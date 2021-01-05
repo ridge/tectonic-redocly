@@ -43,9 +43,12 @@ training:
   - group: Petstore reference
     expanded: true
     pages:
-      - page: openapi/reference.page.yaml/*
-      - page: openapi/rcs.page.yaml/*
-      - page: openapi/rks.page.yaml/*
+      - label: prtstore
+        page: openapi/reference.page.yaml/*
+      - label: rcs
+        page: openapi/rcs.page.yaml/*
+      - label: rks
+        page: openapi/rks.page.yaml/*
   - group: Admin
     expanded: true
     pages:
