@@ -1,0 +1,764 @@
+swagger: "2.0"
+info:
+  version: v1alpha
+  title: Ridge Container Service API
+  description: An API for managing containers
+basePath: /rcs/v1alpha
+host: api.ridge.co
+schemes:
+  - http
+consumes:
+  - application/json
+produces:
+  - application/json
+tags:
+  - name: Batches
+    description: Operations on Batches
+  - name: Containers
+    description: Operations on Containers
+  - name: API Server Status
+    description: An API for checking the server status
+  - name: Container Presets
+    description: Pre-defined sets of container types
+x-explorer-enabled: false
+x-samples-enabled: false
+paths:
+  /status:
+    get:
+      operationId: status
+      summary: Check if API Server is Ready to Serve Requests
+      description: If the API server is ready to serve requests, the response code 204 HTTP is returned.
+      tags:
+        - API Server Status      
+      responses:
+        204:
+          description: OK
+        403:
+          description: Forbidden
+          schema:
+            type: string
+  /container-presets:
+    get:
+      operationId: listContainerPresets
+      summary: List Container Presets
+      description: Gives a list of the container presets (suggested container sizes).
+      tags:
+        - Container Presets
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/container_presets'
+  /orgs/{org}/projects/{project}/batches:
+    parameters:
+      - name: project
+        in: path
+        description: The project identifier
+        required: true
+        type: string
+      - name: org
+        in: path
+        description: The organization identifier
+        required: true
+        type: string
+    get:
+      operationId: listBatches
+      summary: List Batches
+      description: Gives a list of all the batches that have been created for the current project.
+      tags:
+        - Batches
+      #parameters:
+      # READ ME: all parameters related to pagination and sorting commented out temporary.
+      #          KSQL does not support pagination, so it does not make sense to implement it now.
+      # - name: sort_batch
+      #   in: query
+      #   description: The sorting batch for get response
+      #   type: string
+      #   enum:
+      #   - ascending
+      #   - descending
+      #   default: ascending
+      # - name: sort_by
+      #   in: query
+      #   description: The field by which to sort
+      #   type: string
+      # - name: page_token
+      #   in: query
+      #   description: Specify the first entity that you want to retrieve
+      #   type: integer
+      #   default: 0
+      # - name: page_size
+      #   in: query
+      #   description: Specify the number of entities that you want to retrieve
+      #   type: integer
+      #   default: 50
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/batches'
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+    post:
+      operationId: createBatch
+      summary: Create a Batch
+      description: Creates a new batch in the current project. When you create a new batch, you must also specify properties for at least one container. See additional information after Body Params for details of qualities and quantities needed for batch and container creation.
+      tags:
+        - Batches
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/batch_create'
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/batch'
+        400:
+          description: Bad request parameter
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+  /orgs/{org}/projects/{project}/batches/{batch}:
+    parameters:
+      - in: path
+        name: batch
+        description: A unique identifier of a batch
+        type: string
+        required: true
+      - name: project
+        in: path
+        description: The project identifier
+        required: true
+        type: string
+      - name: org
+        in: path
+        description: The organization identifier
+        required: true
+        type: string
+    get:
+      operationId: describeBatch
+      summary: Describe a Batch
+      description: Gives information about a specific batch.
+      tags:
+        - Batches
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/batch'
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+    patch:
+      operationId: updateBatch
+      summary: Update a Batch
+      description: Lets you update the batch's display name, the desired version, or its AWS roles.
+      tags:
+        - Batches
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/batch_update'
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/batch'
+        400:
+          description: Invalid request parameters
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+    delete:
+      operationId: deleteBatch
+      summary: Delete a Batch
+      description: Deletes the selected batch including all its related resources.
+      tags:
+        - Batches
+      responses:
+        204:
+          description: OK
+        400:
+          description: Bad request.
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+  /orgs/{org}/projects/{project}/batches/{batch}/containers:
+    parameters:
+      - in: path
+        name: batch
+        type: string
+        required: true
+      - name: project
+        in: path
+        description: The project identifier
+        required: true
+        type: string
+      - name: org
+        in: path
+        description: The organization identifier
+        required: true
+        type: string
+    get:
+      operationId: listBatchContainers
+      summary: List the Containers in a Batch
+      description: Gives a list of all containers in the desired batch.
+      tags:
+      - Containers
+      parameters:
+        - name: state
+          description: Filter the containers by specified states
+          in: query
+          type: array
+          items:
+            type: string
+          enum:
+            - creating
+            - starting
+            - running
+            - terminating
+            - terminated
+      # READ ME: all parameters related to pagination and sorting commented out temporary.
+      #          KSQL does not support pagination, so it does not make sense to implement it now.
+      # - name: page_token
+      #   in: query
+      #   description: Specify the first entity that you want to retrieve
+      #   type: integer
+      #   default: 0
+      # - name: page_size
+      #   in: query
+      #   description: Specify the number of entities that you want to retrieve
+      #   type: integer
+      #   default: 50
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/containers'
+        400:
+          description: Invalid request parameters
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+  /orgs/{org}/projects/{project}/batches/{batch}/containers/{container}:
+    parameters:
+      - name: container
+        description: The unique identifier of a container.
+        in: path
+        type: string
+        required: true
+      - in: path
+        name: batch
+        description: The batch identifier
+        type: string
+        required: true
+      - name: project
+        in: path
+        description: The project identifier
+        required: true
+        type: string
+      - name: org
+        in: path
+        description: The organization identifier
+        required: true
+        type: string
+    get:
+      operationId: describeContainer
+      summary: Describe a Container
+      description: Gives information about the specified container.
+      tags:
+        - Containers
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/container'
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+  /orgs/{org}/projects/{project}/batches/{batch}/containers/{container}/terminate:
+    parameters:
+      - name: container
+        description: The unique identifier of a container.
+        in: path
+        type: string
+        required: true
+      - in: path
+        name: batch
+        description: The batch identifier
+        type: string
+        required: true
+      - name: project
+        in: path
+        description: The project identifier
+        required: true
+        type: string
+      - name: org
+        in: path
+        description: The organization identifier
+        required: true
+        type: string
+    post:
+      operationId: terminateContainer
+      summary: Terminate a Container
+      description: Terminates the specified container.
+      tags:
+        - Containers
+      responses:
+        204:
+          description: OK
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+definitions:
+  batch:
+    type: object
+    required:
+      - id
+      - name
+      - path
+      - org_id
+      - project_id
+      - created_at
+      - updated_at
+      - state
+      - container_image
+      - desired_number
+      - max_price
+      - actual_number
+    properties:
+      id:
+        description: The unique ID of the batch.
+        type: string
+      name:
+        description: A user readable name of the batch.
+        type: string
+        minLength: 1
+        maxLength: 63
+        pattern: '^[a-z]([-a-z0-9]*[a-z0-9])?$'
+      path:
+        description: The path to the resource that includes all the parents
+        type: string
+        example: /orgs/my-org/projects/my-project/batches/my-batch
+      org_id:
+        description: The unique identifier of the organization.
+        type: string
+      project_id:
+        description: The unique identifier of the project
+        type: string
+      created_at:
+        description: The time at which this batch was created
+        type: string
+        format: date-time
+      updated_at:
+        description: The time at which this batch was last updated
+        type: string
+        format: date-time
+      display_name:
+        description: The display name of the batch
+        type: string
+        maxLength: 512
+      state:
+        description: The current state of the batch.
+        type: string
+        enum:
+          - creating
+          - fulfilling
+          - fulfilled
+          - failed
+          - partiallyFulfilled
+      container_image:
+        description: The path where the container image can be found
+        type: string
+        example: myregistry.local:5000/testing/test-image
+      docker_credentials_id:
+        description: The reference to set of credentials that are required to access the container-image repository.
+        type: string
+      elasticsearch_endpoint:
+        description: URL of Elastic Search instance where logs produced by containers are sent
+        type: string
+        example: http://elasticsearch.example.com:9200
+      container_preset:
+        description: The preset container type. Will only be provided if it was specified at creation.
+        type: string
+      desired_number:
+        description: The desired number of containers.
+        type: integer
+      shortage:
+        description: Indicates the batch is not fully provisioned due to a shortage at partner's level
+        type: boolean
+      max_price:
+        description: The maximum price in USD per hour that the customer is willing to pay. "unlimited" is used to indicate that the price is not a constraint.
+        type: string
+      actual_number:
+        description: The actual number of running or completed containers.
+        type: integer
+      aws_role:
+        $ref: '#/definitions/aws_role'
+      desired_locations:
+        description: One or more country codes (ISO-3166-1) or country subdivision codes (ISO-3166-2) in which the batch may be instantiated.
+        type: array
+        items:
+          type: string
+        x-nullable: true
+      undesired_locations:
+        description: One or more country codes (ISO-3166-1) or country subdivision codes (ISO-3166-2) in which the batch may not be instantiated.
+        type: array
+        items:
+          type: string
+        x-nullable: true
+      qualities:
+        $ref: '#/definitions/quality_set'
+      quantities:
+        $ref: '#/definitions/quantity_set'
+      data_center_ids:
+        description: The data centers in which the user requested the containers to run.
+        type: array
+        items:
+          description: A unique identifier of a resource group
+          type: string
+      deleted:
+        description: Indicates if this batch was deleted.
+        type: boolean
+      env:
+        $ref: '#/definitions/env'
+      entry_point:
+        description: An entry point that override the default one provided by the container image.
+        type: string
+      args:
+        description: Arguments that override the default ones provided by the container image. If you define args, but do not define an entry point, the default one is used with these arguments.
+        type: array
+        items:
+          type: string
+      over_quota:
+        description: The amount of resources not fully provisioned due to exceeded quota.
+        $ref: '#/definitions/quantity_set'
+  batches:
+    description: a list of batches
+    type: object
+    required:
+      - items
+    properties:
+      items:
+        type: array
+        items:
+          $ref: '#/definitions/batch'
+  container:
+    type: object
+    required:
+      - id
+      - batch_id
+      - path
+      - org_id
+      - project_id
+      - data_center_id
+      - data_center_path
+      - state
+    properties:
+      id:
+        description: A unique identifier of a container
+        type: string
+      batch_id:
+        description: The batch that resulted in the creation of this container.
+        type: string
+      path:
+        description: The path to the resource that includes all the parents
+        type: string
+        example: /orgs/my-org/projects/my-project/containers/@cxh5jywfn7y5tdj76go8ijxh7a
+      org_id:
+        description: The unique identifier of the organization.
+        type: string
+      project_id:
+        description: The unique identifier of the project
+        type: string
+      data_center_id:
+        description: The data center in which the container is placed.
+        type: string
+      data_center_path:
+        description: The path to the data center in which this container is provisioned, that includes all the parents
+        type: string
+        example: /partner/foo/data-center/bar
+      quantities:
+        $ref: '#/definitions/quantity_set'
+      start_time:
+        description: The time when the container has been started.
+        type: string
+        format: date-time
+        x-nullable: true
+      end_time:
+        description: The time when the container has been terminated.
+        type: string
+        format: date-time
+        x-nullable: true
+      state:
+        description: The state of the container.
+        type: string
+        enum:
+          - creating
+          - starting
+          - running
+          - terminating
+          - terminated
+      state_reason:
+        description: Information on why the container has reached its state
+        type: string
+      exit_code:
+        description: Exit code of containerized application.
+        type: integer
+        format: int
+        x-nullable: true
+      error:
+        description: Error which occurred during container's lifetime
+        type: string
+      shortage:
+        description: Indicates the container is not fully provisioned due to a shortage at partner's level
+        type: boolean
+      degraded:
+        description: The container is running in a degraded mode. There might be a delay between issuing a command for controlling this container and a response.
+        type: boolean
+  containers:
+    type: object
+    required:
+      - items
+    properties:
+      items:
+        type: array
+        items:
+          $ref: '#/definitions/container'
+  aws_role:
+    description: AWS role and access key for the containers
+    type: object
+    required:
+      - role_arn
+      - aws_access_key_id
+    properties:
+      role_arn:
+        description: The unique identifier of the role in AWS.
+        type: string
+      aws_access_key_id:
+        description: The unique identifier of the AWS key that should be used to create temporary credentials for the container.
+        type: string
+  batch_create:
+    required:
+      - desired_number
+      - container_image
+      - max_price
+    type: object
+    properties:
+      name:
+        type: string
+        description: A name for this batch
+        minLength: 1
+        maxLength: 63
+        pattern: '^[a-z]([-a-z0-9]*[a-z0-9])?$'
+      display_name:
+        description: The display name of the batch
+        type: string
+        maxLength: 512
+      container_image:
+        description: The path where the container image can be found
+        type: string
+        example: myregistry.local:5000/testing/test-image
+      docker_credentials_id:
+        description: The reference to set of credentials that are required to access the container-image repository.
+        type: string
+      elasticsearch_endpoint:
+        description: URL of Elastic Search instance where logs produced by containers are sent
+        type: string
+        example: http://elasticsearch.example.com:9200
+      container_preset:
+        description: The preset container type. Any quantity values specified explicitly override those from the preset.
+        type: string
+      quantities:
+        $ref: '#/definitions/quantity_set'
+      qualities:
+        $ref: '#/definitions/quality_set'
+      max_price:
+        description: The maximum price in USD per hour that the customer is willing to pay. "unlimited" is used to indicate that the price is not a constraint.
+        type: string
+      desired_number:
+        description: The desired number of containers.
+        type: integer
+      desired_locations:
+        description: One or more country codes (ISO-3166-1) or country subdivision codes (ISO-3166-2) in which the batch may be instantiated.
+        type: array
+        items:
+          type: string
+      undesired_locations:
+        description: One or more country codes (ISO-3166-1) or country subdivision codes (ISO-3166-2) in which the batch may not be instantiated.
+        type: array
+        items:
+          type: string
+      data_center_ids:
+        description: The data centers in which the user wishes the containers to run.
+        type: array
+        items:
+          description: A unique identifier of a data center
+          type: string
+      aws_role:
+        $ref: '#/definitions/aws_role'
+      env:
+        $ref: '#/definitions/env'
+      entry_point:
+        description: An entry point that overrides the default one provided by the container image.
+        type: string
+      args:
+        description: Arguments that override the default ones provided by the container image. If you define args, but do not define an entry point, the default one is used with these arguments.
+        type: array
+        items:
+          type: string
+  batch_update:
+    type: object
+    properties:
+      name:
+        description: A human-readable name of the batch.
+        type: string
+        minLength: 1
+        maxLength: 63
+        pattern: '^[a-z]([-a-z0-9]*[a-z0-9])?$'
+        x-nullable: true
+      display_name:
+        description: The display name of the batch
+        type: string
+        maxLength: 512
+        x-nullable: true
+      #      desired_number:
+      #        description: The desired number of containers.
+      #        type: integer
+      #        x-nullable: true
+      #      max_price:
+      #        description: The maximum price in USD per hour that the customer is willing to pay. Unlimited is used to indicate that the price is not a constraint.
+      #        type: string
+      #        x-nullable: true
+      aws_role:
+        $ref: '#/definitions/aws_role'
+        x-nullable: true
+  container_presets:
+    description: A list of container presets.
+    type: object
+    required:
+      - items
+    properties:
+      items:
+        type: array
+        items:
+          $ref: '#/definitions/container_preset'
+  container_preset:
+    type: object
+    required:
+      - name
+      - display_name
+      - quantities
+    properties:
+      name:
+        description: The human readable name of this preset
+        type: string
+      display_name:
+        description: The display name of this preset
+        type: string
+      quantities:
+        $ref: '#/definitions/quantity_set'
+  env:
+    description: A list of environment variables to be passed to the containers. Each environment variable must be specified as <name>=<value>.
+    type: array
+    items:
+      description: A list of environment variables to be passed to the containers. Each environment variable must be specified as <name>=<value>.
+      type: string
+      pattern: '^.+=.+$'
+      example: FOO=bar
+  quality_set:
+    type: object
+    additionalProperties:
+      description: A set of required qualities. The object maps quality identifiers to values. For qualities defined with no values, the value must be 1. See https://api.ridge.co/compute/v1alpha/qualities for possible properties.
+      type: integer
+  quantity_set:
+    type: object
+    additionalProperties:
+      description: A set of quantities. The object maps quantity identifiers to values. See https://api.ridge.co/compute/v1alpha/quantities for possible properties.
+      type: integer
