@@ -21,7 +21,8 @@ nav:
     href: https://cold-starfish-16.redoc.ly
   - label: Training exercises
     page: developer-portal/index.md
-
+  - label: yael
+    page: markdown.md
   - label: External docs
     icon: ./images/redocly-icon-white.png
     href: https://docs.redoc.ly/developer-portal/introduction/
