@@ -2,7 +2,7 @@ meta:
   title: Ridge
   description: The best API documentation generator ever.
   siteUrl: https://ridge.redoc.ly
-headerIcon: ./images/logo.png
+headerIcon: ./images/ridge.svg
 enableToc: true
 oasDefinitions:
   moonstone: ./openapi/moonstone.yaml
