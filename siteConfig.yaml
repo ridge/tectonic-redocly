@@ -22,7 +22,7 @@ nav:
   - label: Training exercises
     page: developer-portal/index.md
   - label: yael
-    page: markdown.md
+    page: ./markdown.md
   - label: External docs
     icon: ./images/redocly-icon-white.png
     href: https://docs.redoc.ly/developer-portal/introduction/
