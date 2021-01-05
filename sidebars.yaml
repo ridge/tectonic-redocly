@@ -5,6 +5,8 @@ training:
     pages:
       - label: Setup
         page: developer-portal/setup.md
+      - label: Upgrade
+        page: developer-portal/upgrade.md
       - label: Markdown
         page: developer-portal/markdown.md
       - label: Folder structure
@@ -13,7 +15,7 @@ training:
         page: developer-portal/mermaid.md
       - label: Page table of contents
         page: developer-portal/page-table-of-contents.md
-      - separator: This is a separator
+      - separator: This is a separator!!!!
       - label: Sidebar navigation
         page: developer-portal/sidebar-nav.md
       - label: Search
