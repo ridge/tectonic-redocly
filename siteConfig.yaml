@@ -19,7 +19,7 @@ stylesheets:
 #  - ./static/intercom.js
 nav:
   - label: API Reference
-    page: developer-portal/index.md
+    page: developer-portal/navagating.md
   - label: External docs
     icon: ./images/redocly-icon-white.png
     href: https://docs.redoc.ly/developer-portal/introduction/
