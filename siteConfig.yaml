@@ -7,7 +7,6 @@ enableToc: true
 oasDefinitions:
   rks: ./openapi/rks.yaml
   rcs: ./openapi/rcs.yaml
-  petstore: ./openapi/petstore.yaml
   # add links to definitions in our API registry by using a fully qualified URL.
 stylesheets:
   - https://fonts.googleapis.com/css?family=Roboto:300,400,600,700
@@ -19,16 +18,11 @@ stylesheets:
 #scripts:
 #  - ./static/intercom.js
 nav:
-  - label: api ref
-    href: https://cold-starfish-16.redoc.ly
-  - label: Training exercises
+  - label: API Reference
     page: developer-portal/index.md
-  - label: yael
-    page: markdown.md
   - label: External docs
     icon: ./images/redocly-icon-white.png
     href: https://docs.redoc.ly/developer-portal/introduction/
-
   - search: true
 
 footer:
