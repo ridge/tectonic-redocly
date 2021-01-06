@@ -1,8 +1,8 @@
 ---
-title: Training program
+title: Ridge APIs
 ---
-
-# Training program
+# PUT stuff here
+<!-- # Training program
 
 This interactive training program is designed to help you understand how to create and edit content using Redocly's developer portal.
 It's a great companion to our [developer portal docs](https://docs.redoc.ly/developer-portal/introduction/).
@@ -42,4 +42,4 @@ Learn how to [deploy the developer portal](https://docs.redoc.ly/ci-cd-workflows
 
 ## Asking for help
 
-Don't be shy... we're here to help.
+Don't be shy... we're here to help. -->

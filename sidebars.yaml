@@ -1,5 +1,5 @@
-training:
-  - page: developer-portal/index.md
+apis:
+  - page: developer-portal/navagating.md
   # - group: Training exercises
   #   expanded: true
   #   pages:
@@ -40,42 +40,16 @@ training:
   #       page: developer-portal/mdx.mdx
   #     - label: Creating React components
   #       page: developer-portal/custom-component.mdx
-  - group: Ridge APIs
-    expanded: true
+  # - group: Ridge APIs
+  #   expanded: true
+  #   pages:
+  - group: RCS
+    expanded: false
     pages:
-      - group: RCS
-        expanded: false
-        pages:
-        - label: rcs
-          page: openapi/rcs.page.yaml/*
-      - group: RKS
-        expanded: false
-        pages:
-        - label: rks
-          page: openapi/rks.page.yaml/*
-  - group: Admin
-    expanded: true
+    - label: rcs
+      page: openapi/rcs.page.yaml/*
+  - group: RKS
+    expanded: false
     pages:
-      - group: Routine
-        expanded: true
-        pages:
-          - group: Rock
-            expanded: true
-            pages:
-              - group: Paper
-                expanded: true
-                pages:
-                  - group: Scissors
-                    expanded: true
-                    pages:
-                      - group: 1-2-3
-                        expanded: true
-                        pages:
-                          - group: Go
-                            expanded: true
-                            pages:
-                              - label: Upgrading
-                                # page: developer-portal/upgrade.md
-alternative:
-  - page: developer-portal/sidebar-alternative.md
-    label: Alternative sidebar example
+    - label: rks
+      page: openapi/rks.page.yaml/*
