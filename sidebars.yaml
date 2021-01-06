@@ -40,15 +40,19 @@ training:
   #       page: developer-portal/mdx.mdx
   #     - label: Creating React components
   #       page: developer-portal/custom-component.mdx
-  - group: Petstore reference
+  - group: Ridge APIs
     expanded: true
     pages:
-      - label: prtstore
-        page: openapi/reference.page.yaml/*
-      - label: rcs
-        page: openapi/rcs.page.yaml/*
-      - label: rks
-        page: openapi/rks.page.yaml/*
+      - group: RCS
+        expanded: false
+        pages:
+        - label: rcs
+          page: openapi/rcs.page.yaml/*
+      - group: RKS
+        expanded: false
+        pages:
+        - label: rks
+          page: openapi/rks.page.yaml/*
   - group: Admin
     expanded: true
     pages:
