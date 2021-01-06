@@ -40,16 +40,16 @@ apis:
   #       page: developer-portal/mdx.mdx
   #     - label: Creating React components
   #       page: developer-portal/custom-component.mdx
-  # - group: Ridge APIs
-  #   expanded: true
-  #   pages:
-  - group: RCS
-    expanded: false
+  - group: Ridge APIs
+    expanded: true
     pages:
-    - label: rcs
-      page: openapi/rcs.page.yaml/*
-  - group: RKS
-    expanded: false
-    pages:
-    - label: rks
-      page: openapi/rks.page.yaml/*
+    - group: RCS
+      expanded: false
+      pages:
+      - label: rcs
+        page: openapi/rcs.page.yaml/*
+    - group: RKS
+      expanded: false
+      pages:
+      - label: rks
+        page: openapi/rks.page.yaml/*
