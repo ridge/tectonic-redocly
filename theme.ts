@@ -15,7 +15,7 @@ export const theme = {
   colors: {
     // tonalOffset: 0.2,
     primary: {
-      main: '#227a88',
+      main: '#0e0c51',
       // light: ({ colors }) => lighten(colors.tonalOffset, colors.primary.main),
       // dark: ({ colors }) => darken(colors.tonalOffset, colors.primary.main),
       // contrastText: ({ colors }) => readableColor(colors.primary.main),
@@ -45,7 +45,7 @@ export const theme = {
     //   contrastText: ({ colors }) => readableColor(colors.info.main),
     // },
     text: {
-      primary: '#424242',
+      primary: '#4f4f4f',
       // secondary: '#4e566d',
     },
     // border: {
@@ -106,9 +106,9 @@ export const theme = {
     fontWeightRegular: '400',
     fontWeightBold: '600',
     fontWeightLight: '300',
-    fontFamily: '"Source Sans Pro", sans-serif',
+    fontFamily: '"Nunito Sans", sans-serif',
     headings: {
-      fontFamily: '"Source Sans Pro", sans-serif',
+      fontFamily: '"Nunito Sans", sans-serif',
       fontWeight: '600',
     },
     // heading1: {
@@ -146,7 +146,7 @@ export const theme = {
     // },
     code: {
       fontSize: '14px',
-      fontFamily: 'Courier, monospace',
+      fontFamily: '"Roboto Mono", monospace',
       fontWeight: ({ typography }) => typography.fontWeightRegular,
       color: '#e53935',
       backgroundColor: 'rgba(38, 50, 56, 0.04)',
@@ -164,7 +164,7 @@ export const theme = {
     // textColor: '#ffffff',
   },
   schema: {
-    nestedBackground: '#fafafa',
+    nestedBackground: '#fafafc',
     // linesColor: theme => lighten( theme.colors.tonalOffset, desaturate(theme.colors.tonalOffset, theme.colors.primary.main) ),
     // defaultDetailsWidth: '75%',
     // typeNameColor: theme => theme.colors.text.secondary,

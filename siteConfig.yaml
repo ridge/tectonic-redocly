@@ -5,12 +5,11 @@ meta:
 headerIcon: ./images/ridge.svg
 enableToc: true
 oasDefinitions:
-  rks: ./openapi/rks.yaml
-  rcs: ./openapi/rcs.yaml
-  # add links to definitions in our API registry by using a fully qualified URL.
+  rks: ./api/rks.yaml
+  rcs: ./api/rcs.yaml
 stylesheets:
-  - https://fonts.googleapis.com/css?family=Roboto:300,400,600,700
-  - https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700&display=swap
+  - https://fonts.googleapis.com/css?family=Roboto+Mono:300,400,600,700
+  - https://fonts.googleapis.com/css?family=Nunito+Sans:300,400,600,700&display=swap
 #ga:
   # you can use any options here from https://www.gatsbyjs.org/packages/gatsby-plugin-google-analytics/
   # note that GA doesn't work in DEV
@@ -19,23 +18,20 @@ stylesheets:
 #  - ./static/intercom.js
 nav:
   - label: API Reference
-    page: developer-portal/navagating.md
-  - label: External docs
-    icon: ./images/redocly-icon-white.png
-    href: https://docs.redoc.ly/developer-portal/introduction/
+    page: api/index.md
   - search: true
 
 footer:
-  copyrightText: Copyright © Redocly 2019-2020. All right reserved.
+  copyrightText: Copyright © Ridge 2021. All right reserved.
   columns:
     - group: Legal
       items:
-        - label: Terms of Use
-          href: 'https://redoc.ly/subscription-agreement/'
-        - label: Privacy Notice
-          href: 'https://redoc.ly/privacy-policy/'
-        - label: Cookie Notice
-          href: 'https://redoc.ly/privacy-policy/'
+        - label: Privacy Policy
+          href: 'https://www.ridge.co/legal/privacy-policy'
+        - label: Cookie Policy
+          href: 'https://www.ridge.co/legal/cookies'
+        - label: EULA
+          href: 'https://www.ridge.co/legal/eula'
     - group: Support
       items:
         - label: FAQ

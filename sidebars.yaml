@@ -1,10 +1,12 @@
-apis:
-  - group: All APIs
+api:
+  - page: api/index.md
+  - group: Ridge Kubernetes Service (RKS)
     expanded: true
     pages:
-      - label: APIs
-        page: developer-portal/navagating.md
-      - label: rcs
-        page: openapi/rcs.page.yaml/*
       - label: rks
-        page: openapi/rks.page.yaml/*
+        page: api/rks.page.yaml/*
+  - group: Ridge Container Service (RCS)
+    expanded: true
+    pages:
+      - label: rcs
+        page: api/rcs.page.yaml/*
