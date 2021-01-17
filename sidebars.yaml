@@ -5,13 +5,13 @@ api:
     pages:
       - label: rks
         page: api/rks.page.yaml/*
-  # - group: Ridge Container Service (RCS)
-  #   expanded: true
-  #   pages:
-  #     - label: rcs
-  #       page: api/rcs.page.yaml/*
-  # - group: Identity and Authorization Management (IAM)
-  #   expanded: true
-  #   pages:
-  #     - label: iam
-  #       page: api/iam.page.yaml/*
+  - group: Ridge Container Service (RCS)
+    expanded: true
+    pages:
+      - label: rcs
+        page: api/rcs.page.yaml/*
+  - group: Identity and Authorization Management (IAM)
+    expanded: true
+    pages:
+      - label: iam
+        page: api/iam.page.yaml/*
