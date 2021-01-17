@@ -10,3 +10,8 @@ api:
     pages:
       - label: rcs
         page: api/rcs.page.yaml/*
+  - group: Identity and Authorization Management (IAM)
+    expanded: true
+    pages:
+      - label: rcs
+        page: api/iam.page.yaml/*

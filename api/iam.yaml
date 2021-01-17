@@ -1,0 +1,4667 @@
+swagger: "2.0"
+info:
+  version: v1alpha
+  title: IAM API
+  description: An API for for access management
+basePath: /iam/v1alpha
+schemes:
+  - http
+consumes:
+  - application/json
+produces:
+  - application/json
+paths:
+  /status:
+    get:
+      operationId: status
+      summary: Check if API is ready to serve requests. It is if 204 HTTP response code is returned.
+      responses:
+        204:
+          description: OK
+        403:
+          description: Forbidden
+          schema:
+            type: string
+  /roles:
+    get:
+      operationId: listRoles
+      summary: List the predefined roles. A role is a set of permissions.
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/roles'
+  /orgs:
+    get:
+      operationId: listOrgs
+      summary: List the organizations.
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/orgs'
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+    post:
+      operationId: createOrg
+      summary: Create an organization.
+      parameters:
+      - in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/org_create'
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/org'
+        400:
+          description: Bad request parameter
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+  /orgs/{org}:
+    parameters:
+      - name: org
+        in: path
+        description: The organization identifier
+        required: true
+        type: string
+    get:
+      operationId: describeOrg
+      summary: Get information about an organization
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/org'
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        400:
+          description: Bad request parameter
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+    delete:
+      operationId: deleteOrg
+      summary: Delete an organization.
+      responses:
+        204:
+          description: OK
+        400:
+          description: Bad request parameter
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+    patch:
+      operationId: updateOrg
+      summary: Update an organization
+      parameters:
+      - in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/org_update'
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/org'
+        400:
+          description: Invalid request parameters
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+  /orgs/{org}/projects:
+    parameters:
+      - name: org
+        in: path
+        description: The organization identifier
+        required: true
+        type: string
+    get:
+      operationId: listProjects
+      summary: List the projects of an organization.
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/projects'
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        400:
+          description: Bad request parameter
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+    post:
+      operationId: createProject
+      summary: Create a project.
+      parameters:
+      - in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/project_create'
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/project'
+        400:
+          description: Bad request parameter
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+  /orgs/{org}/projects/{project}:
+    parameters:
+      - name: project
+        in: path
+        description: The project identifier
+        required: true
+        type: string
+      - name: org
+        in: path
+        description: The organization identifier
+        required: true
+        type: string
+    get:
+      operationId: describeProject
+      summary: Get information about a project
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/project'
+        400:
+          description: Invalid request parameters
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+    delete:
+      operationId: deleteProject
+      summary: Delete a project.
+      responses:
+        204:
+          description: OK
+        400:
+          description: Invalid request parameters
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+    patch:
+      operationId: updateProject
+      summary: Update a project
+      parameters:
+      - in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/project_update'
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/project'
+        400:
+          description: Invalid request parameters
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+  /orgs/{org}/projects/{project}/policies:
+    parameters:
+      - name: project
+        in: path
+        description: The project identifier
+        required: true
+        type: string
+      - name: org
+        in: path
+        description: The organization identifier
+        required: true
+        type: string
+    get:
+      operationId: listProjectPolicies
+      summary: List the policies that apply to the project.
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/policies'
+        400:
+          description: Invalid request parameters
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+    post:
+      operationId: createProjectPolicy
+      summary: Create an policy for the project.
+      parameters:
+      - in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/object_policy_create'
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/policy'
+        400:
+          description: Bad request parameter
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+  /orgs/{org}/projects/{project}/policies/{policy}:
+    parameters:
+      - name: policy
+        in: path
+        description: The policy identifier
+        required: true
+        type: string
+      - name: project
+        in: path
+        description: The project identifier
+        required: true
+        type: string
+      - name: org
+        in: path
+        description: The organization identifier
+        required: true
+        type: string
+    delete:
+      operationId: deleteProjectPolicy
+      summary: Delete a project's policy.
+      responses:
+        204:
+          description: OK
+        400:
+          description: Invalid request parameters
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+  /orgs/{org}/policies:
+    parameters:
+      - name: org
+        in: path
+        description: The organization identifier
+        required: true
+        type: string
+    get:
+      operationId: listOrgPolicies
+      summary: List the policies that apply to the organization.
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/policies'
+        400:
+          description: Invalid request parameters
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+    post:
+      operationId: createOrgPolicy
+      summary: Create an policy for the organization.
+      parameters:
+      - in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/object_policy_create'
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/policy'
+        400:
+          description: Bad request parameter
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+  /orgs/{org}/policies/{policy}:
+    parameters:
+      - name: policy
+        in: path
+        description: The policy identifier
+        required: true
+        type: string
+      - name: org
+        in: path
+        description: The organization identifier
+        required: true
+        type: string
+    delete:
+      operationId: deleteOrgPolicy
+      summary: Delete an organization's policy.
+      responses:
+        204:
+          description: OK
+        400:
+          description: Invalid request parameters
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+  /orgs/{org}/groups:
+    parameters:
+      - name: org
+        in: path
+        description: The organization identifier
+        required: true
+        type: string
+    get:
+      operationId: listOrgGroups
+      summary: List the groups.
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/groups'
+        400:
+          description: Invalid request parameters
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+    post:
+      operationId: createOrgGroup
+      summary: Create a group.
+      parameters:
+      - in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/group_create'
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/group'
+        400:
+          description: Bad request parameter
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+  /orgs/{org}/groups/{group}:
+    parameters:
+      - name: group
+        description: The identifier of a group
+        in: path
+        type: string
+        required: true
+      - name: org
+        in: path
+        description: The organization identifier
+        required: true
+        type: string
+    get:
+      operationId: describeOrgGroup
+      summary: Describe a group.
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/group'
+        400:
+          description: Invalid request parameters
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+    patch:
+      operationId: updateOrgGroup
+      summary: Update group parameters
+      parameters:
+      - in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/group_update'
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/group'
+        400:
+          description: Invalid request parameters
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+    delete:
+      operationId: deleteOrgGroup
+      summary: Delete a group
+      responses:
+        204:
+          description: OK
+        400:
+          description: Invalid request parameters
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+  /orgs/{org}/groups/{group}/privileges:
+    parameters:
+      - name: group
+        description: The identifier of a group
+        in: path
+        type: string
+        required: true
+      - name: org
+        in: path
+        description: The organization identifier
+        required: true
+        type: string
+    get:
+      operationId: listOrgGroupPrivileges
+      summary: List the policies granting roles to the group.
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/policies'
+        400:
+          description: Invalid request parameters
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+    post:
+      operationId: createOrgGroupPrivilege
+      summary: Grant a role to the group.
+      parameters:
+      - in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/subject_policy_create'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/policy'
+        400:
+          description: Bad request parameter
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+  /orgs/{org}/groups/{group}/members:
+    parameters:
+      - name: group
+        description: The identifier of a group
+        in: path
+        type: string
+        required: true
+      - name: org
+        in: path
+        description: The organization identifier
+        required: true
+        type: string
+    get:
+      operationId: listOrgGroupMembers
+      summary: List the members of a group.
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/group_memberships'
+        400:
+          description: Invalid request parameters
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+    post:
+      operationId: createOrgGroupMember
+      summary: Add a member to the group.
+      parameters:
+      - in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/group_membership_create'
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/group_membership'
+        400:
+          description: Bad request parameter
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+  /orgs/{org}/groups/{group}/members/{member}:
+    parameters:
+      - name: member
+        description: The identifier of a member
+        in: path
+        type: string
+        required: true
+      - name: group
+        description: The identifier of a group
+        in: path
+        type: string
+        required: true
+      - name: org
+        in: path
+        description: The organization identifier
+        required: true
+        type: string
+    get:
+      operationId: describeOrgGroupMembership
+      summary: Describe a member of a group.
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/group_membership'
+        400:
+          description: Invalid request parameters
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+    delete:
+      operationId: deleteOrgGroupMembership
+      summary: Remove a member from the group.
+      responses:
+        204:
+          description: OK
+        400:
+          description: Invalid request parameters
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+  /orgs/{org}/members:
+    parameters:
+      - name: org
+        in: path
+        description: The organization identifier
+        required: true
+        type: string
+    get:
+      operationId: listOrgMembers
+      summary: List members of the organization.
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/members'
+        400:
+          description: Invalid request parameters
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+    post:
+      operationId: createOrgMember
+      summary: Add an application or invite a user to an organization.
+      description: Note that a separate call to /orgs/{org}/members/{member}/invitation/send is necessary to send the invitation email.
+      parameters:
+      - in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/member_create'
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/member'
+        400:
+          description: Bad request parameter
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+  /orgs/{org}/members/{member}:
+    parameters:
+      - name: member
+        description: The identifier of a member.
+        in: path
+        type: string
+        required: true
+      - name: org
+        in: path
+        description: The organization identifier
+        required: true
+        type: string
+    get:
+      operationId: describeOrgMember
+      summary: Describe a member of the organization.
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/member'
+        400:
+          description: Invalid request parameters
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+    patch:
+      operationId: updateOrgMember
+      summary: Update the properties of a member (app only)
+      parameters:
+      - in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/member_update'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/member'
+        400:
+          description: Bad request parameter
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+    delete:
+      operationId: deleteOrgMember
+      summary: Remove a member from the organization
+      responses:
+        204:
+          description: OK
+        400:
+          description: Invalid request parameters
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+  /orgs/{org}/members/{member}/groups:
+    parameters:
+      - name: member
+        description: The identifier of a member.
+        in: path
+        type: string
+        required: true
+      - name: org
+        in: path
+        description: The organization identifier
+        required: true
+        type: string
+    get:
+      operationId: listOrgMemberGroups
+      summary: List the groups the member belongs to.
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/group_memberships'
+        400:
+          description: Invalid request parameters
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+    post:
+      operationId: createOrgMemberGroup
+      summary: Add the member to a group.
+      parameters:
+      - in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/member_group_membership_create'
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/group_membership'
+        400:
+          description: Bad request parameter
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+  /orgs/{org}/members/{member}/privileges:
+    parameters:
+      - name: member
+        description: The identifier of a member
+        in: path
+        type: string
+        required: true
+      - name: org
+        in: path
+        description: The organization identifier
+        required: true
+        type: string
+    get:
+      operationId: listOrgMemberPrivileges
+      summary: List the privileges of a member.
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/policies'
+        400:
+          description: Invalid request parameters
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+    post:
+      operationId: createOrgMemberPrivilege
+      summary: Grant a role to the member.
+      parameters:
+      - in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/subject_policy_create'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/policy'
+        400:
+          description: Bad request parameter
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+  /orgs/{org}/members/{member}/api-keys:
+    parameters:
+      - name: member
+        description: The identifier of a member
+        in: path
+        type: string
+        required: true
+      - name: org
+        in: path
+        description: The organization identifier
+        required: true
+        type: string
+    get:
+      operationId: listOrgMemberAPIKeys
+      summary: List the API keys of a member (for apps only).
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/api_keys'
+        400:
+          description: Invalid request parameters
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+    post:
+      operationId: createOrgMemberAPIKey
+      summary: Create a new API key (for apps only).
+      parameters:
+      - in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/api_key_create'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/api_key_details'
+        400:
+          description: Bad request parameter
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+  /orgs/{org}/members/{member}/api-keys/{api_key}:
+    parameters:
+      - name: api_key
+        description: The identifier of an API key
+        in: path
+        type: string
+        required: true
+      - name: member
+        description: The identifier of a member
+        in: path
+        type: string
+        required: true
+      - name: org
+        in: path
+        description: The organization identifier
+        required: true
+        type: string
+    get:
+      operationId: describeOrgMemberAPIKey
+      summary: Retrieve a member's API key (apps only).
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/api_key'
+        400:
+          description: Invalid request parameters
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+    patch:
+      operationId: updateOrgMemberAPIKey
+      summary: Update a member's API key (apps only).
+      parameters:
+      - in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/api_key_update'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/api_key'
+        400:
+          description: Bad request parameter
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+    delete:
+      operationId: deleteOrgMemberAPIKey
+      summary: Delete a member's API key (apps only).
+      responses:
+        204:
+          description: Success
+        400:
+          description: Invalid request parameters
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+  /orgs/{org}/members/{member}/invitation/token:
+    parameters:
+      - name: member
+        description: The identifier of a member
+        in: path
+        type: string
+        required: true
+      - name: org
+        in: path
+        description: The organization identifier
+        required: true
+        type: string
+    get:
+      operationId: generateOrgMemberInvitationToken
+      summary: Generate an invitation token for a provisional user.
+      responses:
+        200:
+          description: Success
+          schema:
+            type: string
+        400:
+          description: Invalid request parameters
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+  /orgs/{org}/members/{member}/invitation/send:
+    parameters:
+      - name: member
+        description: The identifier of a member
+        in: path
+        type: string
+        required: true
+      - name: org
+        in: path
+        description: The organization identifier
+        required: true
+        type: string
+    post:
+      operationId: sendOrgMemberInvitationEmail
+      summary: Send an invitation email to a provisional user.
+      responses:
+        204:
+          description: Success
+        400:
+          description: Bad request parameter
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+  /orgs/{org}/transfer:
+    parameters:
+      - name: org
+        in: path
+        description: The organization identifier
+        required: true
+        type: string
+    get:
+      operationId: describeTransfer
+      summary: Get information about the pending organization transfer, if any
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/transfer_for_org'
+        400:
+          description: Bad request parameter
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+    post:
+      operationId: createTransfer
+      summary: Create or replace an organization transfer request
+      description: Used to request a transfer of the organization to another partner or to make it a direct customer of Ridge. In both cases the transfer is pending approval of the receiver of the request. An empty partner indicates that the organization is being transferred to Ridge.
+      parameters:
+      - in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/transfer_for_org'
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/transfer_for_org'
+        400:
+          description: Bad request parameter
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+    delete:
+      operationId: deleteTransfer
+      # By org admin, if they no longer want to join the partner.
+      summary: Delete the pending organization tranfer
+      responses:
+        204:
+          description: OK
+        400:
+          description: Bad request parameter
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+  /orgs/{org}/quota:
+    parameters:
+      - name: org
+        in: path
+        description: The organization identifier
+        required: true
+        type: string
+    get:
+      operationId: describeOrgQuota
+      summary: Describe the quota of the organization.
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/quota'
+        400:
+          description: Invalid request parameters
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+    patch:
+      operationId: updateOrgQuota
+      summary: Update the quota of the organization.
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/quota_update'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/quota'
+        400:
+          description: Bad request parameter
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+  /partners:
+    get:
+      operationId: listPartners
+      summary: List the partners.
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/partners'
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+  /partners/{partner}:
+    parameters:
+      - name: partner
+        in: path
+        description: The partner identifier
+        required: true
+        type: string
+    get:
+      operationId: describePartner
+      summary: Get information about a partner
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/partner'
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        400:
+          description: Bad request parameter
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+  /partners/{partner}/clients:
+    parameters:
+      - name: partner
+        in: path
+        description: The partner identifier
+        required: true
+        type: string
+    get:
+      operationId: listClients
+      summary: List the clients of the partner
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/clients'
+        400:
+          description: Bad request parameter
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+    post:
+      operationId: createClient
+      summary: Create a client organization.
+      parameters:
+      - in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/client_create'
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/client'
+        400:
+          description: Bad request parameter
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+  /partners/{partner}/clients/{client}:
+    parameters:
+      - name: partner
+        in: path
+        description: The partner identifier
+        required: true
+        type: string
+      - name: client
+        in: path
+        description: The client organization identifier
+        required: true
+        type: string
+    get:
+      operationId: describeClient
+      summary: Get information about a client
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/client'
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        400:
+          description: Bad request parameter
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+    delete:
+      operationId: removeClient
+      # Can be performed by partner admin, Ridge admin
+      summary: Remove the organization from the list of clients. The client is converted to a free-standing organization
+      responses:
+        204:
+          description: OK
+        400:
+          description: Bad request parameter
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+  /partners/{partner}/transfers:
+    parameters:
+      - name: partner
+        in: path
+        description: The identifier of the partner
+        required: true
+        type: string
+    get:
+      operationId: listTransfers
+      summary: List the pending incoming transfers for the partner.
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/transfers'
+        400:
+          description: Bad request parameter
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+  /partners/{partner}/transfers/{transfer}:
+    parameters:
+      - name: partner
+        in: path
+        description: The identifier of the partner
+        required: true
+        type: string
+      - name: transfer
+        in: path
+        description: The identifier of the transfer request
+        required: true
+        type: string
+    get:
+      operationId: describeTransferForPartner
+      summary: Get information about a pending incoming organization transfer
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/transfer'
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        400:
+          description: Bad request parameter
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+  /partners/{partner}/transfers/{transfer}/accept:
+    parameters:
+      - name: partner
+        in: path
+        description: The identifier of the partner
+        required: true
+        type: string
+      - name: transfer
+        in: path
+        description: The identifier of the transfer request
+        required: true
+        type: string
+    post:
+      operationId: acceptTransfer
+      summary: Accept an incoming organization transfer
+      parameters:
+      - in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/transfer_accept'
+      responses:
+        204:
+          description: OK
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        400:
+          description: Bad request parameter
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+  /partners/{partner}/transfers/{transfer}/reject:
+    parameters:
+      - name: partner
+        in: path
+        description: The identifier of the partner
+        required: true
+        type: string
+      - name: transfer
+        in: path
+        description: The identifier of the transfer request
+        required: true
+        type: string
+    post:
+      operationId: rejectTransfer
+      summary: Reject an incoming organization transfer
+      responses:
+        204:
+          description: OK
+        400:
+          description: Bad request parameter
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+  /partners/{partner}/policies:
+    parameters:
+      - name: partner
+        in: path
+        description: The partner identifier
+        required: true
+        type: string
+    get:
+      operationId: listPartnerPolicies
+      summary: List the policies that apply to the partner.
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/policies'
+        400:
+          description: Invalid request parameters
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+    post:
+      operationId: createPartnerPolicy
+      summary: Create an policy for the partner.
+      parameters:
+      - in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/object_policy_create'
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/policy'
+        400:
+          description: Bad request parameter
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+  /partners/{partner}/policies/{policy}:
+    parameters:
+      - name: policy
+        in: path
+        description: The policy identifier
+        required: true
+        type: string
+      - name: partner
+        in: path
+        description: The partner identifier
+        required: true
+        type: string
+    delete:
+      operationId: deletePartnerPolicy
+      summary: Delete a partner's policy.
+      responses:
+        204:
+          description: OK
+        400:
+          description: Invalid request parameters
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+  /partners/{partner}/groups:
+    parameters:
+      - name: partner
+        in: path
+        description: The partner identifier
+        required: true
+        type: string
+    get:
+      operationId: listPartnerGroups
+      summary: List the groups.
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/groups'
+        400:
+          description: Invalid request parameters
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+    post:
+      operationId: createPartnerGroup
+      summary: Create a group.
+      parameters:
+      - in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/group_create'
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/group'
+        400:
+          description: Bad request parameter
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+  /partners/{partner}/groups/{group}:
+    parameters:
+      - name: group
+        description: The identifier of a group
+        in: path
+        type: string
+        required: true
+      - name: partner
+        in: path
+        description: The partner identifier
+        required: true
+        type: string
+    get:
+      operationId: describePartnerGroup
+      summary: Describe a group.
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/group'
+        400:
+          description: Invalid request parameters
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+    patch:
+      operationId: updatePartnerGroup
+      summary: Update group parameters
+      parameters:
+      - in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/group_update'
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/group'
+        400:
+          description: Invalid request parameters
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+    delete:
+      operationId: deletePartnerGroup
+      summary: Delete a group
+      responses:
+        204:
+          description: OK
+        400:
+          description: Invalid request parameters
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+  /partners/{partner}/groups/{group}/privileges:
+    parameters:
+      - name: group
+        description: The identifier of a group
+        in: path
+        type: string
+        required: true
+      - name: partner
+        in: path
+        description: The partner identifier
+        required: true
+        type: string
+    get:
+      operationId: listPartnerGroupPrivileges
+      summary: List the policies granting roles to the group.
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/policies'
+        400:
+          description: Invalid request parameters
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+    post:
+      operationId: createPartnerGroupPrivilege
+      summary: Grant a role to the group.
+      parameters:
+      - in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/subject_policy_create'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/policy'
+        400:
+          description: Bad request parameter
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+  /partners/{partner}/groups/{group}/members:
+    parameters:
+      - name: group
+        description: The identifier of a group
+        in: path
+        type: string
+        required: true
+      - name: partner
+        in: path
+        description: The partner identifier
+        required: true
+        type: string
+    get:
+      operationId: listPartnerGroupMembers
+      summary: List the members of a group.
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/group_memberships'
+        400:
+          description: Invalid request parameters
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+    post:
+      operationId: createPartnerGroupMember
+      summary: Add a member to the group.
+      parameters:
+      - in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/group_membership_create'
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/group_membership'
+        400:
+          description: Bad request parameter
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+  /partners/{partner}/groups/{group}/members/{member}:
+    parameters:
+      - name: member
+        description: The identifier of a member
+        in: path
+        type: string
+        required: true
+      - name: group
+        description: The identifier of a group
+        in: path
+        type: string
+        required: true
+      - name: partner
+        in: path
+        description: The partner identifier
+        required: true
+        type: string
+    get:
+      operationId: describePartnerGroupMembership
+      summary: Describe a member of a group.
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/group_membership'
+        400:
+          description: Invalid request parameters
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+    delete:
+      operationId: deletePartnerGroupMembership
+      summary: Remove a member from the group.
+      responses:
+        204:
+          description: OK
+        400:
+          description: Invalid request parameters
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+  /partners/{partner}/members:
+    parameters:
+      - name: partner
+        in: path
+        description: The partner identifier
+        required: true
+        type: string
+    get:
+      operationId: listPartnerMembers
+      summary: List members of the partner.
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/members'
+        400:
+          description: Invalid request parameters
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+    post:
+      operationId: createPartnerMember
+      summary: Add an application or invite a user to a partner.
+      description: Note that a separate call to /partners/{partner}/members/{member}/invitation/send is necessary to send the invitation email.
+      parameters:
+      - in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/member_create'
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/member'
+        400:
+          description: Bad request parameter
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+  /partners/{partner}/members/{member}:
+    parameters:
+      - name: member
+        description: The identifier of a member.
+        in: path
+        type: string
+        required: true
+      - name: partner
+        in: path
+        description: The partner identifier
+        required: true
+        type: string
+    get:
+      operationId: describePartnerMember
+      summary: Describe a member of the partner.
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/member'
+        400:
+          description: Invalid request parameters
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+    patch:
+      operationId: updatePartnerMember
+      summary: Update the properties of a member (app only)
+      parameters:
+      - in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/member_update'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/member'
+        400:
+          description: Bad request parameter
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+    delete:
+      operationId: deletePartnerMember
+      summary: Remove a member from the partner
+      responses:
+        204:
+          description: OK
+        400:
+          description: Invalid request parameters
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+  /partners/{partner}/members/{member}/groups:
+    parameters:
+      - name: member
+        description: The identifier of a member.
+        in: path
+        type: string
+        required: true
+      - name: partner
+        in: path
+        description: The partner identifier
+        required: true
+        type: string
+    get:
+      operationId: listPartnerMemberGroups
+      summary: List the groups the member belongs to.
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/group_memberships'
+        400:
+          description: Invalid request parameters
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+    post:
+      operationId: createPartnerMemberGroup
+      summary: Add the member to a group.
+      parameters:
+      - in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/member_group_membership_create'
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/group_membership'
+        400:
+          description: Bad request parameter
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+  /partners/{partner}/members/{member}/privileges:
+    parameters:
+      - name: member
+        description: The identifier of a member
+        in: path
+        type: string
+        required: true
+      - name: partner
+        in: path
+        description: The partner identifier
+        required: true
+        type: string
+    get:
+      operationId: listPartnerMemberPrivileges
+      summary: List the privileges of a member.
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/policies'
+        400:
+          description: Invalid request parameters
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+    post:
+      operationId: createPartnerMemberPrivilege
+      summary: Grant a role to the member.
+      parameters:
+      - in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/subject_policy_create'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/policy'
+        400:
+          description: Bad request parameter
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+  /partners/{partner}/members/{member}/api-keys:
+    parameters:
+      - name: member
+        description: The identifier of a member
+        in: path
+        type: string
+        required: true
+      - name: partner
+        in: path
+        description: The partner identifier
+        required: true
+        type: string
+    get:
+      operationId: listPartnerMemberAPIKeys
+      summary: List the partner member's API keys (for apps only).
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/api_keys'
+        400:
+          description: Invalid request parameters
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+    post:
+      operationId: createPartnerMemberAPIKey
+      summary: Create a new API key (for apps only).
+      parameters:
+      - in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/api_key_create'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/api_key_details'
+        400:
+          description: Bad request parameter
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+  /partners/{partner}/members/{member}/api-keys/{api_key}:
+    parameters:
+      - name: api_key
+        description: The identifier of an API key
+        in: path
+        type: string
+        required: true
+      - name: member
+        description: The identifier of a member
+        in: path
+        type: string
+        required: true
+      - name: partner
+        in: path
+        description: The partner identifier
+        required: true
+        type: string
+    get:
+      operationId: describePartnerMemberAPIKey
+      summary: Retrieve a member's API key (apps only).
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/api_key'
+        400:
+          description: Invalid request parameters
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+    patch:
+      operationId: updatePartnerMemberAPIKey
+      summary: Update a member's API key (apps only).
+      parameters:
+      - in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/api_key_update'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/api_key'
+        400:
+          description: Bad request parameter
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+    delete:
+      operationId: deletePartnerMemberAPIKey
+      summary: Delete a member's API key (apps only).
+      responses:
+        204:
+          description: Success
+        400:
+          description: Invalid request parameters
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+  /partners/{partner}/members/{member}/invitation/token:
+    parameters:
+      - name: member
+        description: The identifier of a member
+        in: path
+        type: string
+        required: true
+      - name: partner
+        in: path
+        description: The partner identifier
+        required: true
+        type: string
+    get:
+      operationId: generatePartnerMemberInvitationToken
+      summary: Generate an invitation token for a provisional user.
+      responses:
+        200:
+          description: Success
+          schema:
+            type: string
+        400:
+          description: Invalid request parameters
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+  /partners/{partner}/members/{member}/invitation/send:
+    parameters:
+      - name: member
+        description: The identifier of a member
+        in: path
+        type: string
+        required: true
+      - name: partner
+        in: path
+        description: The partner identifier
+        required: true
+        type: string
+    post:
+      operationId: sendPartnerMemberInvitationEmail
+      summary: Send an invitation email to a provisional user.
+      responses:
+        204:
+          description: Success
+        400:
+          description: Bad request parameter
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+  /me/personal:
+    get:
+      operationId: getOwnPersonalInfo
+      summary: Retrieve the authenticated user's own personal info.
+      description: 'Note: Does not apply to apps.'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/personal_info'
+        400:
+          description: Invalid request parameters
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+  /me/memberships:
+    get:
+      operationId: getOwnMemberships
+      summary: Retrieve the authenticated user's own memberships in organizations.
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/members'
+        400:
+          description: Invalid request parameters
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+    post:
+      operationId: join
+      summary: Join a realm using an invitation token.
+      description: 'Note: Does not apply to apps.'
+      parameters:
+      - in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/join'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/member'
+        400:
+          description: Bad request parameter
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+  /me/api-keys:
+    get:
+      operationId: listOwnAPIKeys
+      summary: List the authenticated user's own API keys.
+      description: Cannot be used when authenticated with an API key.
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/api_keys'
+        400:
+          description: Invalid request parameters
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+    post:
+      operationId: createOwnAPIKey
+      summary: Create a new API key for the authenticated user.
+      description: Cannot be used when authenticated with an API key.
+      parameters:
+      - in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/api_key_create'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/api_key_details'
+        400:
+          description: Bad request parameter
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+  /me/api-keys/{api_key}:
+    parameters:
+      - name: api_key
+        description: The identifier of an API key
+        in: path
+        type: string
+        required: true
+    get:
+      operationId: describeOwnAPIKey
+      summary: Retrieve the authenticated user's own API key.
+      description: Cannot be used when authenticated with an API key.
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/api_key'
+        400:
+          description: Bad request parameter
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+    patch:
+      operationId: updateOwnAPIKey
+      summary: Update the authenticated user's own API key.
+      description: Cannot be used when authenticated with an API key.
+      parameters:
+      - in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/api_key_update'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/api_key'
+        400:
+          description: Bad request parameter
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+    delete:
+      operationId: deleteOwnAPIKey
+      summary: Delete the authenticated user's own API key.
+      description: Cannot be used when authenticated with an API key.
+      responses:
+        204:
+          description: Success
+        400:
+          description: Bad request parameter
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+  /admin/members:
+    get:
+      operationId: listAdminMembers
+      summary: List admin members.
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/members'
+        400:
+          description: Invalid request parameters
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+    post:
+      operationId: createAdminMember
+      summary: Invite a user to a become admin member.
+      description: Note that a separate call to /admin/members/{member}/invitation/send is necessary to send the invitation email.
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/member_create'
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/member'
+        400:
+          description: Bad request parameter
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+  /admin/members/{member}:
+    parameters:
+      - name: member
+        description: The identifier of a member.
+        in: path
+        type: string
+        required: true
+    get:
+      operationId: describeAdminMember
+      summary: Describe a admin member.
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/member'
+        400:
+          description: Invalid request parameters
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+    patch:
+      operationId: updateAdminMember
+      summary: Update the properties of a member (app only)
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/member_update'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/member'
+        400:
+          description: Bad request parameter
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+    delete:
+      operationId: deleteAdminMember
+      summary: Delete an admin member
+      responses:
+        204:
+          description: OK
+        400:
+          description: Invalid request parameters
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+  /admin/members/{member}/invitation/send:
+    parameters:
+      - name: member
+        description: The identifier of a member
+        in: path
+        type: string
+        required: true
+    post:
+      operationId: sendAdminMemberInvitationEmail
+      summary: Send an invitation email to a provisional user.
+      responses:
+        204:
+          description: Success
+        400:
+          description: Bad request parameter
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+  /admin/members/{member}/invitation/token:
+    parameters:
+      - name: member
+        description: The identifier of a member
+        in: path
+        type: string
+        required: true
+    get:
+      operationId: generateAdminMemberInvitationToken
+      summary: Generate an invitation token for a provisional user.
+      responses:
+        200:
+          description: Success
+          schema:
+            type: string
+        400:
+          description: Invalid request parameters
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+  /admin/members/{member}/groups:
+    parameters:
+      - name: member
+        description: The identifier of a member.
+        in: path
+        type: string
+        required: true
+    get:
+      operationId: listAdminMemberGroups
+      summary: List the groups the member belongs to.
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/group_memberships'
+        400:
+          description: Invalid request parameters
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+    post:
+      operationId: createAdminMemberGroup
+      summary: Add the member to a group.
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/member_group_membership_create'
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/group_membership'
+        400:
+          description: Bad request parameter
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+  /admin/groups:
+    get:
+      operationId: listAdminGroups
+      summary: List the groups.
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/groups'
+        400:
+          description: Invalid request parameters
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+    post:
+      operationId: createAdminGroup
+      summary: Create a group.
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/group_create'
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/group'
+        400:
+          description: Bad request parameter
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+  /admin/groups/{group}:
+    parameters:
+      - name: group
+        description: The identifier of a group
+        in: path
+        type: string
+        required: true
+    get:
+      operationId: describeAdminGroup
+      summary: Describe a group.
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/group'
+        400:
+          description: Invalid request parameters
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+    patch:
+      operationId: updateAdminGroup
+      summary: Update group parameters
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/group_update'
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/group'
+        400:
+          description: Invalid request parameters
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+    delete:
+      operationId: deleteAdminGroup
+      summary: Delete a group
+      responses:
+        204:
+          description: OK
+        400:
+          description: Invalid request parameters
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+  /admin/groups/{group}/privileges:
+    parameters:
+      - name: group
+        description: The identifier of a group
+        in: path
+        type: string
+        required: true
+    get:
+      operationId: listAdminGroupPrivileges
+      summary: List the policies granting roles to the group.
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/policies'
+        400:
+          description: Invalid request parameters
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+    post:
+      operationId: createAdminGroupPrivilege
+      summary: Grant a role to the group.
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/subject_policy_create'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/policy'
+        400:
+          description: Bad request parameter
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+  /admin/groups/{group}/members:
+    parameters:
+      - name: group
+        description: The identifier of a group
+        in: path
+        type: string
+        required: true
+    get:
+      operationId: listAdminGroupMembers
+      summary: List the members of a group.
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/group_memberships'
+        400:
+          description: Invalid request parameters
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+    post:
+      operationId: createAdminGroupMember
+      summary: Add a member to the group.
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/group_membership_create'
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/group_membership'
+        400:
+          description: Bad request parameter
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+  /admin/groups/{group}/members/{member}:
+    parameters:
+      - name: member
+        description: The identifier of a member
+        in: path
+        type: string
+        required: true
+      - name: group
+        description: The identifier of a group
+        in: path
+        type: string
+        required: true
+    get:
+      operationId: describeAdminGroupMembership
+      summary: Describe a member of a group.
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/group_membership'
+        400:
+          description: Invalid request parameters
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+    delete:
+      operationId: deleteAdminGroupMembership
+      summary: Remove a member from the group.
+      responses:
+        204:
+          description: OK
+        400:
+          description: Invalid request parameters
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+  /admin/members/{member}/privileges:
+    parameters:
+      - name: member
+        description: The identifier of a member
+        in: path
+        type: string
+        required: true
+    get:
+      operationId: listAdminMemberPrivileges
+      summary: List the privileges of a member.
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/policies'
+        400:
+          description: Invalid request parameters
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+    post:
+      operationId: createAdminMemberPrivilege
+      summary: Grant a role to the member.
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/subject_policy_create'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/policy'
+        400:
+          description: Bad request parameter
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+  /admin/policies:
+    get:
+      operationId: listAdminPolicies
+      summary: List the policies that apply to the admin realm.
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/policies'
+        400:
+          description: Invalid request parameters
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+    post:
+      operationId: createAdminPolicy
+      summary: Create an policy for the admin realm.
+      parameters:
+      - in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/object_policy_create'
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/policy'
+        400:
+          description: Bad request parameter
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+  /admin/policies/{policy}:
+    parameters:
+      - name: policy
+        in: path
+        description: The policy identifier
+        required: true
+        type: string
+    delete:
+      operationId: deleteAdminPolicy
+      summary: Delete a partner's policy.
+      responses:
+        204:
+          description: OK
+        400:
+          description: Invalid request parameters
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+  /admin/members/{member}/api-keys:
+    parameters:
+      - name: member
+        description: The identifier of a member
+        in: path
+        type: string
+        required: true
+    get:
+      operationId: listAdminMemberAPIKeys
+      summary: List the API keys of a member (for apps only).
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/api_keys'
+        400:
+          description: Invalid request parameters
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+    post:
+      operationId: createAdminMemberAPIKey
+      summary: Create a new API key (for apps only).
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/api_key_create'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/api_key_details'
+        400:
+          description: Bad request parameter
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+  /admin/members/{member}/api-keys/{api_key}:
+    parameters:
+      - name: api_key
+        description: The identifier of an API key
+        in: path
+        type: string
+        required: true
+      - name: member
+        description: The identifier of a member
+        in: path
+        type: string
+        required: true
+    get:
+      operationId: describeAdminMemberAPIKey
+      summary: Retrieve a member's API key (apps only).
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/api_key'
+        400:
+          description: Invalid request parameters
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+    patch:
+      operationId: updateAdminMemberAPIKey
+      summary: Update a member's API key (apps only).
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/api_key_update'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/api_key'
+        400:
+          description: Bad request parameter
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+    delete:
+      operationId: deleteAdminMemberAPIKey
+      summary: Delete a member's API key (apps only).
+      responses:
+        204:
+          description: Success
+        400:
+          description: Invalid request parameters
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+definitions:
+  group:
+    description: A group of users or apps that are associated with the organization
+    type: object
+    required:
+      - id
+      - name
+      - path
+      - realm_type
+      - created_at
+    properties:
+      id:
+        description: A system-defined unique ID of the group.
+        type: string
+      name:
+        description: The human readable name of the group. The name is unique within the organization.
+        type: string
+        minLength: 1
+        maxLength: 63
+        pattern: '^[a-z]([-a-z0-9]*[a-z0-9])?$'
+        example: admins
+      path:
+        description: The path to the resource that includes all the parents
+        type: string
+        example: /orgs/acme/groups/admins
+      realm_type:
+        description: The type of realm containing the group
+        type: string
+        enum: [partner, org, admin]
+      org_id:
+        description: The unique identifier of the organization, if the group is within one.
+        type: string
+      partner_id:
+        description: The unique identifier of the partner, if the group is within one.
+        type: string
+      created_at:
+        description: The time at which this group was created
+        type: string
+        format: date-time
+      updated_at:
+        description: The time at which this group was last updated
+        type: string
+        format: date-time
+      display_name:
+        description: The display name of the group.
+        type: string
+        maxLength: 512
+  groups:
+    description: A list of groups.
+    type: object
+    required:
+      - items
+    properties:
+      items:
+        type: array
+        items:
+          $ref: '#/definitions/group'
+  group_create:
+    type: object
+    required:
+      - name
+    properties:
+      name:
+        description: The human readable name of the group. The name is unique within the organization.
+        type: string
+        minLength: 1
+        maxLength: 63
+        pattern: '^[a-z]([-a-z0-9]*[a-z0-9])?$'
+        example: admins
+      display_name:
+        description: The display name of the group.
+        type: string
+        maxLength: 512
+  group_update:
+    type: object
+    properties:
+      display_name:
+        description: The display name of the group.
+        type: string
+        maxLength: 512
+      name:
+        description: The human readable name of the group. The name is unique within the organization.
+        type: string
+        minLength: 1
+        maxLength: 63
+        pattern: '^[a-z]([-a-z0-9]*[a-z0-9])?$'
+        example: admins
+  role:
+    description: A role that is defined and managed by the system.
+    type: object
+    required:
+      - name
+      - path
+      - realm_type
+      - object_type
+    properties:
+      name:
+        description: The human readable name of the role.
+        type: string
+        minLength: 1
+        maxLength: 63
+        pattern: '^[a-z]([-a-z0-9]*[a-z0-9])?$'
+        example: project-admin
+      path:
+        description: The path to the resource that includes all the parents
+        type: string
+        example: /roles/project-admin
+      realm_type:
+        description: The type of realm to which the role applies.
+        type: string
+        enum: [partner, org, admin]
+      object_type:
+        description: The type of the object to which the role applies.
+        type: string
+        enum: [partner, org, project]
+      display_name:
+        description: The display name of the role.
+        type: string
+        maxLength: 512
+  roles:
+    description: A list of roles.
+    type: object
+    required:
+      - items
+    properties:
+      items:
+        type: array
+        items:
+          $ref: '#/definitions/role'
+  policy:
+    type: object
+    required:
+      - id
+      - path
+      - subject_type
+      - subject_path
+      - object_type
+      - role_path
+      - created_at
+    properties:
+      id:
+        description: A unique ID of the policy.
+        type: string
+      path:
+        description: The path to the resource that includes all the parents
+        type: string
+        example: /orgs/acme/projects/manhattan/policies/@42
+      org_id:
+        description: The unique identifier of the organization, if the policy is within one.
+        type: string
+      partner_id:
+        description: The unique identifier of the partner, if the policy is within one.
+        type: string
+      project_id:
+        description: The unique identifier of the project, if the object of the policy is a project.
+        type: string
+      object_type:
+        description: Type of the policy object.
+        type: string
+        enum: [partner, org, project]
+      object_path:
+        description: The path to the policy object.
+        type: string
+        example: /orgs/acme/projects/manhattan
+      member_id:
+        description: The unique identifier of the member, if the subject of the policy is a member.
+        type: string
+      group_id:
+        description: The unique identifier of the group, if the subject of the policy is a group.
+        type: string
+      subject_type:
+        description: Type of the policy subject.
+        type: string
+        enum: [member, group]
+      subject_path:
+        description: The path to the policy subject.
+        type: string
+        example: /orgs/acme/members/@42
+      role_path:
+        description: The path to the role.
+        type: string
+        example: /roles/org-admin
+      created_at:
+        description: The time at which this policy was created
+        type: string
+        format: date-time
+  policies:
+    description: A list of policies.
+    type: object
+    required:
+      - items
+    properties:
+      items:
+        type: array
+        items:
+          $ref: '#/definitions/policy'
+  object_policy_create:
+    type: object
+    required:
+      - role_path
+    properties:
+      member_id:
+        description: The unique identifier of the member, if the subject is a member. If specified together with subject_path, they must agree.
+        type: string
+      group_id:
+        description: The unique identifier of the group, if the subject is a group. If specified together with subject_path, they must agree.
+        type: string
+      org_id:
+        description: The unique identifier of the organization.
+        type: string
+      subject_path:
+        description: The path to the policy subject (member or group). If omitted, one of (member_id, group_id) must be specified.
+        type: string
+        example: /orgs/acme/members/@42
+      role_path:
+        description: The path to the role.
+        type: string
+        example: /roles/org-admin
+  subject_policy_create:
+    type: object
+    required:
+      - role_path
+    properties:
+      project_id:
+        description: The unique identifier of the project, if the object is a project. If specified together with object_path, they must agree.
+        type: string
+      object_path:
+        description: The path to the policy object (partner, organization or project). If the object is an organization, object_path must be the path to the subject's organization or omitted. If the object is a project, then object_path, project_id or both must be specified.
+        type: string
+        example: /partners/dist/orgs/acme/projects/manhattan
+      role_path:
+        description: The path to the role.
+        type: string
+        example: /roles/org-admin
+  partner:
+    type: object
+    required:
+      - name
+      - id
+      - path
+    properties:
+      id:
+        description: A unique ID of the partner.
+        type: string
+      name:
+        description: The human readable name of the partner.
+        type: string
+        minLength: 1
+        maxLength: 63
+        pattern: '^[a-z]([-a-z0-9]*[a-z0-9])?$'
+        example: acme
+      path:
+        description: The path to the resource that includes all the parents
+        type: string
+        example: /partners/acme
+      display_name:
+        description: The display name of the partner
+        type: string
+        maxLength: 512
+  partners:
+    description: A list of partners.
+    type: object
+    required:
+      - items
+    properties:
+      items:
+        type: array
+        items:
+          $ref: '#/definitions/partner'
+  org:
+    type: object
+    required:
+      - name
+      - id
+      - path
+      - created_at
+    properties:
+      id:
+        description: A unique ID of the organization.
+        type: string
+      name:
+        description: The human readable name of the organization.
+        type: string
+        maxLength: 63
+        example: acme
+      path:
+        description: The path to the resource that includes all the parents
+        type: string
+        example: /orgs/acme
+      display_name:
+        description: The display name of the organization.
+        type: string
+        maxLength: 512
+      created_at:
+        description: The time at which this role was created
+        type: string
+        format: date-time
+      updated_at:
+        description: The time at which this organization was last updated
+        type: string
+        format: date-time
+      deleted:
+        description: True if the organization is deleted.
+        type: boolean
+      partner_id:
+        description: The ID of the partner for this organization, if any
+        type: string
+      partner_path:
+        description: The path to the partner for this organization, if any.
+        type: string
+        example: /partners/acme
+  orgs:
+    description: A list of organizations.
+    type: object
+    required:
+      - items
+    properties:
+      items:
+        type: array
+        items:
+          $ref: '#/definitions/org'
+  org_create:
+    type: object
+    required:
+      - name
+    properties:
+      name:
+        description: The human readable name of the organization.
+        type: string
+        maxLength: 63
+        example: acme
+      display_name:
+        description: The display name of the organization.
+        type: string
+        maxLength: 512
+  org_update:
+    type: object
+    properties:
+      name:
+        description: The human readable name of the organization.
+        type: string
+        maxLength: 63
+        example: acme
+      display_name:
+        description: The display name of the organization.
+        type: string
+        maxLength: 512
+  clients:
+    type: object
+    required:
+      - items
+    properties:
+      items:
+        type: array
+        items:
+          $ref: '#/definitions/client'
+  client:
+    # FIXME (misha): Parameters of client: whitelist, pricing
+    type: object
+    required:
+      - id
+      - path
+      - org_path
+      - partner_id
+      - partner_path
+    properties:
+      id:
+        description: The ID of the client, identical to the organization ID.
+        type: string
+      path:
+        description: The path of the client.
+        type: string
+      partner_id:
+        description: The ID of the client partner.
+        type: string
+      partner_path:
+        description: The path of the client partner.
+        type: string
+      org_path:
+        description: The path of the client organization.
+        type: string
+  client_create:
+    # FIXME (misha): Parameters of client: whitelist, pricing
+    type: object
+    required:
+      - name
+    properties:
+      name:
+        description: The human readable name of the organization.
+        type: string
+        maxLength: 63
+        example: acme
+      display_name:
+        description: The display name of the organization.
+        type: string
+        maxLength: 512
+  transfers:
+    type: object
+    required:
+      - items
+    properties:
+      items:
+        type: array
+        items:
+          $ref: '#/definitions/transfer'
+  transfer:
+    type: object
+    required:
+      - id
+      - path
+      - org_id
+      - org_path
+    properties:
+      id:
+        description: The unique identifier of the transfer request.
+        type: string
+      path:
+        description: The path to the transfer object that includes all its parents
+        type: string
+        example: /orgs/acme/transfers/@abcdefghij
+      org_id:
+        description: The ID of the organization that is requesting a new partner.
+        type: string
+      org_path:
+        description: The path of the organization that is requesting a new partner.
+        type: string
+  transfer_accept:
+    # FIXME (misha): parameters for acceptance (whitelist, pricing)
+    type: object
+    properties:
+      pricing:
+        type: string
+        description: "Not implemented yet, for later use"
+      whitelist:
+        type: string
+        description: "Not implemented yet, for later use"
+  transfer_for_org:
+    type: object
+    properties:
+      partner_id:
+        description: The ID of the pending new partner for this organization.
+        type: string
+      partner_path:
+        description: The path to the pending new partner for this organization.
+        type: string
+  project:
+    type: object
+    required:
+      - name
+      - id
+      - path
+      - org_id
+      - created_at
+    properties:
+      id:
+        description: A unique ID of the project.
+        type: string
+      name:
+        description: The human readable name of the project.
+        type: string
+        maxLength: 63
+        example: manhattan
+      path:
+        description: The path to the resource that includes all the parents
+        type: string
+        example: /orgs/acme/projects/manhattan
+      org_id:
+        description: The unique identifier of the organization.
+        type: string
+      display_name:
+        description: The display name of the project.
+        type: string
+        maxLength: 512
+      created_at:
+        description: The time at which this role was created
+        type: string
+        format: date-time
+      updated_at:
+        description: The time at which this project was last updated
+        type: string
+        format: date-time
+      deleted:
+        description: True if the project is deleted.
+        type: boolean
+  projects:
+    description: A list of projects.
+    type: object
+    required:
+      - items
+    properties:
+      items:
+        type: array
+        items:
+          $ref: '#/definitions/project'
+  project_create:
+    type: object
+    required:
+      - name
+    properties:
+      name:
+        description: The human readable name of the project.
+        type: string
+        maxLength: 63
+        example: manhattan
+      display_name:
+        description: The display name of the project.
+        type: string
+        maxLength: 512
+  project_update:
+    type: object
+    properties:
+      name:
+        description: The human readable name of the project.
+        type: string
+        maxLength: 63
+        example: manhattan
+      display_name:
+        description: The display name of the project.
+        type: string
+        maxLength: 512
+  member:
+    allOf:
+    - type: object
+      required:
+        - id
+        - path
+        - realm_type
+        - type
+        - created_at
+      properties:
+        id:
+          description: The unique ID of the member
+          type: string
+        path:
+          description: The path to the resource that includes all the parents
+          type: string
+          example: /orgs/acme/members/@42
+        org_id:
+          description: The unique ID of the organization, if the member is within one.
+          type: string
+        partner_id:
+          description: The unique identifier of the partner, if the member is within one.
+          type: string
+        realm_type:
+          description: The type of realm containing the member
+          type: string
+          enum: [partner, org, admin]
+        type:
+          description: The type of the member.
+          type: string
+          enum: [user, invitee, app]
+        name:
+          description: The name of the member (apps only).
+          type: string
+          maxLength: 63
+        display_name:
+          description: The display name of the member (apps only).
+          type: string
+          maxLength: 512
+        created_at:
+          description: The time at which the member was created
+          type: string
+          format: date-time
+        updated_at:
+          description: The time at which the member was last updated
+          type: string
+          format: date-time
+    - $ref: '#/definitions/personal_info'
+  member_update:
+    type: object
+    properties:
+      name:
+        description: The name of the member (apps only).
+        type: string
+        maxLength: 63
+      display_name:
+        description: The display name of the member (apps only).
+        type: string
+        maxLength: 512
+  members:
+    description: A list of members.
+    type: object
+    required:
+      - items
+    properties:
+      items:
+        type: array
+        items:
+          $ref: '#/definitions/member'
+  member_create:
+    type: object
+    required:
+      - type
+    properties:
+      type:
+        description: "Type of the member to add: invitee means invite a user, app means create an app."
+        type: string
+        enum: [invitee, app]
+      name:
+        description: The name of the app, if creating an app. Must be unique within the organization.
+        type: string
+        maxLength: 63
+      display_name:
+        description: The display name of the app, if creating an app.
+        type: string
+        maxLength: 512
+      email:
+        description: The email address of the user, if inviting a user.
+        type: string
+        format: email
+        example: user@example.com
+      full_name:
+        description: The full name of the user, if inviting a user.
+        type: string
+        example: J. Random User
+  join:
+    type: object
+    required:
+      - token
+    properties:
+      token:
+        description: An invitation token.
+        type: string
+  group_memberships:
+    description: A list of group memberships.
+    type: object
+    required:
+      - items
+    properties:
+      items:
+        type: array
+        items:
+          $ref: '#/definitions/group_membership'
+  group_membership:
+    description: A group membership.
+    type: object
+    required:
+      - id
+      - path
+      - group_id
+      - group_path
+      - member_id
+      - member_path
+      - created_at
+    properties:
+      id:
+        description: The unique ID of the group membership.
+        type: string
+      path:
+        description: The path to the group membership.
+        type: string
+        example: /orgs/acme/groups/admins/members/@42
+      group_id:
+        description: The unique ID of the group.
+        type: string
+      group_path:
+        description: The path to the group.
+        type: string
+        example: /orgs/acme/groups/admins
+      member_id:
+        description: The unique ID of the member.
+        type: string
+      member_path:
+        description: The path to the member.
+        type: string
+        example: /orgs/acme/members/@42
+      created_at:
+        description: The time at which the member was added to the group
+        type: string
+        format: date-time
+  group_membership_create:
+    type: object
+    properties:
+      member_id:
+        description: The unique ID of the member. Either member_id or member_path must be specified; if both are present, they must agree.
+        type: string
+      member_path:
+        description: The path to the member. Either member_id or member_path must be specified; if both are present, they must agree.
+        type: string
+        example: /orgs/acme/members/@42
+  member_group_membership_create:
+    type: object
+    properties:
+      group_id:
+        description: The unique ID of the group. Either group_id or group_path must be specified; if both are present, they must agree.
+        type: string
+      group_path:
+        description: The path to the group. Either group_id or group_path must be specified; if both are present, they must agree.
+        type: string
+        example: /orgs/acme/groups/admins
+  personal_info:
+    type: object
+    properties:
+      email:
+        description: The email address of the user.
+        type: string
+        format: email
+        example: user@example.com
+      full_name:
+        description: The full name of the user.
+        type: string
+        example: J. Random User
+      avatar:
+        description: URL to the avatar image.
+        type: string
+        format: uri
+  api_keys:
+    description: A list of API keys.
+    type: object
+    required:
+      - items
+    properties:
+      items:
+        type: array
+        items:
+          $ref: '#/definitions/api_key'
+  api_key:
+    description: Properties of an API key.
+    type: object
+    required:
+      - id
+      - path
+      - name
+      - created_at
+    properties:
+      id:
+        description: The unique ID of the API key.
+        type: string
+      path:
+        description: The path to the API key.
+        type: string
+        example: /orgs/acme/members/robot/api-keys/automation
+      member_id:
+        description: The unique ID of the owning member, if it's an app.
+        type: string
+      name:
+        description: The name of the API key. Must be unique among the keys of the same user or app.
+        type: string
+        maxLength: 63
+      display_name:
+        description: The display name of the API key.
+        type: string
+        maxLength: 512
+      created_at:
+        description: The time at which this API key was created.
+        type: string
+        format: date-time
+      updated_at:
+        description: The time at which this API key was last updated.
+        type: string
+        format: date-time
+  api_key_details:
+    description: Properties of an API key, including the auth token.
+    allOf:
+    - $ref: '#/definitions/api_key'
+    - type: object
+      required:
+        - token
+      properties:
+        token:
+          description: The secret token for API authentication
+          type: string
+  api_key_create:
+    required:
+      - name
+    properties:
+      name:
+        description: The name of the API key. Must be unique among the keys of the same user or app.
+        type: string
+        maxLength: 63
+      display_name:
+        description: The display name of the API key.
+        type: string
+        maxLength: 512
+  api_key_update:
+    properties:
+      name:
+        description: The name of the API key. Must be unique among the keys of the same user or app.
+        type: string
+        maxLength: 63
+      display_name:
+        description: The display name of the API key.
+        type: string
+        maxLength: 512
+  quota:
+    required:
+      - limits
+      - usage
+    properties:
+      limits:
+        description: Maximum resource usage. Omitted parameters are unlimited.
+        $ref: '#/definitions/quantity_set'
+      usage:
+        description: Actual resource usage
+        $ref: '#/definitions/quantity_set'
+  quota_update:
+    type: object
+    properties:
+      limits:
+        description: Maximum resource usage. Omitted parameters are unlimited. Providing a value for limits replaces all values, even those that are unspecified.
+        $ref: '#/definitions/quantity_set'
+  quantity_set:
+    description: A set of quantities. The object maps quantity identifiers to values. See https://api.ridge.co/compute/v1alpha/quantities for possible properties.
+    type: object
+    additionalProperties:
+      type: integer
