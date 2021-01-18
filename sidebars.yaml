@@ -20,3 +20,8 @@ api:
     pages:
       - label: compute
         page: api/compute.page.yaml/*
+  - group: External Credentials
+    expanded: true
+    pages:
+      - label: compute
+        page: api/keystring.page.yaml/*
