@@ -15,3 +15,8 @@ api:
     pages:
       - label: iam
         page: api/iam.page.yaml/*
+  - group: Data Centers
+    expanded: true
+    pages:
+      - label: compute
+        page: api/compute.page.yaml/*

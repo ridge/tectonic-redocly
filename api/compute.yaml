@@ -1,0 +1,621 @@
+swagger: "2.0"
+info:
+  version: v1alpha
+  title: Compute API
+  description: An API that manage the compute in the Ridge meta-cloud.
+basePath: /compute/v1alpha
+schemes:
+  - http
+consumes:
+  - application/json
+produces:
+  - application/json
+paths:
+  /status:
+    get:
+      operationId: status
+      summary: Check if API is ready to serve requests. It is if 204 HTTP response code is returned.
+      responses:
+        204:
+          description: OK
+        403:
+          description: Forbidden
+          schema:
+            type: string
+  /qualities:
+    get:
+      operationId: listQualities
+      summary: List all qualities defined in the system.
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/qualities'
+  /quantities:
+    get:
+      operationId: listQuantities
+      summary: List all quantities defined in the system.
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/quantities'
+  /partners:
+    get:
+      operationId: listPartners
+      summary: List partners
+      # - name: sort_order
+      #   in: query
+      #   description: The sorting order for get response
+      #   type: string
+      #   enum:
+      #   - ascending
+      #   - descending
+      #   default: ascending
+      # - name: sort_by
+      #   in: query
+      #   description: The field by which to sort
+      #   type: string
+      # - name: page_token
+      #   in: query
+      #   description: The page_token that was received in a previous request.
+      #   type: integer
+      #   default: 0
+      # - name: page_size
+      #   in: query
+      #   description: Specify the number of entities that you want to retrieve
+      #   type: integer
+      #   default: 50
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/partners'
+  /partners/{partner}:
+    parameters:
+      - name: partner
+        description: The identifier of a partner.
+        in: path
+        type: string
+        required: true
+    get:
+      operationId: describePartner
+      summary: Describe a partner
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/partner'
+        400:
+          description: Bad request parameter
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+  /partners/{partner}/data-centers:
+    parameters:
+    - name: partner
+      description: The identifier of a partner.
+      in: path
+      type: string
+      required: true
+    get:
+      operationId: listPartnerDataCenters
+      summary: List partner's data centers
+      parameters:
+        - name: location
+          description: The country codes (ISO-3166-1) or country subdivision codes (ISO-3166-2) in which the Data centers reside
+          in: query
+          type: array
+          items:
+            type: string
+        - name: quality
+          description: Specify quality_id or quality_id=value to match only data centers satisfying the quality requirement. Can be repeated.
+          in: query
+          type: array
+          items:
+            type: string
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/data_centers'
+        400:
+          description: Bad request parameter
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+  /partners/{partner}/data-centers/{data_center}:
+    parameters:
+    - name: partner
+      description: The identifier of a partner.
+      in: path
+      type: string
+      required: true
+    - name: data_center
+      description: The identifier of a data center.
+      in: path
+      type: string
+      required: true
+    get:
+      operationId: describeDataCenter
+      summary: Describe data center
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/data_center'
+        400:
+          description: Bad request parameter
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+  /partners/{partner}/data-centers/{data_center}/vm-catalog:
+    parameters:
+    - name: partner
+      description: The identifier of a partner.
+      in: path
+      type: string
+      required: true
+    - name: data_center
+      description: The identifier of a data center.
+      in: path
+      type: string
+      required: true
+    get:
+      operationId: describeVMCatalog
+      summary: Describe a data center's VM catalog.
+      parameters:
+        - name: quality
+          description: Specify quality_id or quality_id=value to match only catalog items satisfying the quality requirement. Can be repeated.
+          in: query
+          type: array
+          items:
+            type: string
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/vm_catalog'
+        400:
+          description: Bad request parameter
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+  /partners/{partner}/data-centers/{data_center}/vm-catalog/{vm_catalog_item}:
+    parameters:
+    - name: partner
+      description: The identifier of a partner.
+      in: path
+      type: string
+      required: true
+    - name: data_center
+      description: The identifier of a data center.
+      in: path
+      type: string
+      required: true
+    - name: vm_catalog_item
+      description: The unique identifier of a VM catalog item.
+      in: path
+      type: string
+      required: true
+    get:
+      operationId: describeVMCatalogItem
+      summary: Describe a data center's VM catalog item.
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/vm_catalog_item'
+        400:
+          description: Bad request parameter
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+  /partners/{partner}/clients/{client}:
+    parameters:
+      - name: partner
+        in: path
+        description: The partner identifier
+        required: true
+        type: string
+      - name: client
+        in: path
+        description: The client organization identifier
+        required: true
+        type: string
+    get:
+      operationId: describeClient
+      summary: Get list of allowed data center IDs
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/client'
+        400:
+          description: Bad request parameter
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+    patch:
+      operationId: updateClient
+      # Can be performed by partner admin, Ridge admin
+      summary: Update client allowed data centers
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/client_update'
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/client'
+        400:
+          description: Bad request parameter
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+definitions:
+  vm_catalog:
+    type: array
+    items:
+      $ref: "#/definitions/vm_catalog_item"
+  vm_catalog_item:
+    type: object
+    required:
+      - id
+      - path
+      - prices
+      - qualities
+      - quantities
+    properties:
+      id:
+        type: string
+        description: The unique identifier of a VM catalog item.
+      path:
+        type: string
+        description: The path to the resource that includes all the parents
+        example: /partners/big-partner/data-center/boston/vm-catalog/@7g167ryep3fr8ejr4bxemxju4h
+      qualities:
+        $ref: '#/definitions/quality_set'
+      quantities:
+        $ref: '#/definitions/quantity_set'
+      prices:
+        description: The prices in USD per hour for a machine with these resources.
+        $ref: '#/definitions/vm_price_set'
+  location:
+    type: object
+    required:
+      - area
+      - latitude
+      - longitude
+      - continent
+    properties:
+      area:
+        $ref: "#/definitions/area"
+      city:
+        description: The city in which the data center is located
+        type: string
+        example: Portland
+      latitude:
+        description: The latitude in range (-90.0, 90.0)
+        type: string
+      longitude:
+        description: The latitude in range (-180.0, 180.0)
+        type: string
+      continent:
+        description: The continent in which the data center is located
+        type: string
+        enum:
+        - africa
+        - asia
+        - europe
+        - north-america
+        - south-america
+        - antarctica
+        - oceania
+      # READ ME: all parameters related to pagination and sorting commented out temporary.
+      #          KSQL does not support pagination, so it does not make sense to implement it now.
+      # next_page_token:
+      #   type: string
+      #   description: The token that is to be used in a request to get the next page of data centers.
+  data_centers:
+    description: A list of data centers.
+    type: object
+    required:
+      - items
+    properties:
+      items:
+        type: array
+        items:
+          $ref: '#/definitions/data_center'
+  data_center:
+    type: object
+    required:
+      - id
+      - name
+      - path
+      - partner_id
+      - location
+      - available
+      - qualities
+    properties:
+      id:
+        description: The unique identifier of the data center
+        type: string
+      name:
+        description: A human-readable name
+        type: string
+        example: paris
+      path:
+        description: The path to the resource that includes all the parents
+        type: string
+        example: /partners/big-partner/data-centers/paris
+      partner_id:
+        description: The unique identifier of the partner who is offering this data center.
+        type: string
+      location:
+        $ref: '#/definitions/location'
+      available:
+        type: boolean
+        description: Indicates if this data center is currently available for use
+      qualities:
+        $ref: '#/definitions/quality_set'
+  partners:
+    description: A list of partners.
+    type: object
+    required:
+      - items
+    properties:
+      items:
+        type: array
+        items:
+          $ref: '#/definitions/partner'
+  partner:
+    description: The description of a partner
+    type: object
+    required:
+      - id
+      - name
+      - path
+      - data_centers
+    properties:
+      id:
+        description: A unique identifier of the partner
+        type: string
+      name:
+        description: A human-readable unique name
+        type: string
+      display_name:
+        description: A human-readable display name of partner
+        type: string
+      path:
+        description: The path to the partner
+        type: string
+        example: /partners/big-partner
+      data_centers:
+        description: The data centers that are offered by this partner. A data center could, for example, be a data center or a set of servers with a certain property within a data center.
+        type: array
+        items:
+          description: A unique identifier of a data center
+          type: string
+      website:
+        type: string
+        format: url
+        example: https://www.partner.com
+  area:
+    type: object
+    required:
+      - country
+    properties:
+      country:
+        description: The 2 letter country code according to ISO-3166-1
+        type: string
+      state_or_province:
+        description: The country subdivision code according to ISO-3166-2
+        type: string
+  client:
+    # FIXME (misha): Parameters of client: pricing
+    type: object
+    required:
+      - client_id
+    properties:
+      client_id:
+        type: string
+        description: The unique identifier of a client.
+      data_centers:
+        description: The data centers that are allowed by the partner
+        type: array
+        x-nullable: true
+        items:
+          description: A unique identifier of a data center
+          type: string
+  client_update:
+    type: object
+    properties:
+      data_centers:
+        $ref: "#/definitions/data_centers_update"
+  data_centers_update:
+    description: The data centers that are allowed by the partner
+    items:
+      description: A unique identifier of a data center
+      type: string
+    type: array
+    x-go-type:
+      type: DataCentersArray
+      import:
+        package: go.tectonic.network/kraken/api/custom
+  qualities:
+    description: The list of all qualities defined in the system, organized in thematic sections
+    type: array
+    items:
+      $ref: '#/definitions/quality_section'
+  quality_section:
+    description: A thematic section containing quality definitions
+    type: object
+    required:
+      - display_name
+      - qualities
+    properties:
+      display_name:
+        description: The display name of the section
+        type: string
+      qualities:
+        description: The list of qualities in the section
+        type: array
+        items:
+          $ref: '#/definitions/quality'
+  quality:
+    description: A single quality defined in the system
+    type: object
+    required:
+      - id
+      - display_name
+    properties:
+      id:
+        description: A unique identifier of the quality
+        type: string
+      display_name:
+        description: The display name of the quality
+        type: string
+      scope:
+        description: Specifies whether the quality applies to data centers or VMs. Omitted for mixed-scope bundles.
+        type: string
+        enum:
+        - data_center
+        - vm
+      values:
+        description: If specified, the quality has values, with either bigger or smaller numbers considered preferable
+        type: string
+        enum:
+        - more-is-better
+        - less-is-better
+      unit:
+        description: The optional measurement unit of the quality values
+        type: string
+      bundle:
+        description: If specified, the quality is a bundle containing the given qualities
+        $ref: '#/definitions/quality_set'
+  quality_set:
+    description: A set of provided qualities. The object maps quality identifiers to values. For qualities defined with no values, the value must be 1. See https://api.ridge.co/compute/v1alpha/qualities for possible properties.
+    type: object
+    additionalProperties:
+      type: integer
+  quantities:
+    description: The list of all quantities defined in the system
+    type: array
+    items:
+      $ref: '#/definitions/quantity'
+  quantity:
+    description: A single quantity defined in the system
+    type: object
+    required:
+      - id
+      - display_name
+      - scope
+      - pricing_unit
+    properties:
+      id:
+        description: A unique identifier of the quantity
+        type: string
+      display_name:
+        description: The display name of the quantity
+        type: string
+      scope:
+        description: Specifies whether the quantity applies to orders, VMs or volumes.
+        type: string
+        enum:
+        - order
+        - vm
+        - volume
+      unit:
+        description: The optional measurement unit of the quantity values
+        type: string
+        enum:
+        - bytes
+      pricing_unit:
+        description: The basic amount of the quantity for which prices are expressed
+        type: integer
+  quantity_set:
+    description: A set of quantities. The object maps quantity identifiers to values. See https://api.ridge.co/compute/v1alpha/quantities for possible properties.
+    type: object
+    additionalProperties:
+      type: integer
+  vm_price_set:
+    description: A set of VM catalog item prices. The object maps resource identifiers to price.
+    type: object
+    additionalProperties:
+      type: string
+    example:
+      vms: "0.123"
+      cpu_cores: "0.12"
+      ram: "0.012"
+      ephemeral_storage: "0.00123"
+  data_center_price_set:
+    description: A set of data center resource prices. The object maps resource identifiers to price.
+    type: object
+    additionalProperties:
+      type: string
+    example:
+      networks: "0.123"
+      gateways: "0.12"
+      forwarders: "0.012"
+      persistent_storage: "0.00123"
