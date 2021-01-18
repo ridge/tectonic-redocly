@@ -1,27 +1,27 @@
 api:
   - page: api/index.md
   - group: Ridge Kubernetes Service (RKS)
-    expanded: true
+    expanded: false
     pages:
       - label: rks
         page: api/rks.page.yaml/*
   - group: Ridge Container Service (RCS)
-    expanded: true
+    expanded: false
     pages:
       - label: rcs
         page: api/rcs.page.yaml/*
   - group: Identity and Authorization Management (IAM)
-    expanded: true
+    expanded: false
     pages:
       - label: iam
         page: api/iam.page.yaml/*
   - group: Data Centers
-    expanded: true
+    expanded: false
     pages:
       - label: compute
         page: api/compute.page.yaml/*
   - group: External Credentials
-    expanded: true
+    expanded: false
     pages:
       - label: compute
         page: api/keying.page.yaml/*
