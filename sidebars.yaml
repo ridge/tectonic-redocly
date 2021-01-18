@@ -24,4 +24,4 @@ api:
     expanded: true
     pages:
       - label: compute
-        page: api/keystring.page.yaml/*
+        page: api/keying.page.yaml/*
