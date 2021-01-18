@@ -23,5 +23,5 @@ api:
   - group: External Credentials
     expanded: false
     pages:
-      - label: compute
+      - label: keying
         page: api/keying.page.yaml/*
