@@ -9,7 +9,7 @@ oasDefinitions:
   rcs: ./api/rcs.yaml
   iam: ./api/iam.yaml
   compute: ./api/compute.yaml
-  keyring: ./api/keyring.yaml
+  keying: ./api/keyring.yaml
 stylesheets:
   - https://fonts.googleapis.com/css?family=Roboto+Mono:300,400,600,700
   - https://fonts.googleapis.com/css?family=Nunito+Sans:300,400,600,700&display=swap
