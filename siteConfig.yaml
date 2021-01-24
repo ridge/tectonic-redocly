@@ -20,6 +20,10 @@ stylesheets:
 #scripts:
 #  - ./static/intercom.js
 nav:
+  - label: Getting Started
+    page: getting-started/index.md
+  - label: Docs
+    page: docs/index.md
   - label: API Reference
     page: api/index.md
   - search: true
@@ -37,7 +41,5 @@ footer:
           href: 'https://www.ridge.co/legal/eula'
     - group: Support
       items:
-        - label: FAQ
-          page: faq.md
         - label: Contact us
-          page: contact.mdx
+          href: 'https://www.ridge.co/contact-us'
