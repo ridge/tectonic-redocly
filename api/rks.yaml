@@ -2,7 +2,8 @@ swagger: "2.0"
 info:
   version: v1alpha
   title: Ridge Kubernetes Service - API
-  description: An API for the Managed Kubernetes Service
+  description:
+    $ref: rks-overview.md
 basePath: /rks/v1alpha
 host: api.ridge.co
 schemes:
@@ -455,7 +456,7 @@ paths:
     get:
       operationId: listClusterNodes
       summary: List the Worker Nodes of a Kubernetes Cluster
-      description: Returns a list of the worker nodes of the specified Kubernetes cluster. 
+      description: Returns a list of the worker nodes of the specified Kubernetes cluster.
       tags:
         - Nodes
       parameters:
@@ -1550,7 +1551,7 @@ definitions:
         type: string
         format: ipv4
         x-nullable: true
-      whitelist:        
+      whitelist:
         type: array
         x-nullable: true
         items:
