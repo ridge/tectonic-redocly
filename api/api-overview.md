@@ -1,10 +1,10 @@
 ﻿
 
-# Introduction
+# Introduction to the Ridge API
 
 This guide explains the core concepts necessary for working with the Ridge API.
 
-# API Token
+## API Token
 
 The Ridge API is a RESTFUL API that uses JSON encoding. All API requests must include a token in the header for authentication. The token is obtained using the Ridge API, and placed in the HTTP Authorization request header.
 
@@ -12,10 +12,10 @@ The Ridge API is a RESTFUL API that uses JSON encoding. All API requests must in
 
 Authorization: Bearer <Token<Token>>
 
-# API Variables - Quantities and Qualities
+## API Variables - Quantities and Qualities
 
 In some cases, the input or output fields for an API function are defined as variables named Quantities and Qualities. In these cases, the definition of the variable appears at the bottom of the page that describes the function. (This is, as opposed to the description of non-variable parameters that appear inline.)
-# Resource Management
+## Resource Management
 
 Ridge resources are managed with a hierarchical structure.
 
@@ -23,16 +23,16 @@ Ridge resources are managed with a hierarchical structure.
 
 * Groups are used for conveniently managing access to resources.
 
-## Orgs
+### Orgs
 
 Organizations (Orgs) are the top level of the hierarchy and provide Ridge customers with full visibility of all consumed resources and the ability to segment and manage resources including user management and account administration. Each customer is associated with at least one Org.
 
 
-## Projects
+### Projects
 
 Projects are part of an Organization. Projects provide the ability to logically segment resources within an Org. Projects contain infrastructure resources, (Compute, Network and Storage) that are consumed using Ridge Services. User and/or groups may be granted roles in each project.
 
-## Resource Identifiers
+### Resource Identifiers
 
 Ridge resources can be identified by:
 
@@ -46,21 +46,21 @@ Ridge resources can be identified by:
 
 
 
-## Resource Access Examples
+### Resource Access Examples
 
 In the examples below we perform all the requests in an org named **test-org** and a project named **test-proj**.
 
 
 
-### Access a Resource by Member Name
+#### Access a Resource by Member Name
 
 GET ``https://api.ridge.co/iam/v1alpha/orgs/example-org/members/my-name``
 
-### Access a Resource by ID (prepended by `@`)
+#### Access a Resource by ID (prepended by `@`)
 
 GET ``https://api.ridge.co/iam/v1alpha/orgs/example-org/members/@4536``
 
-### Access All Resources
+#### Access All Resources
 
 To access all resources, include`-` in the path as shown in the example below.
 
@@ -75,7 +75,7 @@ Parameters in the JSON body with the suffix **_path** should be set with the par
 
 
 
-# Display Name
+## Display Name
 
 Each Ridge resource can have an optional **display_name** that is used only for display in the Console.
 
