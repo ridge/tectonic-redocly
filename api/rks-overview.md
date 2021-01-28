@@ -65,7 +65,7 @@ The following can be specified during node pool creation:
 
 Note that if the data center does not have the exact configuration requested, the actual configuration may be different, however it will not be less than the minimum specified here.
 #### Variables: Qualities Used in Node Pool Creation
-**bare_metal:** Requires that the node pool use physical servers only, and not virtual machines, the value must always be `1`.
+- **bare_metal:** Requires that the node pool use physical servers only, and not virtual machines, the value must always be `1`.
 ### Scaling the node pool
 To change the number of nodes in a pool, simply update the desired_node_count. Increasing the number will cause  new nodes to added to the cluster. Decreasing the number will ensure,that when you delete the nodes you no longer need, new nodes will not be creates in their place.
 ## Nodes
