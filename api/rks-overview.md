@@ -20,6 +20,7 @@ Node Presets provide suggested VM specifications for the node. If you specify qu
 
 ## Clusters
 The cluster endpoints are used to manage the entire lifecycle of your kubernetes cluster.
+
 ### Cluster Operations
 The operations that can be performed on Kubernetes Clusters are:
 - List Kubernetes Clusters (GET)
@@ -27,6 +28,7 @@ The operations that can be performed on Kubernetes Clusters are:
 - Describe a Kubernetes Cluster (GET)
 - Update Kubernetes Cluster Parameters (PATCH)
 - Delete a Cluster (DELETE)
+
 
 ### Cluster Creation Details
 To create a kubernetes cluster you need to determine the following:
@@ -36,6 +38,7 @@ To create a kubernetes cluster you need to determine the following:
 - The kubernetes version
 - Whether or not you would like the cluster to be highly available
 - A Whitelist for controlling the source IPs from which the cluster is accessed.
+
 
 #### Variables: Qualities Used in Cluster Creation
 If your cluster requires a specific certification for the data center in which it is created, you can add this as a quality, in the form of `certification_name:1`. The value of this quality is always `1`.
@@ -51,11 +54,14 @@ The operations that can be performed on node pools are:
 - Delete a Node Pool from a Cluster (DELETE)
 - Update Node Pool Parameters (PATCH)
 
+
+
 ### Node Pool Creation Details
 The following can be specified during node pool creation:
 - Quantitive characteristics of the node (e,g, the amount of RAM it should have)
 - Whether or not the node should be a bare metal one
 - Kubernetes labels and taints that should be applied to the nodes
+
 
 #### Variables: Quantities Used in Node Pool Creation
 - **cpu_cores:** The minimal number of CPU cores required for each node.
@@ -64,8 +70,10 @@ The following can be specified during node pool creation:
 - **bandwidth:** The minimal amount of bandwidth required for each node (in Mbps).
 
 Note that if the data center does not have the exact configuration requested, the actual configuration may be different, however it will not be less than the minimum specified here.
+
 #### Variables: Qualities Used in Node Pool Creation
 - **bare_metal:** Requires that the node pool use physical servers only, and not virtual machines, the value must always be `1`.
+
 ### Scaling the node pool
 To change the number of nodes in a pool, simply update the desired_node_count. Increasing the number will cause  new nodes to added to the cluster. Decreasing the number will ensure,that when you delete the nodes you no longer need, new nodes will not be creates in their place.
 ## Nodes
@@ -76,6 +84,7 @@ The operations you can perform on worker nodes are:
 - Get Information About a Worker Node (GET)
 - Shut Down a Worker Node in a Cluster (DELETE)
 
+
 ### Node Status
 A node can be in one of several states. The state can be used as a filter of the node list. The states are:
 -  `starting`
@@ -83,6 +92,7 @@ A node can be in one of several states. The state can be used as a filter of the
 -  `updating`
 -  `terminating`
 -  `terminated`
+
 ## Access Tokens
 Access Tokens are required to access clusters. You can grant and retract tokens. A unique token is required for each member who accesses the cluster.
 ### Operations
