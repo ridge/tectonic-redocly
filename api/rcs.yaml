@@ -2,7 +2,9 @@ swagger: "2.0"
 info:
   version: v1alpha
   title: Ridge Container Service API
-  description: An API for managing containers
+#  description: An API for managing containers
+  description:
+    $ref: rcs-overview.md
 basePath: /rcs/v1alpha
 host: api.ridge.co
 schemes:
@@ -29,7 +31,7 @@ paths:
       summary: Check if API Server is Ready to Serve Requests
       description: If the API server is ready to serve requests, the response code 204 HTTP is returned.
       tags:
-        - API Server Status      
+        - API Server Status
       responses:
         204:
           description: OK
