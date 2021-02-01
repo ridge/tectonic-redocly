@@ -10,8 +10,8 @@ api:
   - group: Ridge Container Service (RCS)
     expanded: false
     pages:
-      - label: Overview
-        page: api/api-overview.md
+      - label: Overview 2
+        page: api/rcs-overview.md
       - label: rcs
         page: api/rcs.page.yaml/*
   - group: Identity and Authorization Management (IAM)
