@@ -11,7 +11,7 @@ api:
     expanded: false
     pages:
       - label: Overview
-        page: api/rcs-overview.md
+        page: api/api-overview.md
       - label: rcs
         page: api/rcs.page.yaml/*
   - group: Identity and Authorization Management (IAM)
