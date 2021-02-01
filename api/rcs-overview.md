@@ -1,7 +1,9 @@
-﻿The RCS API is used to create, manage, and monitor Batches and Containers. The API includes functions for:
+﻿# Ridge Container Service API Overview
+The RCS API is used to create, manage, and monitor Batches and Containers. The API includes functions for:
 -  **Container Presets** - This is a list (read-only) of suggested, predefined Container specifications that you can reference when you create a batch of containers. Alternatively, you can explicitly specify the Container specification: number of CPU Cores, amount of ephemeral storage and RAM.
 -  **Batches** - When you create a batch you will specify at least one pool of worker nodes, and optional location and conformity constraints.
 -  **Containers**- Containers are created when you create or update a batch.
+
 ## Container Presets
 Container Presets provide suggested specifications for the container. If you specify quantity values explicitly when creating a batch of containers, these override any preset values.
 Use **List Container Presets**  to fetch a detailed list of Container Presets.
