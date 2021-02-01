@@ -2,8 +2,7 @@ swagger: "2.0"
 info:
   version: v1alpha
   title: Ridge Kubernetes Service - API
-  description:
-    $ref: rks-overview.md
+  description: An API for the Managed Kubernetes Service
 basePath: /rks/v1alpha
 host: api.ridge.co
 schemes:

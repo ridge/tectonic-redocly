@@ -2,9 +2,7 @@ swagger: "2.0"
 info:
   version: v1alpha
   title: Ridge Container Service API
-#  description: An API for managing containers
-  description:
-    $ref: rcs-overview.md
+  description: An API for managing containers
 basePath: /rcs/v1alpha
 host: api.ridge.co
 schemes:
