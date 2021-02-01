@@ -10,7 +10,7 @@ api:
   - group: Ridge Container Service (RCS)
     expanded: false
     pages:
-      - label: Yael
+      - label: Overview
         page: api/rcs-overview.md
       - label: rcs
         page: api/rcs.page.yaml/*
