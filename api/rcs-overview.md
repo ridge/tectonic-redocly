@@ -57,7 +57,7 @@ For example:
 `"hipaa": 1` requires that the data center have HIPAA certification.
 
 
-A full list of available certifications can be found on the `/qualities` endpoint of the data center API .
+Use the qualities endpoint in the Data Center API to get the list of certifications.
 
 ### Updating Batch Parameters
 The batch parameters that can be updated are:
