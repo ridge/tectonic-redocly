@@ -43,7 +43,7 @@ To create a kubernetes cluster you need to determine the following:
 #### Variables: Qualities Used in Cluster Creation
 If your cluster requires a specific certification for the data center in which it is created, you can add this as a quality, in the form of `certification_name:1`. The value of this quality is always `1`.
 For example: `iso_27001: 1` requires that the data center have ISO 27001 certification.
-Use the qualities endpoint in the data center API to het the list of certifications.
+Use the qualities endpoint in the Data Center API to get the list of certifications.
 
 ## Node Pools
 Node pools are a set of nodes (VMs), with a common configuration. They may have a set of Kubernetes labels and taints applied to them, which may be used during pod scheduling.
@@ -59,7 +59,7 @@ The operations that can be performed on node pools are:
 ### Node Pool Creation Details
 The following can be specified during node pool creation:
 - Quantitive characteristics of the node (e,g, the amount of RAM it should have)
-- Whether or not the node should be a bare metal one
+- Whether or not the node should be bare metal
 - Kubernetes labels and taints that should be applied to the nodes
 
 #### Variables: Quantities Used in Node Pool Creation
@@ -73,7 +73,7 @@ Note that if the data center does not have the exact configuration requested, th
 - **bare_metal:** Requires that the node pool use physical servers only, and not virtual machines, the value must always be `1`.
 
 ### Scaling the node pool
-To change the number of nodes in a pool, simply update the desired_node_count. Increasing the number will cause  new nodes to added to the cluster. Decreasing the number will ensure,that when you delete the nodes you no longer need, new nodes will not be creates in their place.
+To change the number of nodes in a pool, simply update the desired_node_count. Increasing the number will cause new nodes to added to the cluster. Decreasing the number will ensure,that when you delete the nodes you no longer need, new nodes will not be creates in their place.
 
 ## Nodes
 The nodes that were created as part of a node pool.
