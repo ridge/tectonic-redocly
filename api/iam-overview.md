@@ -1,0 +1,9 @@
+﻿# Ridge IAM API Overview
+The Identity and Access Management API is used to manage the following IAM entities:
+-  **Org**  - Org stands for organization throughout the API. An org represents a customer organization.
+-  **Project** - Projects group the resources that the org consumed from the Ridge cloud. As such they also provide an administrative tool for access control. For example, you may grant a user from your organization access to just one project. The API allows you to create, update and delete projects, subject to the access control policy,
+-  **Role**- A role represents a predefined set of actions. When a subject is granted the role in a context, the subject can execute these actions in the defined context. The API provides an endpoint for listing the predefined roles in the Ridge cloud.
+- **Member**- A member is either a user that can be identified with an external IdP or an application that needs to use the Ridge API.Use the API to invite new users, create an identity for an application and remove them if needed. Once created, you may assign the member to a group or grant him privileges that will allow him to perform actions on the Ridge cloud.
+- **Group** - It is highly recommended to group members. This allows you to manage the privileges once, at the group level rather than for each individual member. The API offers endpoints for CRUD operations in addition to adding and removing members and privileges.
+- **Policy**- A policy is a combination of a subject (member or group) and a role. The API allows you to manage policies. Each policy applies to an org or a project.
+- **API key**- The API allows you to manage API keys for apps. When you create an API key for an app, the response includes the key itself. This is the only API call that returns the key.  You may also use the API to  view and update the key’s name and display name as well as delete it. User keys can be managed from the console.
