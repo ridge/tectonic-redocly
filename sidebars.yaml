@@ -14,9 +14,11 @@ api:
         page: api/rcs-overview.md
       - label: rcs
         page: api/rcs.page.yaml/*
-  - group: Identity and Authorization Management (IAM)
+  - group: Identity and Access Management (IAM)
     expanded: false
     pages:
+      - label: Overview
+        page: api/iam-overview.md
       - label: iam
         page: api/iam.page.yaml/*
   - group: Data Centers
