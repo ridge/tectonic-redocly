@@ -21,7 +21,7 @@ stylesheets:
 #  - ./static/intercom.js
 nav:
   - label: Getting Started
-    page: getting-started/index.md
+    page: Getting Started/index.md
   - label: Docs
     page: docs/index.md
   - label: API Reference
