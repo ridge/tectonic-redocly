@@ -2,7 +2,7 @@ swagger: "2.0"
 info:
   version: v1alpha
   title: IAM API
-  description: An API for for access management
+  description: An API for identity and access management
 basePath: /iam/v1alpha
 schemes:
   - https
@@ -11,22 +11,29 @@ consumes:
 produces:
   - application/json
 tags:
-  - name: Orgs
-    description: Operations on orgs
+# admin and Me tags are omitted as will not be documented
   - name: API Server Status
     description: An API for checking the server status
   - name: Roles
     description: The predefined roles.
+  - name: Organizations
+    description: Operations on organizations
+  - name: Organization Policies
+    description: Operations for managing organization policies
   - name: Projects
     description: Operations for managing projects
   - name: Project Policies
     description: Operations for managing project policies
-  - name: Org Policies
-    description: Operations for managing org policies
   - name: Groups
     description: Operations for managing groups of members
   - name: Members
     description: Operations for managing members
+  # - name: Partners
+  #   description: Operations on partners
+  # - name: Partner Policies
+  #   description: Operations for managing partner policies
+  - name: My User
+    description: Operations for managing your identity and credentials
 paths:
   /status:
     get:
@@ -54,10 +61,10 @@ paths:
           description: Success
           schema:
             $ref: '#/definitions/roles'
-  # /orgs:
+  /orgs:
     # get:
     #   operationId: listOrgs
-    #   summary: List the orgs.
+    #   summary: List the organizations.
     #   tags:
     #     - admin
     #   responses:
@@ -75,7 +82,7 @@ paths:
     #         type: string
     # post:
     #   operationId: createOrg
-    #   summary: Create an org
+    #   summary: Create an organization
     #   tags:
     #     - admin
     #   parameters:
@@ -105,15 +112,15 @@ paths:
     parameters:
       - name: org
         in: path
-        description: The org identifier
+        description: The organization identifier
         required: true
         type: string
     get:
       operationId: describeOrg
-      summary: Describe an org
-      description: Get information about an org.
+      summary: Describe an organization
+      description: Get information about an organization.
       tags:
-        - Orgs
+        - Organizations
       responses:
         200:
           description: OK
@@ -137,7 +144,7 @@ paths:
             type: string
     # delete:
     #   operationId: deleteOrg
-    #   summary: Delete an org
+    #   summary: Delete an organization
     #   tags:
     #     - admin
     #   responses:
@@ -163,7 +170,7 @@ paths:
       operationId: updateOrg
       summary: Update an org
       tags:
-        - Orgs
+        - Organizations
       parameters:
       - in: body
         name: body
@@ -195,13 +202,13 @@ paths:
     parameters:
       - name: org
         in: path
-        description: The org identifier
+        description: The organization identifier
         required: true
         type: string
     get:
       operationId: listProjects
       summary: List projects
-      description: List the projects of an org.
+      description: List the projects of an organization.
       tags:
         - Projects
       responses:
@@ -266,7 +273,7 @@ paths:
         type: string
       - name: org
         in: path
-        description: The org identifier
+        description: The organization identifier
         required: true
         type: string
     get:
@@ -336,6 +343,15 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/project'
+          examples:
+            application/json:
+              id: g3ker86kt6mir8rbczwkyjotpe
+              name: manhattan
+              path: "/orgs/test-org/projects/manhattan"
+              org_id: di86ihycue5875pb7d5ybfhn9r
+              display_name: Manhattan
+              created_at: '2020-07-15T14:46:47.944Z'
+              updated_at: '2021-02-15T12:44:23.564Z'
         400:
           description: Invalid request parameters
           schema:
@@ -361,7 +377,7 @@ paths:
         type: string
       - name: org
         in: path
-        description: The org identifier
+        description: The organization identifier
         required: true
         type: string
     get:
@@ -375,6 +391,20 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/policies'
+          examples:
+            application/json:
+              items:
+                - id: ygjibwfaycx47k4e3y3m8mrmzo
+                  path: "/orgs/test-org/projects/sandbox/policies/@ygjibwfaycx47k4e3y3m8mrmzo"
+                  org_id: di86ihycue5875pb7d5ybfhn9r
+                  project_id: g3ker86kt6mir8rbczwkyjotpe
+                  object_type: project
+                  object_path: "/orgs/test-org/projects/sandbox"
+                  member_id: icwdxdd37bxw5bojsgkp6x3p6e
+                  subject_type: member
+                  subject_path: "/orgs/test-org/members/bot"
+                  role_path: "/roles/project-admin"
+                  created_at: '2021-01-14T12:28:21.609Z'
         400:
           description: Invalid request parameters
           schema:
@@ -408,6 +438,19 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/policy'
+          examples:
+            application/json:
+              id: pguktgf9s9swukjn4m1sh5adqe
+              path: "/orgs/test-org/projects/sandbox/policies/@pguktgf9s9swukjn4m1sh5adqe"
+              org_id: di86ihycue5875pb7d5ybfhn9r
+              project_id: g3ker86kt6mir8rbczwkyjotpe
+              object_type: project
+              object_path: "/orgs/test-org/projects/sandbox"
+              member_id: t1fdw9f44d9jj99psnt3bgyh7w
+              subject_type: member
+              subject_path: "/orgs/test-org/members/my-bot"
+              role_path: "/roles/project-operator"
+              created_at: '2021-02-17T16:50:06.701Z'
         400:
           description: Bad request parameter
           schema:
@@ -438,7 +481,7 @@ paths:
         type: string
       - name: org
         in: path
-        description: The org identifier
+        description: The organization identifier
         required: true
         type: string
     delete:
@@ -470,20 +513,53 @@ paths:
     parameters:
       - name: org
         in: path
-        description: The org identifier
+        description: The organization identifier
         required: true
         type: string
     get:
       operationId: listOrgPolicies
       summary: List policies
-      description: List the access policies that apply to the org.
+      description: List the access policies that apply to the organization.
       tags:
-        - Org Policies
+        - Organization Policies
       responses:
         200:
           description: OK
           schema:
             $ref: '#/definitions/policies'
+          examples:
+            application/json:
+              items:
+              - id: m337qtsrm4qu1gr9qkqoucusao
+                path: "/orgs/test-org/policies/@m337qtsrm4qu1gr9qkqoucusao"
+                org_id: di86ihycue5875pb7d5ybfhn9r
+                object_type: org
+                object_path: "/orgs/test-org"
+                group_id: yhyh6d6pdfoz5hndc6a4ka6bpw
+                subject_type: group
+                subject_path: "/orgs/test-org/groups/admins"
+                role_path: "/roles/org-admin"
+                created_at: '2020-12-23T13:24:26.743Z'
+              - id: wcswmjx88o6md9nfdbnq6gfp5y
+                path: "/orgs/test-org/policies/@wcswmjx88o6md9nfdbnq6gfp5y"
+                org_id: di86ihycue5875pb7d5ybfhn9r
+                object_type: org
+                object_path: "/orgs/test-org"
+                member_id: b8zsucjct9kth71jrgzgeqc6jr
+                subject_type: member
+                subject_path: "/orgs/test-org/members/@b8zsucjct9kth71jrgzgeqc6jr"
+                role_path: "/roles/org-admin"
+                created_at: '2020-12-28T10:32:57.644Z'
+              - id: t1zd1hju38jo7ob5qna5uh9jdr
+                path: "/orgs/test-org/policies/@t1zd1hju38jo7ob5qna5uh9jdr"
+                org_id: di86ihycue5875pb7d5ybfhn9r
+                object_type: org
+                object_path: "/orgs/test-org"
+                member_id: cp77fibtdomuy1ph9pucqb1ohy
+                subject_type: member
+                subject_path: "/orgs/test-org/members/@cp77fibtdomuy1ph9pucqb1ohy"
+                role_path: "/roles/org-admin"
+                created_at: '2020-07-23T06:48:00.023Z'
         400:
           description: Invalid request parameters
           schema:
@@ -503,9 +579,9 @@ paths:
     post:
       operationId: createOrgPolicy
       summary: Create a policy
-      description: Create an access policy for the org.
+      description: Create an access policy for the organization.
       tags:
-        - Org Policies
+        - Organization Policies
       parameters:
       - in: body
         name: body
@@ -517,6 +593,18 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/policy'
+          examples:
+            application/json:
+              id: m337qtsrm4qu1gr9qkqoucusao
+              path: "/orgs/test-org/policies/@m337qtsrm4qu1gr9qkqoucusao"
+              org_id: di86ihycue5875pb7d5ybfhn9r
+              object_type: org
+              object_path: "/orgs/test-org"
+              group_id: yhyh6d6pdfoz5hndc6a4ka6bpw
+              subject_type: group
+              subject_path: "/orgs/test-org/groups/admins"
+              role_path: "/roles/org-admin"
+              created_at: '2020-12-23T13:24:26.743Z'
         400:
           description: Bad request parameter
           schema:
@@ -542,15 +630,15 @@ paths:
         type: string
       - name: org
         in: path
-        description: The org identifier
+        description: The organization identifier
         required: true
         type: string
     delete:
       operationId: deleteOrgPolicy
       summary: Delete a policy
-      description: Delete an org's access policy.
+      description: Delete an organization's access policy.
       tags:
-        - Org Policies
+        - Organization Policies
       responses:
         204:
           description: OK
@@ -574,13 +662,13 @@ paths:
     parameters:
       - name: org
         in: path
-        description: The org identifier
+        description: The organization identifier
         required: true
         type: string
     get:
       operationId: listOrgGroups
       summary: List groups
-      description: List the member groups of an org.
+      description: List the member groups of an organization.
       tags:
         - Groups
       responses:
@@ -607,7 +695,7 @@ paths:
     post:
       operationId: createOrgGroup
       summary: Create a group
-      description: Create a group of members. Specify a name and an optional display name.
+      description: Create a group of members.
       tags:
         - Groups
       parameters:
@@ -646,7 +734,7 @@ paths:
         required: true
       - name: org
         in: path
-        description: The org identifier
+        description: The organization identifier
         required: true
         type: string
     get:
@@ -692,6 +780,16 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/group'
+          examples:
+            application/json:
+              id: yhyh6d6pdfoz5hndc6a4ka6bpw
+              name: admins
+              path: "/orgs/test-org/groups/admins"
+              realm_type: org
+              org_id: di86ihycue5875pb7d5ybfhn9r
+              created_at: '2020-12-23T13:24:21.750Z'
+              updated_at: '2021-02-23T17:12:09.645Z'
+              display_name: Admins
         400:
           description: Invalid request parameters
           schema:
@@ -741,7 +839,7 @@ paths:
         required: true
       - name: org
         in: path
-        description: The org identifier
+        description: The organization identifier
         required: true
         type: string
     get:
@@ -754,6 +852,19 @@ paths:
           description: Success
           schema:
             $ref: '#/definitions/policies'
+          examples:
+            application/json:
+              items:
+              - id: m337qtsrm4qu1gr9qkqoucusao
+                path: "/orgs/test-org/policies/@m337qtsrm4qu1gr9qkqoucusao"
+                org_id: di86ihycue5875pb7d5ybfhn9r
+                object_type: org
+                object_path: "/orgs/test-org"
+                group_id: yhyh6d6pdfoz5hndc6a4ka6bpw
+                subject_type: group
+                subject_path: "/orgs/test-org/groups/admins"
+                role_path: "/roles/org-admin"
+                created_at: '2020-12-23T13:24:26.743Z'
         400:
           description: Invalid request parameters
           schema:
@@ -786,6 +897,18 @@ paths:
           description: Success
           schema:
             $ref: '#/definitions/policy'
+          examples:
+            application/json:
+              id: m337qtsrm4qu1gr9qkqoucusao
+              path: "/orgs/test-org/policies/@m337qtsrm4qu1gr9qkqoucusao"
+              org_id: di86ihycue5875pb7d5ybfhn9r
+              object_type: org
+              object_path: "/orgs/test-org"
+              group_id: yhyh6d6pdfoz5hndc6a4ka6bpw
+              subject_type: group
+              subject_path: "/orgs/test-org/groups/admins"
+              role_path: "/roles/org-admin"
+              created_at: '2020-12-23T13:24:26.743Z'
         400:
           description: Bad request parameter
           schema:
@@ -811,7 +934,7 @@ paths:
         required: true
       - name: org
         in: path
-        description: The org identifier
+        description: The organization identifier
         required: true
         type: string
     get:
@@ -887,7 +1010,7 @@ paths:
         required: true
       - name: org
         in: path
-        description: The org identifier
+        description: The organization identifier
         required: true
         type: string
     get:
@@ -944,13 +1067,13 @@ paths:
     parameters:
       - name: org
         in: path
-        description: The org identifier
+        description: The organization identifier
         required: true
         type: string
     get:
       operationId: listOrgMembers
       summary: List members
-      description: List the members of an org.
+      description: List the members of an organization.
       tags:
         - Members
       responses:
@@ -977,7 +1100,7 @@ paths:
     post:
       operationId: createOrgMember
       summary: Add a member
-      description: Add an application or invite a user to an org. Note that a separate call to /orgs/{org}/members/{member}/invitation/send is necessary to send the invitation email.
+      description: Add an application or invite a user to an organization. Note that a separate call to /orgs/{org}/members/{member}/invitation/send is necessary to send the invitation email.
       tags:
         - Members
       parameters:
@@ -1016,7 +1139,7 @@ paths:
         required: true
       - name: org
         in: path
-        description: The org identifier
+        description: The organization identifier
         required: true
         type: string
     get:
@@ -1048,7 +1171,7 @@ paths:
     patch:
       operationId: updateOrgMember
       summary: Update a member
-      description: Update the properties of a member. This only applies to members of type `aap`.
+      description: Update the properties of a member. This only applies to members of type `app`.
       tags:
         - Members
       parameters:
@@ -1062,6 +1185,17 @@ paths:
           description: Success
           schema:
             $ref: '#/definitions/member'
+          examples:
+            application/json:
+              created_at: '2021-02-15T12:57:39.601Z'
+              display_name: New Name
+              id: cymuwhd4dzi6pmtr5oyhue99jh
+              name: new_bame
+              org_id: di86ihycue5875pb7d5ybfhn9r
+              path: "/orgs/test-org/members/new_name"
+              realm_type: org
+              type: app
+              updated_at: '2021-02-15T13:57:49.601Z'
         400:
           description: Bad request parameter
           schema:
@@ -1081,7 +1215,7 @@ paths:
     delete:
       operationId: deleteOrgMember
       summary: Delete a member
-      description: Remove a member from the org.
+      description: Remove a member from the organization.
       tags:
         - Members
       responses:
@@ -1112,7 +1246,7 @@ paths:
         required: true
       - name: org
         in: path
-        description: The org identifier
+        description: The organization identifier
         required: true
         type: string
     get:
@@ -1183,7 +1317,7 @@ paths:
         required: true
       - name: org
         in: path
-        description: The org identifier
+        description: The organization identifier
         required: true
         type: string
     get:
@@ -1229,6 +1363,18 @@ paths:
           description: Success
           schema:
             $ref: '#/definitions/policy'
+          examples:
+            application/json:
+              id: umf6zxhohm94xpxhpc61y78o6c
+              path: "/orgs/test-org/policies/@umf6zxhohm94xpxhpc61y78o6c"
+              org_id: di86ihycue5875pb7d5ybfhn9r
+              object_type: org
+              object_path: "/orgs/test-org"
+              member_id: cymuwhd4dzi6pmtr5oyhue99jh
+              subject_type: member
+              subject_path: "/orgs/test-org/members/app1"
+              role_path: "/roles/org-admin"
+              created_at: '2021-02-21T16:15:09.263Z'
         400:
           description: Bad request parameter
           schema:
@@ -1254,13 +1400,13 @@ paths:
         required: true
       - name: org
         in: path
-        description: The org identifier
+        description: The organization identifier
         required: true
         type: string
     get:
       operationId: listOrgMemberAPIKeys
       summary: List API keys
-      description: List the API keys of a member. This only applies to members of type `aap`.
+      description: List the API keys of a member. This only applies to members of type `app`.
       tags:
         - Members
       responses:
@@ -1287,7 +1433,7 @@ paths:
     post:
       operationId: createOrgMemberAPIKey
       summary: Create an API key
-      description: Create a new API key. This only applies to members of type `aap`.
+      description: Create a new API key. This only applies to members of type `app`.
       tags:
         - Members
       parameters:
@@ -1331,13 +1477,13 @@ paths:
         required: true
       - name: org
         in: path
-        description: The org identifier
+        description: The organization identifier
         required: true
         type: string
     get:
       operationId: describeOrgMemberAPIKey
       summary: Describe an API key
-      description: Retrieve information about a member's API key. This only applies to members of type `aap` and does not return the key itself.
+      description: Retrieve information about a member's API key. This only applies to members of type `app` and does not return the key itself.
       tags:
         - Members
       responses:
@@ -1364,7 +1510,7 @@ paths:
     patch:
       operationId: updateOrgMemberAPIKey
       summary: Update an API key
-      description: Update the name and display name of a member's API key. This only applies to members of type `aap`.
+      description: Update the name and display name of a member's API key. This only applies to members of type `app`.
       tags:
         - Members
       parameters:
@@ -1397,7 +1543,7 @@ paths:
     delete:
       operationId: deleteOrgMemberAPIKey
       summary: Delete an API key
-      description: Delete a member's API key. This only applies to members of type `aap`.
+      description: Delete a member's API key. This only applies to members of type `app`.
       tags:
         - Members
       responses:
@@ -1428,7 +1574,7 @@ paths:
         required: true
       - name: org
         in: path
-        description: The org identifier
+        description: The organization identifier
         required: true
         type: string
     get:
@@ -1467,7 +1613,7 @@ paths:
         required: true
       - name: org
         in: path
-        description: The org identifier
+        description: The organization identifier
         required: true
         type: string
     post:
@@ -1499,12 +1645,12 @@ paths:
   #   parameters:
   #     - name: org
   #       in: path
-  #       description: The org identifier
+  #       description: The organization identifier
   #       required: true
   #       type: string
   #   get:
   #     operationId: describeTransfer
-  #     summary: Get information about the pending org transfer, if any
+  #     summary: Get information about the pending organization transfer, if any
   #     tags:
   #       - admin
   #     responses:
@@ -1530,8 +1676,8 @@ paths:
   #           type: string
   #   post:
   #     operationId: createTransfer
-  #     summary: Create or replace an org transfer request
-  #     description: Used to request a transfer of the org to another partner or to make it a direct customer of Ridge. In both cases the transfer is pending approval of the receiver of the request. An empty partner indicates that the org is being transferred to Ridge.
+  #     summary: Create or replace an organization transfer request
+  #     description: Used to request a transfer of the organization to another partner or to make it a direct customer of Ridge. In both cases the transfer is pending approval of the receiver of the request. An empty partner indicates that the organization is being transferred to Ridge.
   #     tags:
   #       - admin
   #     parameters:
@@ -1563,8 +1709,8 @@ paths:
   #           type: string
   #   delete:
   #     operationId: deleteTransfer
-  #     # By org admin, if they no longer want to join the partner.
-  #     summary: Delete the pending org transfer
+  #     # By org-admin, if they no longer want to join the partner.
+  #     summary: Delete the pending organization transfer
   #     tags:
   #       - admin
   #     responses:
@@ -1590,15 +1736,15 @@ paths:
     parameters:
       - name: org
         in: path
-        description: The org identifier
+        description: The organization identifier
         required: true
         type: string
     get:
       operationId: describeOrgQuota
       summary: Describe quota
-      description: Describe the quota of the org.
+      description: Describe the quota of the organization.
       tags:
-        - Orgs
+        - Organizations
       responses:
         200:
           description: Success
@@ -1620,39 +1766,39 @@ paths:
           description: Resource not found
           schema:
             type: string
-  #   patch:
-  #     operationId: updateOrgQuota
-  #     summary: Update quota
-  #     description: Update the quota of the org.
-  #     tags:
-  #       - admin
-  #     parameters:
-  #       - in: body
-  #         name: body
-  #         required: true
-  #         schema:
-  #           $ref: '#/definitions/quota_update'
-  #     responses:
-  #       200:
-  #         description: Success
-  #         schema:
-  #           $ref: '#/definitions/quota'
-  #       400:
-  #         description: Bad request parameter
-  #         schema:
-  #           type: string
-  #       401:
-  #         description: Unauthorized
-  #         schema:
-  #           type: string
-  #       403:
-  #         description: Forbidden
-  #         schema:
-  #           type: string
-  #       404:
-  #         description: Resource not found
-  #         schema:
-  #           type: string
+    # patch:
+    #   operationId: updateOrgQuota
+    #   summary: Update quota
+    #   description: Update the quota of the organization.
+    #   tags:
+    #     - admin
+    #   parameters:
+    #     - in: body
+    #       name: body
+    #       required: true
+    #       schema:
+    #         $ref: '#/definitions/quota_update'
+    #   responses:
+    #     200:
+    #       description: Success
+    #       schema:
+    #         $ref: '#/definitions/quota'
+    #     400:
+    #       description: Bad request parameter
+    #       schema:
+    #         type: string
+    #     401:
+    #       description: Unauthorized
+    #       schema:
+    #         type: string
+    #     403:
+    #       description: Forbidden
+    #       schema:
+    #         type: string
+    #     404:
+    #       description: Resource not found
+    #       schema:
+    #         type: string
   # /partners:
   #   get:
   #     operationId: listPartners
@@ -1715,7 +1861,7 @@ paths:
   #       type: string
   #   get:
   #     operationId: listClients
-  #     summary: Lis clients
+  #     summary: List clients
   #     description: List the clients of the partner
   #     tags:
   #       - Partner Clients
@@ -1743,7 +1889,7 @@ paths:
   #   post:
   #     operationId: createClient
   #     summary: create client
-  #     description: Create a client org.
+  #     description: Create a client organization.
   #     tags:
   #       - Partner Clients
   #     parameters:
@@ -1778,7 +1924,7 @@ paths:
   #       type: string
   #     - name: client
   #       in: path
-  #       description: The client org identifier
+  #       description: The client organization identifier
   #       required: true
   #       type: string
   #   get:
@@ -1812,7 +1958,7 @@ paths:
   #     operationId: removeClient
   #     # Can be performed by partner admin, Ridge admin
   #     summary: Remove client
-  #     description: Remove the org from the list of clients. The client is converted to a free-standing org.
+  #     description: Remove the organization from the list of clients. The client is converted to a free-standing organization.
   #     tags:
   #       - Partner Clients
   #     responses:
@@ -1883,7 +2029,7 @@ paths:
   #   get:
   #     operationId: describeTransferForPartner
   #     summary: Describe  a transfer
-  #     description: Get information about a pending incoming org transfer.
+  #     description: Get information about a pending incoming organization transfer.
   #     tags:
   #       - Partners
   #     responses:
@@ -1922,7 +2068,7 @@ paths:
   #   post:
   #     operationId: acceptTransfer
   #     summary: Accept transfer
-  #     description: Accept an incoming org transfer.
+  #     description: Accept an incoming organization transfer.
   #     tags:
   #       - Partners
   #     parameters:
@@ -1965,7 +2111,7 @@ paths:
   #   post:
   #     operationId: rejectTransfer
   #     summary: Reject transfer
-  #     description: Reject an incoming org transfer.
+  #     description: Reject an incoming organization transfer.
   #     tags:
   #       - Partners
   #     responses:
@@ -2100,9 +2246,9 @@ paths:
   #   get:
   #     operationId: listPartnerGroups
   #     summary: List groups.
-  #     description: List the member groups of the parter.
+  #     description: List the member groups of the partner.
   #     tags:
-  #       - Partner Groups
+  #       - Groups
   #     responses:
   #       200:
   #         description: Success
@@ -2127,9 +2273,9 @@ paths:
   #   post:
   #     operationId: createPartnerGroup
   #     summary: Create a group
-  #     description: CReate a member group for thr partner.
+  #     description: Create a member group for thr partner.
   #     tags:
-  #       - Partner Groups
+  #       - Groups
   #     parameters:
   #     - in: body
   #       name: body
@@ -2173,7 +2319,7 @@ paths:
   #     operationId: describePartnerGroup
   #     summary: Describe a group
   #     tags:
-  #       - Partner Groups
+  #       - Groups
   #     responses:
   #       200:
   #         description: Success
@@ -2200,7 +2346,7 @@ paths:
   #     summary: Update  a group
   #     description: Update the name and display name of a partner's group.
   #     tags:
-  #       - Partner Groups
+  #       - Groups
   #     parameters:
   #     - in: body
   #       name: body
@@ -2232,7 +2378,7 @@ paths:
   #     operationId: deletePartnerGroup
   #     summary: Delete a group
   #     tags:
-  #       - Partner Groups
+  #       - Groups
   #     responses:
   #       204:
   #         description: OK
@@ -2269,7 +2415,7 @@ paths:
   #     summary: List privileges
   #     description: List the group's privileges.
   #     tags:
-  #       - Partner Groups
+  #       - Groups
   #     responses:
   #       200:
   #         description: Success
@@ -2296,7 +2442,7 @@ paths:
   #     summary: Add privilege
   #     description: Add a privilege to the group.
   #     tags:
-  #       - Partner Groups
+  #       - Groups
   #     parameters:
   #     - in: body
   #       name: body
@@ -2341,7 +2487,7 @@ paths:
   #     summary: List members
   #     description: List the members of a group.
   #     tags:
-  #       - Partner Groups
+  #       - Groups
   #     responses:
   #       200:
   #         description: Success
@@ -2368,7 +2514,7 @@ paths:
   #     summary: Add member
   #     description: Add a member to the group.
   #     tags:
-  #       - Partner Groups
+  #       - Groups
   #     parameters:
   #     - in: body
   #       name: body
@@ -2418,7 +2564,7 @@ paths:
   #     summary: Describe a member
   #     description: Describe a member of a group.
   #     tags:
-  #       - Partner Groups
+  #       - Groups
   #     responses:
   #       200:
   #         description: Success
@@ -2445,7 +2591,7 @@ paths:
   #     summary: Remove member
   #     description: Remove a member from the group.
   #     tags:
-  #       - Partner Groups
+  #       - Groups
   #     responses:
   #       204:
   #         description: OK
@@ -2477,7 +2623,7 @@ paths:
   #     summary: List members
   #     description: List members of the partner.
   #     tags:
-  #       - Partner Members
+  #       - Members
   #     responses:
   #       200:
   #         description: Success
@@ -2504,7 +2650,7 @@ paths:
   #     summary: Add member
   #     description: Add an application or invite a user to a partner. Note that a separate call to /partners/{partner}/members/{member}/invitation/send is necessary to send the invitation email.
   #     tags:
-  #       - Partner Members
+  #       - Members
   #     parameters:
   #     - in: body
   #       name: body
@@ -2549,7 +2695,7 @@ paths:
   #     summary: Describe a member
   #     description: Describe a member of the partner.
   #     tags:
-  #       - Partner Members
+  #       - Members
   #     responses:
   #       200:
   #         description: Success
@@ -2574,9 +2720,9 @@ paths:
   #   patch:
   #     operationId: updatePartnerMember
   #     summary: Update  a member
-  #     description: Update the properties of a member . This only applies to members of type `aap`.
+  #     description: Update the properties of a member . This only applies to members of type `app`.
   #     tags:
-  #       - Partner Members
+  #       - Members
   #     parameters:
   #     - in: body
   #       name: body
@@ -2609,7 +2755,7 @@ paths:
   #     summary: Remove member
   #     description: Remove a member from the partner.
   #     tags:
-  #       - Partner Members
+  #       - Members
   #     responses:
   #       204:
   #         description: OK
@@ -2646,7 +2792,7 @@ paths:
   #     summary: List groups
   #     description: List the groups the member belongs to.
   #     tags:
-  #       - Partner Members
+  #       - Members
   #     responses:
   #       200:
   #         description: Success
@@ -2673,7 +2819,7 @@ paths:
   #     summary: Add to group
   #     description: Add the member to a group.
   #     tags:
-  #       - Partner Members
+  #       - Members
   #     parameters:
   #     - in: body
   #       name: body
@@ -2718,7 +2864,7 @@ paths:
   #     summary: List privilege
   #     description: List the privileges of a member.
   #     tags:
-  #       - Partner Members
+  #       - Members
   #     responses:
   #       200:
   #         description: Success
@@ -2745,7 +2891,7 @@ paths:
   #     summary: Add privilege
   #     description: Add a privilege to a member.
   #     tags:
-  #       - Partner Members
+  #       - Members
   #     parameters:
   #     - in: body
   #       name: body
@@ -2788,9 +2934,9 @@ paths:
   #   get:
   #     operationId: listPartnerMemberAPIKeys
   #     summary: List API keys
-  #     description: List the partner member's API keys. This only applies to members of type `aap`.
+  #     description: List the partner member's API keys. This only applies to members of type `app`.
   #     tags:
-  #       - Partner Members
+  #       - Members
   #     responses:
   #       200:
   #         description: Success
@@ -2815,9 +2961,9 @@ paths:
   #   post:
   #     operationId: createPartnerMemberAPIKey
   #     summary: Create an API key
-  #     description: Create a new API key. This only applies to members of type `aap`.
+  #     description: Create a new API key. This only applies to members of type `app`.
   #     tags:
-  #       - Partner Members
+  #       - Members
   #     parameters:
   #     - in: body
   #       name: body
@@ -2865,9 +3011,9 @@ paths:
   #   get:
   #     operationId: describePartnerMemberAPIKey
   #     summary: Describe an API key
-  #     description: Retrieve information about a member's API key. This only applies to members of type `aap` and does not return the key itself.
+  #     description: Retrieve information about a member's API key. This only applies to members of type `app` and does not return the key itself.
   #     tags:
-  #       - Partner Members
+  #       - Members
   #     responses:
   #       200:
   #         description: Success
@@ -2892,9 +3038,9 @@ paths:
   #   patch:
   #     operationId: updatePartnerMemberAPIKey
   #     summary: Update API key
-  #     description: Update the name or display name of a member's API key. This only applies to members of type `aap`.
+  #     description: Update the name or display name of a member's API key. This only applies to members of type `app`.
   #     tags:
-  #       - Partner Members
+  #       - Members
   #     parameters:
   #     - in: body
   #       name: body
@@ -2925,9 +3071,9 @@ paths:
   #   delete:
   #     operationId: deletePartnerMemberAPIKey
   #     summary: Delete an API key
-  #     description: Delete a member's API key. This only applies to members of type `aap`.
+  #     description: Delete a member's API key. This only applies to members of type `app`.
   #     tags:
-  #       - Partner Members
+  #       - Members
   #     responses:
   #       204:
   #         description: Success
@@ -2964,7 +3110,7 @@ paths:
   #     summary: Create an invitation token
   #     description: Generate an invitation token for a provisional user.
   #     tags:
-  #       - Partner Members
+  #       - Members
   #     responses:
   #       200:
   #         description: Success
@@ -3003,7 +3149,7 @@ paths:
   #     summary: Send an invitation
   #     description: Send an invitation email to a provisional user.
   #     tags:
-  #       - Partner Members
+  #       - Members
   #     responses:
   #       204:
   #         description: Success
@@ -3023,67 +3169,77 @@ paths:
   #         description: Resource not found
   #         schema:
   #           type: string
-  # /me/personal:
-  #   get:
-  #     operationId: getOwnPersonalInfo
-  #     summary: Retrieve the authenticated user's own personal info.
-  #     description: 'Note: Does not apply to apps.'
-  #     tags:
-  #       - Me
-  #     responses:
-  #       200:
-  #         description: Success
-  #         schema:
-  #           $ref: '#/definitions/personal_info'
-  #       400:
-  #         description: Invalid request parameters
-  #         schema:
-  #           type: string
-  #       401:
-  #         description: Unauthorized
-  #         schema:
-  #           type: string
-  #       403:
-  #         description: Forbidden
-  #         schema:
-  #           type: string
-  #       404:
-  #         description: Resource not found
-  #         schema:
-  #           type: string
-  # /me/memberships:
-  #   get:
-  #     operationId: getOwnMemberships
-  #     summary: Retrieve the authenticated user's own memberships in orgs.
-  #     tags:
-  #       - Me
-  #     responses:
-  #       200:
-  #         description: Success
-  #         schema:
-  #           $ref: '#/definitions/members'
-  #       400:
-  #         description: Invalid request parameters
-  #         schema:
-  #           type: string
-  #       401:
-  #         description: Unauthorized
-  #         schema:
-  #           type: string
-  #       403:
-  #         description: Forbidden
-  #         schema:
-  #           type: string
-  #       404:
-  #         description: Resource not found
-  #         schema:
-  #           type: string
+  /me/personal:
+    get:
+      operationId: getOwnPersonalInfo
+      summary: Retrieve the authenticated user's own personal info.
+      description: 'Note: Does not apply to apps.'
+      tags:
+        - My User
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/personal_info'
+        400:
+          description: Invalid request parameters
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
+  /me/memberships:
+    get:
+      operationId: getOwnMemberships
+      summary: Retrieve the authenticated user's own memberships in realms.
+      tags:
+        - My User
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/members'
+          examples:
+            application/json:
+              items:
+                - created_at: '2020-11-17T18:00:50.030Z'
+                  id: as8s7axfrq1q1tyfkw4t56jz1y
+                  org_id: di86ihycue5875pb7d5ybfhn9r
+                  path: "/orgs/test-org/members/@as8s7axfrq1q1tyfkw4t56jz1y"
+                  realm_type: org
+                  type: user
+                  updated_at: '2020-11-17T19:19:13.896Z'
+        400:
+          description: Invalid request parameters
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Resource not found
+          schema:
+            type: string
   #   post:
   #     operationId: join
   #     summary: Join a realm using an invitation token.
   #     description: 'Note: Does not apply to apps.'
   #     tags:
-  #       - Me
+  #       - My User
   #     parameters:
   #     - in: body
   #       name: body
@@ -3117,12 +3273,21 @@ paths:
   #     summary: List the authenticated user's own API keys.
   #     description: Cannot be used when authenticated with an API key.
   #     tags:
-  #       - Me
+  #       - My User
   #     responses:
   #       200:
   #         description: Success
   #         schema:
   #           $ref: '#/definitions/api_keys'
+  #         examples:
+  #           application/json:
+  #             items:
+  #               - id: rgenrmhy1phcmeyinzxxcdcq8a
+  #                 path: "/me/api-keys/eve1"
+  #                 name: eve1
+  #                 display_name: Eve 1
+  #                 created_at: '2021-02-09T08:22:42.235Z'
+  #                 updated_at: '2021-02-09T08:22:42.235Z'
   #       400:
   #         description: Invalid request parameters
   #         schema:
@@ -3144,7 +3309,7 @@ paths:
   #     summary: Create a new API key for the authenticated user.
   #     description: Cannot be used when authenticated with an API key.
   #     tags:
-  #       - Me
+  #       - My User
   #     parameters:
   #     - in: body
   #       name: body
@@ -3184,7 +3349,7 @@ paths:
   #     summary: Retrieve the authenticated user's own API key.
   #     description: Cannot be used when authenticated with an API key.
   #     tags:
-  #       - Me
+  #       - My User
   #     responses:
   #       200:
   #         description: Success
@@ -3211,7 +3376,7 @@ paths:
   #     summary: Update the authenticated user's own API key.
   #     description: Cannot be used when authenticated with an API key.
   #     tags:
-  #       - Me
+  #       - My User
   #     parameters:
   #     - in: body
   #       name: body
@@ -3244,7 +3409,7 @@ paths:
   #     summary: Delete the authenticated user's own API key.
   #     description: Cannot be used when authenticated with an API key.
   #     tags:
-  #       - Me
+  #       - My User
   #     responses:
   #       204:
   #         description: Success
@@ -3359,7 +3524,7 @@ paths:
   #           type: string
   #   patch:
   #     operationId: updateAdminMember
-  #     summary: Update the properties of a member. This only applies to members of type `aap`.
+  #     summary: Update the properties of a member. This only applies to members of type `app`.
   #     tags:
   #       - admin
   #     parameters:
@@ -4046,7 +4211,7 @@ paths:
   #       required: true
   #   get:
   #     operationId: listAdminMemberAPIKeys
-  #     summary: List the API keys of a member. This only applies to members of type `aap`.
+  #     summary: List the API keys of a member. This only applies to members of type `app`.
   #     tags:
   #       - admin
   #     responses:
@@ -4072,7 +4237,7 @@ paths:
   #           type: string
   #   post:
   #     operationId: createAdminMemberAPIKey
-  #     summary: Create a new API key. This only applies to members of type `aap`.
+  #     summary: Create a new API key. This only applies to members of type `app`.
   #     tags:
   #       - admin
   #     parameters:
@@ -4116,7 +4281,7 @@ paths:
   #       required: true
   #   get:
   #     operationId: describeAdminMemberAPIKey
-  #     summary: Retrieve information about a member's API key. This only applies to members of type `aap`and does not retrieve the key itself.
+  #     summary: Retrieve information about a member's API key. This only applies to members of type `app`and does not retrieve the key itself.
   #     tags:
   #       - admin
   #     responses:
@@ -4142,7 +4307,7 @@ paths:
   #           type: string
   #   patch:
   #     operationId: updateAdminMemberAPIKey
-  #     summary: Update the name and display name of a member's API key. This only applies to members of type `aap`.
+  #     summary: Update the name and display name of a member's API key. This only applies to members of type `app`.
   #     tags:
   #       - admin
   #     parameters:
@@ -4174,7 +4339,7 @@ paths:
   #           type: string
   #   delete:
   #     operationId: deleteAdminMemberAPIKey
-  #     summary: Delete a member's API key. This only applies to members of type `aap`.
+  #     summary: Delete a member's API key. This only applies to members of type `app`.
   #     tags:
   #       - admin
   #     responses:
@@ -4211,7 +4376,7 @@ definitions:
         description: A system-defined unique ID of the group.
         type: string
       name:
-        description: The human readable name of the group. The name is unique within the org.
+        description: The human readable name of the group. The name is unique within the organization.
         type: string
         minLength: 1
         maxLength: 63
@@ -4226,7 +4391,7 @@ definitions:
         type: string
         enum: [partner, org, admin]
       org_id:
-        description: The unique identifier of the org, if the group is within one.
+        description: The unique identifier of the organization, if the group is within one.
         type: string
       partner_id:
         description: The unique identifier of the partner, if the group is within one.
@@ -4243,6 +4408,15 @@ definitions:
         description: The display name of the group.
         type: string
         maxLength: 512
+    example:
+      id: yhyh6d6pdfoz5hndc6a4ka6bpw
+      name: admins
+      path: "/orgs/test-org/groups/admins"
+      realm_type: org
+      org_id: di86ihycue5875pb7d5ybfhn9r
+      created_at: '2020-12-23T13:24:21.750Z'
+      updated_at: '2020-12-23T13:24:21.750Z'
+      display_name: admins
   groups:
     description: A list of groups.
     type: object
@@ -4259,7 +4433,7 @@ definitions:
       - name
     properties:
       name:
-        description: The human readable name of the group. The name is unique within the org.
+        description: The human readable name of the group. The name is unique within the organization.
         type: string
         minLength: 1
         maxLength: 63
@@ -4269,6 +4443,7 @@ definitions:
         description: The display name of the group.
         type: string
         maxLength: 512
+        example: admins
   group_update:
     type: object
     properties:
@@ -4277,12 +4452,14 @@ definitions:
         type: string
         maxLength: 512
       name:
-        description: The human readable name of the group. The name is unique within the org.
+        description: The human readable name of the group. The name is unique within the organization.
         type: string
         minLength: 1
         maxLength: 63
         pattern: '^[a-z]([-a-z0-9]*[a-z0-9])?$'
         example: admins
+    example:
+      display_name: Admins
   role:
     description: A role that is defined and managed by the system.
     type: object
@@ -4325,6 +4502,33 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/role'
+    example:
+      items:
+        - name: org-accountant
+          path: "/roles/org-accountant"
+          realm_type: org
+          object_type: org
+          display_name: Organization accountant
+        - name: org-admin
+          path: "/roles/org-admin"
+          realm_type: org
+          object_type: org
+          display_name: Organization administrator
+        - name: org-operator
+          path: "/roles/org-operator"
+          realm_type: org
+          object_type: org
+          display_name: Organization operator
+        - name: project-admin
+          path: "/roles/project-admin"
+          realm_type: org
+          object_type: project
+          display_name: Project administrator
+        - name: project-operator
+          path: "/roles/project-operator"
+          realm_type: org
+          object_type: project
+          display_name: Project operator
   policy:
     type: object
     required:
@@ -4342,9 +4546,9 @@ definitions:
       path:
         description: The path to the resource that includes all the parents
         type: string
-        example: /orgs/acme/projects/manhattan/policies/@42
+        example: /orgs/test-org/projects/manhattan/policies/@42
       org_id:
-        description: The unique identifier of the org, if the policy is within one.
+        description: The unique identifier of the organization, if the policy is within one.
         type: string
       partner_id:
         description: The unique identifier of the partner, if the policy is within one.
@@ -4359,7 +4563,7 @@ definitions:
       object_path:
         description: The path to the policy object.
         type: string
-        example: /orgs/acme/projects/manhattan
+        example: /orgs/test-org/projects/manhattan
       member_id:
         description: The unique identifier of the member, if the subject of the policy is a member.
         type: string
@@ -4373,7 +4577,7 @@ definitions:
       subject_path:
         description: The path to the policy subject.
         type: string
-        example: /orgs/acme/members/@42
+        example: /orgs/test-org/members/@42
       role_path:
         description: The path to the role.
         type: string
@@ -4404,12 +4608,12 @@ definitions:
         description: The unique identifier of the group, if the subject is a group. If specified together with subject_path, they must agree.
         type: string
       org_id:
-        description: The unique identifier of the org.
+        description: The unique identifier of the organization.
         type: string
       subject_path:
         description: The path to the policy subject (member or group). If omitted, one of (member_id, group_id) must be specified.
         type: string
-        example: /orgs/acme/members/@42
+        example: /orgs/test-org/members/@42
       role_path:
         description: The path to the role.
         type: string
@@ -4423,13 +4627,16 @@ definitions:
         description: The unique identifier of the project, if the object is a project. If specified together with object_path, they must agree.
         type: string
       object_path:
-        description: The path to the policy object (partner, org or project). If the object is an org, object_path must be the path to the subject's org or omitted. If the object is a project, then object_path, project_id or both must be specified.
+        description: The path to the policy object (partner, organization or project). If the object is an organization, object_path must be the path to the subject's organization or omitted. If the object is a project, then object_path, project_id or both must be specified.
         type: string
-        example: /partners/dist/orgs/acme/projects/manhattan
+        example: /orgs/test-org
       role_path:
         description: The path to the role.
         type: string
         example: /roles/org-admin
+    example:
+      object_path: /orgs/test-org
+      role: /roles/org-admin
   partner:
     type: object
     required:
@@ -4446,7 +4653,7 @@ definitions:
         minLength: 1
         maxLength: 63
         pattern: '^[a-z]([-a-z0-9]*[a-z0-9])?$'
-        example: acme
+        example: test-org
       path:
         description: The path to the resource that includes all the parents
         type: string
@@ -4474,10 +4681,10 @@ definitions:
       - created_at
     properties:
       id:
-        description: A unique ID of the org.
+        description: A unique ID of the organization.
         type: string
       name:
-        description: The human readable name of the org.
+        description: The human readable name of the organization.
         type: string
         maxLength: 63
         example: acme
@@ -4486,7 +4693,7 @@ definitions:
         type: string
         example: /orgs/acme
       display_name:
-        description: The display name of the org.
+        description: The display name of the organization.
         type: string
         maxLength: 512
       created_at:
@@ -4494,21 +4701,28 @@ definitions:
         type: string
         format: date-time
       updated_at:
-        description: The time at which this org was last updated
+        description: The time at which this organization was last updated
         type: string
         format: date-time
       deleted:
-        description: True if the org is deleted.
+        description: True if the organization is deleted.
         type: boolean
       partner_id:
-        description: The ID of the partner for this org, if any
+        description: The ID of the partner for this organization, if any
         type: string
       partner_path:
-        description: The path to the partner for this org, if any.
+        description: The path to the partner for this organization, if any.
         type: string
         example: /partners/acme
+    example:
+      id: di86ihycue5875pb7d56bfhn9r
+      name: test-org
+      path: "/orgs/test-org"
+      display_name: Test Org
+      created_at: '2020-06-26T17:03:35.059Z'
+      updated_at: '2020-06-26T17:03:35.059Z'
   orgs:
-    description: A list of orgs.
+    description: A list of organizations.
     type: object
     required:
       - items
@@ -4523,26 +4737,29 @@ definitions:
       - name
     properties:
       name:
-        description: The human readable name of the org.
+        description: The human readable name of the organization.
         type: string
         maxLength: 63
         example: acme
       display_name:
-        description: The display name of the org.
+        description: The display name of the organization.
         type: string
         maxLength: 512
   org_update:
     type: object
     properties:
       name:
-        description: The human readable name of the org.
+        description: The human readable name of the organization.
         type: string
         maxLength: 63
         example: acme
       display_name:
-        description: The display name of the org.
+        description: The display name of the organization.
         type: string
         maxLength: 512
+    example:
+      name: test-org
+      display_name: Test Org
   clients:
     type: object
     required:
@@ -4563,7 +4780,7 @@ definitions:
       - partner_path
     properties:
       id:
-        description: The ID of the client, identical to the org ID.
+        description: The ID of the client, identical to the organization ID.
         type: string
       path:
         description: The path of the client.
@@ -4575,7 +4792,7 @@ definitions:
         description: The path of the client partner.
         type: string
       org_path:
-        description: The path of the client org.
+        description: The path of the client organization.
         type: string
   client_create:
     # FIXME (misha): Parameters of client: whitelist, pricing
@@ -4584,12 +4801,12 @@ definitions:
       - name
     properties:
       name:
-        description: The human readable name of the org.
+        description: The human readable name of the organization.
         type: string
         maxLength: 63
         example: acme
       display_name:
-        description: The display name of the org.
+        description: The display name of the organization.
         type: string
         maxLength: 512
   transfers:
@@ -4617,10 +4834,10 @@ definitions:
         type: string
         example: /orgs/acme/transfers/@abcdefghij
       org_id:
-        description: The ID of the org that is requesting a new partner.
+        description: The ID of the organization that is requesting a new partner.
         type: string
       org_path:
-        description: The path of the org that is requesting a new partner.
+        description: The path of the organization that is requesting a new partner.
         type: string
   transfer_accept:
     # FIXME (misha): parameters for acceptance (whitelist, pricing)
@@ -4636,10 +4853,10 @@ definitions:
     type: object
     properties:
       partner_id:
-        description: The ID of the pending new partner for this org.
+        description: The ID of the pending new partner for this organization.
         type: string
       partner_path:
-        description: The path to the pending new partner for this org.
+        description: The path to the pending new partner for this organization.
         type: string
   project:
     type: object
@@ -4663,7 +4880,7 @@ definitions:
         type: string
         example: /orgs/acme/projects/manhattan
       org_id:
-        description: The unique identifier of the org.
+        description: The unique identifier of the organization.
         type: string
       display_name:
         description: The display name of the project.
@@ -4680,6 +4897,14 @@ definitions:
       deleted:
         description: True if the project is deleted.
         type: boolean
+    example:
+      id: g3ker86kt6mir8rbczwkyjotpe
+      name: sandbox
+      path: "/orgs/test-org/projects/sandbox"
+      org_id: di86ihycue5875pb7d5ybfhn9r
+      display_name: Sandbox
+      created_at: '2020-07-15T14:46:47.944Z'
+      updated_at: '2020-07-15T14:46:47.944Z'
   projects:
     description: A list of projects.
     type: object
@@ -4699,11 +4924,12 @@ definitions:
         description: The human readable name of the project.
         type: string
         maxLength: 63
-        example: manhattan
+        example: sandbox
       display_name:
         description: The display name of the project.
         type: string
         maxLength: 512
+        example: Sandbox
   project_update:
     type: object
     properties:
@@ -4716,6 +4942,7 @@ definitions:
         description: The display name of the project.
         type: string
         maxLength: 512
+        example: Manhattan
   member:
     allOf:
     - type: object
@@ -4734,7 +4961,7 @@ definitions:
           type: string
           example: /orgs/acme/members/@42
         org_id:
-          description: The unique ID of the org, if the member is within one.
+          description: The unique ID of the organization, if the member is within one.
           type: string
         partner_id:
           description: The unique identifier of the partner, if the member is within one.
@@ -4764,6 +4991,16 @@ definitions:
           type: string
           format: date-time
     - $ref: '#/definitions/personal_info'
+    example:
+      created_at: '2021-02-15T12:57:39.601Z'
+      display_name: APP 1
+      id: cymuwhd4dzi6pmtr5oyhue99jh
+      name: app1
+      org_id: di86ihycue5875pb7d5ybfhn9r
+      path: "/orgs/test-org/members/app1"
+      realm_type: org
+      type: app
+      updated_at: '2021-02-15T12:57:39.601Z'
   member_update:
     type: object
     properties:
@@ -4771,10 +5008,12 @@ definitions:
         description: The name of the member (apps only).
         type: string
         maxLength: 63
+        example: new_name
       display_name:
         description: The display name of the member (apps only).
         type: string
         maxLength: 512
+        example: New NAme
   members:
     description: A list of members.
     type: object
@@ -4785,6 +5024,27 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/member'
+    example:
+      items:
+        - created_at: '2020-11-17T18:00:50.030Z'
+          id: as8s7axfrq1q1tyfkw4t56jz1y
+          org_id: di86ihycue5875pb7d5ybfhn9r
+          path: "/orgs/test-org/members/@as8s7axfrq1q1tyfkw4t56jz1y"
+          realm_type: org
+          type: user
+          updated_at: '2020-11-17T19:19:13.896Z'
+          email: eve.smith@foo.com
+          full_name: Eve Smith
+          avatar: https://lh3.googleusercontent.com/a-/AOh22Ggvu8zDMuwMBr9p-VleQAEQV703_o5au6hp5COR=s96-c
+        - created_at: '2021-02-15T12:57:39.601Z'
+          display_name: APP 1
+          id: cymuwhd4dzi6pmtr5oyhue99jh
+          name: app1
+          org_id: di86ihycue5875pb7d5ybfhn9r
+          path: "/orgs/test-org/members/app1"
+          realm_type: org
+          type: app
+          updated_at: '2021-02-15T12:57:39.601Z'
   member_create:
     type: object
     required:
@@ -4795,7 +5055,7 @@ definitions:
         type: string
         enum: [invitee, app]
       name:
-        description: The name of the app, if creating an app. Must be unique within the org.
+        description: The name of the app, if creating an app. Must be unique within the organization.
         type: string
         maxLength: 63
       display_name:
@@ -4811,6 +5071,10 @@ definitions:
         description: The full name of the user, if inviting a user.
         type: string
         example: J. Random User
+    example:
+      type: app
+      name: app1
+      display_name: APP 1
   join:
     type: object
     required:
@@ -4837,8 +5101,8 @@ definitions:
       - path
       - group_id
       - group_path
-      - Member_id
-      - Member_path
+      - member_id
+      - member_path
       - created_at
     properties:
       id:
@@ -4866,6 +5130,14 @@ definitions:
         description: The time at which the member was added to the group
         type: string
         format: date-time
+    example:
+      id: t1mf43ywwf6jqb49c14k5eobxy
+      path: "/orgs/test-org/groups/admins/members/@t1mf43ywwf6jqb49c14k5eobxy"
+      group_id: yhyh6d6pdfoz5hndc6a4ka6bpw
+      group_path: "/orgs/test-org/groups/admins"
+      member_id: as8s7axfrq1q1tyfkw4t56jz1y
+      member_path: "/orgs/test-org/members/@as8s7axfrq1q1tyfkw4t56jz1y"
+      created_at: '2021-01-05T17:05:51.329Z'
   group_membership_create:
     type: object
     properties:
@@ -4876,6 +5148,8 @@ definitions:
         description: The path to the member. Either member_id or member_path must be specified; if both are present, they must agree.
         type: string
         example: /orgs/acme/members/@42
+    example:
+      member_id: as8s7axfrq1q1tyfkw4t56jz1y
   member_group_membership_create:
     type: object
     properties:
@@ -4886,6 +5160,8 @@ definitions:
         description: The path to the group. Either group_id or group_path must be specified; if both are present, they must agree.
         type: string
         example: /orgs/acme/groups/admins
+    example:
+      group_path: /orgs/test-org/groups/admins
   personal_info:
     type: object
     properties:
@@ -4902,6 +5178,10 @@ definitions:
         description: URL to the avatar image.
         type: string
         format: uri
+    example:
+      email: eve.smith@foo.com
+      full_name: Eve Smith
+      avatar: https://lh3.googleusercontent.com/a-/AOh22Ggvu8zDMuwMBr9p-VleQAEQV703_o5au6hp5COR=s96-c
   api_keys:
     description: A list of API keys.
     type: object
@@ -4947,6 +5227,14 @@ definitions:
         description: The time at which this API key was last updated.
         type: string
         format: date-time
+    example:
+      id: ch4prd1ckfwjdiaz9f8ttowdww
+      path: "/orgs/test-org/members/app1/api-keys/key1"
+      member_id: cymuwhd4dzi6pmtr5oyhue99jh
+      name: key1
+      display_name: Key 1
+      created_at: '2021-02-21T16:24:42.436Z'
+      updated_at: '2021-02-21T16:24:42.436Z'
   api_key_details:
     description: Properties of an API key, including the auth token.
     allOf:
@@ -4958,6 +5246,15 @@ definitions:
         token:
           description: The secret token for API authentication
           type: string
+    example:
+      id: ch4prd1ckfwjdiaz9f8ttowdww
+      path: "/orgs/test-org/members/app1/api-keys/key1"
+      member_id: cymuwhd4dzi6pmtr5oyhue99jh
+      name: key1
+      display_name: Key 1
+      created_at: '2021-02-21T16:24:42.436Z'
+      updated_at: '2021-02-21T16:24:42.436Z'
+      token: 283a41e1d9f5c954e439c9c4e74b17338cd8711f684cdcf295160da2b9468af16f9acd334477d8cc13e6cb939d38d0c6d87b2f2b4b16ad559727db5ff5ad16d0a774783e56200f8a0ad3b4e7bdd7a28cad68b8189af53566a31ee8b78766bbebcf11bbc2f229f8cacd0f1dc720392e00cdab18061e02527c00a2c87ad7760a873e0d60f46e231fa4c0796f568b5928597a787c4d391ed8ac029d2326db85f1461d0d7fe1978187c84d2d3b68585732dacb5e45c76418a90a01e1398019453c672a39204831c51a0ab59eeea8fbdca4e1d2f328e34234003e79228ed019a773f53c3a2c698cfbfec39e7cc90c0443fb0c23489546190e54b2edace3c121495f29
   api_key_create:
     required:
       - name
@@ -4966,20 +5263,27 @@ definitions:
         description: The name of the API key. Must be unique among the keys of the same user or app.
         type: string
         maxLength: 63
+        example: api_key
       display_name:
         description: The display name of the API key.
         type: string
         maxLength: 512
+        example: API Key
+    example:
+      name: key1
+      display_name: Key 1
   api_key_update:
     properties:
       name:
         description: The name of the API key. Must be unique among the keys of the same user or app.
         type: string
         maxLength: 63
+        example: key1
       display_name:
         description: The display name of the API key.
         type: string
         maxLength: 512
+        example: Key 1
   quota:
     required:
       - limits
@@ -4991,6 +5295,23 @@ definitions:
       usage:
         description: Actual resource usage
         $ref: '#/definitions/quantity_set'
+    example:
+      limits:
+        cpu_cores: 1000
+        ephemeral_storage: 1073741824000
+        networks: 1000
+        public_ips: 1000
+        ram: 1073741824000
+        vms: 1000
+      usage:
+        cpu_cores: 10
+        ephemeral_storage: 182536110080
+        forwarders: 2
+        gateways: 2
+        networks: 2
+        persistent_storage: 6442450944
+        ram: 13958643712
+        vms: 5
   quota_update:
     type: object
     properties:

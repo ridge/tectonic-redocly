@@ -1,11 +1,11 @@
 swagger: "2.0"
 info:
   version: v1alpha
-  title: Compute API
-  description: An API that manage the compute in the Ridge meta-cloud.
+  title: Data Center API
+  description: An API for obtaining information on data centers.
 basePath: /compute/v1alpha
 schemes:
-  - http
+  - https
 consumes:
   - application/json
 produces:
@@ -14,7 +14,8 @@ paths:
   /status:
     get:
       operationId: status
-      summary: Check if API is ready to serve requests. It is if 204 HTTP response code is returned.
+      summary: Check API server status
+      description: Check if API is ready to serve requests. It is if HTTP response code 204 is returned.
       responses:
         204:
           description: OK
@@ -25,7 +26,8 @@ paths:
   /qualities:
     get:
       operationId: listQualities
-      summary: List all qualities defined in the system.
+      summary: List qualities
+      description: List all qualities defined in the system. You can view the list [here](https://api.ridge.co/compute/v1alpha/qualities).
       responses:
         200:
           description: OK
@@ -34,7 +36,8 @@ paths:
   /quantities:
     get:
       operationId: listQuantities
-      summary: List all quantities defined in the system.
+      summary: List quantities
+      description: List all quantities defined in the system. For example, the amount of RAM or the number of VCPUs will be represented as quantities.
       responses:
         200:
           description: OK
@@ -44,6 +47,7 @@ paths:
     get:
       operationId: listPartners
       summary: List partners
+      description: Information about all the partners that offer data centers in the Ridge Cloud.
       # - name: sort_order
       #   in: query
       #   description: The sorting order for get response
@@ -107,7 +111,8 @@ paths:
       required: true
     get:
       operationId: listPartnerDataCenters
-      summary: List partner's data centers
+      summary: List data centers
+      description: Get information about all the data centers that are offered by a Ridge Cloud partner. Note that you can use `-` in place of the partner identifier in the path to retrieve information about akk the data centers from all partners.
       parameters:
         - name: location
           description: The country codes (ISO-3166-1) or country subdivision codes (ISO-3166-2) in which the Data centers reside
@@ -152,7 +157,7 @@ paths:
       required: true
     get:
       operationId: describeDataCenter
-      summary: Describe data center
+      summary: Describe a data center
       responses:
         200:
           description: OK
@@ -184,7 +189,8 @@ paths:
       required: true
     get:
       operationId: describeVMCatalog
-      summary: Describe a data center's VM catalog.
+      summary: Describe a data center's VM catalog
+      description: Retrieve the catalog of a data center. The catalog specifies the different VM offerings along with their prices.
       parameters:
         - name: quality
           description: Specify quality_id or quality_id=value to match only catalog items satisfying the quality requirement. Can be repeated.
@@ -246,73 +252,73 @@ paths:
           description: Resource not found
           schema:
             type: string
-  /partners/{partner}/clients/{client}:
-    parameters:
-      - name: partner
-        in: path
-        description: The partner identifier
-        required: true
-        type: string
-      - name: client
-        in: path
-        description: The client organization identifier
-        required: true
-        type: string
-    get:
-      operationId: describeClient
-      summary: Get list of allowed data center IDs
-      responses:
-        200:
-          description: OK
-          schema:
-            $ref: '#/definitions/client'
-        400:
-          description: Bad request parameter
-          schema:
-            type: string
-        401:
-          description: Unauthorized
-          schema:
-            type: string
-        403:
-          description: Forbidden
-          schema:
-            type: string
-        404:
-          description: Resource not found
-          schema:
-            type: string
-    patch:
-      operationId: updateClient
-      # Can be performed by partner admin, Ridge admin
-      summary: Update client allowed data centers
-      parameters:
-        - in: body
-          name: body
-          required: true
-          schema:
-            $ref: '#/definitions/client_update'
-      responses:
-        200:
-          description: OK
-          schema:
-            $ref: '#/definitions/client'
-        400:
-          description: Bad request parameter
-          schema:
-            type: string
-        401:
-          description: Unauthorized
-          schema:
-            type: string
-        403:
-          description: Forbidden
-          schema:
-            type: string
-        404:
-          description: Resource not found
-          schema:
-            type: string
+  # /partners/{partner}/clients/{client}:
+  #   parameters:
+  #     - name: partner
+  #       in: path
+  #       description: The partner identifier
+  #       required: true
+  #       type: string
+  #     - name: client
+  #       in: path
+  #       description: The client organization identifier
+  #       required: true
+  #       type: string
+  #   get:
+  #     operationId: describeClient
+  #     summary: Get list of allowed data center IDs
+  #     responses:
+  #       200:
+  #         description: OK
+  #         schema:
+  #           $ref: '#/definitions/client'
+  #       400:
+  #         description: Bad request parameter
+  #         schema:
+  #           type: string
+  #       401:
+  #         description: Unauthorized
+  #         schema:
+  #           type: string
+  #       403:
+  #         description: Forbidden
+  #         schema:
+  #           type: string
+  #       404:
+  #         description: Resource not found
+  #         schema:
+  #           type: string
+  #   patch:
+  #     operationId: updateClient
+  #     # Can be performed by partner admin, Ridge admin
+  #     summary: Update client allowed data centers
+  #     parameters:
+  #       - in: body
+  #         name: body
+  #         required: true
+  #         schema:
+  #           $ref: '#/definitions/client_update'
+  #     responses:
+  #       200:
+  #         description: OK
+  #         schema:
+  #           $ref: '#/definitions/client'
+  #       400:
+  #         description: Bad request parameter
+  #         schema:
+  #           type: string
+  #       401:
+  #         description: Unauthorized
+  #         schema:
+  #           type: string
+  #       403:
+  #         description: Forbidden
+  #         schema:
+  #           type: string
+  #       404:
+  #         description: Resource not found
+  #         schema:
+  #           type: string
 definitions:
   vm_catalog:
     type: array
@@ -337,10 +343,28 @@ definitions:
       qualities:
         $ref: '#/definitions/quality_set'
       quantities:
-        $ref: '#/definitions/quantity_set'
+        description: A set of VM catalog item ranges such as amount of cpu, ram, storage
+        $ref: '#/definitions/quantity_range_set'
       prices:
         description: The prices in USD per hour for a machine with these resources.
         $ref: '#/definitions/vm_price_set'
+    example:
+      id: ync51u
+      path: "/partners/medone/data-centers/ptv/vm-catalog/@ync51u"
+      qualities:
+        max_volumes: 1
+      quantities:
+        cpu_cores:
+          min: 1
+          max: 1
+        ephemeral_storage:
+          min: 10737418240
+          max: 10737418240
+        ram:
+          min: 2147483648
+          max: 2147483648
+      prices:
+        vms: '0.044444'
   location:
     type: object
     required:
@@ -419,6 +443,25 @@ definitions:
         description: Indicates if this data center is currently available for use
       qualities:
         $ref: '#/definitions/quality_set'
+    example:
+      id: qk6pua
+      name: tira
+      path: "/partners/medone/data-centers/tira"
+      partner_id: e48rd6
+      location:
+        area:
+          country: IL
+        city: Tirat HaCarmel
+        latitude: '32.750340'
+        longitude: '34.951992'
+        continent: asia
+      available: true
+      qualities:
+        csa_star: 1
+        hipaa: 1
+        iso_27001: 1
+        iso_27017: 1
+        iso_27799: 1
   partners:
     description: A list of partners.
     type: object
@@ -429,6 +472,26 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/partner'
+    example:
+      items:
+      - id: caakd9
+        name: inap
+        display_name: INAP
+        path: "/partners/inap"
+        data_centers:
+        - rg1oeu
+        - m5xxcn
+        - ggif1z
+        - qp9gut
+        website: https://www.inap.com/
+      - id: e48rd6
+        name: medone
+        display_name: MedOne
+        path: "/partners/medone"
+        data_centers:
+        - qk6pua
+        - n6wicf
+        website: https://medone.co.il/
   partner:
     description: The description of a partner
     type: object
@@ -461,6 +524,15 @@ definitions:
         type: string
         format: url
         example: https://www.partner.com
+    example:
+      id: e48rd6
+      name: medone
+      display_name: MedOne
+      path: "/partners/medone"
+      data_centers:
+      - qk6pua
+      - n6wicf
+      website: https://medone.co.il/
   area:
     type: object
     required:
@@ -508,6 +580,26 @@ definitions:
     type: array
     items:
       $ref: '#/definitions/quality_section'
+    example:
+      - display_name: Certifications
+        qualities:
+        - id: gdpr
+          display_name: GDPR
+          scope: resource-pool
+        - id: hipaa
+          display_name: HIPAA
+          scope: resource-pool
+        - id: iso_9001
+          display_name: ISO 9001
+          scope: resource-pool
+      - display_name: Hardware
+        qualities:
+        - id: bare_metal
+          display_name: Bare metal
+          scope: vm
+        - id: max_volumes
+          display_name: Maximum number of persistent volumes attached
+          scope: vm
   quality_section:
     description: A thematic section containing quality definitions
     type: object
@@ -540,7 +632,7 @@ definitions:
         description: Specifies whether the quality applies to data centers or VMs. Omitted for mixed-scope bundles.
         type: string
         enum:
-        - data_center
+        - data-center
         - vm
       values:
         description: If specified, the quality has values, with either bigger or smaller numbers considered preferable
@@ -564,6 +656,51 @@ definitions:
     type: array
     items:
       $ref: '#/definitions/quantity'
+    example:
+      - id: cpu_cores
+        display_name: CPU cores
+        scope: vm
+        pricing_unit: 1
+      - id: ram
+        display_name: RAM size
+        scope: vm
+        unit: bytes
+        pricing_unit: 1073741824
+      - id: ephemeral_storage
+        display_name: Ephemeral storage size
+        scope: vm
+        unit: bytes
+        pricing_unit: 1073741824
+      - id: bandwidth
+        display_name: Network bandwidth
+        scope: vm
+        unit: bps
+        pricing_unit: 1000000000
+      - id: persistent_storage
+        display_name: Persistent storage size
+        scope: volume
+        unit: bytes
+        pricing_unit: 1073741824
+      - id: vms
+        display_name: VM count
+        scope: order
+        pricing_unit: 1
+      - id: networks
+        display_name: Network count
+        scope: order
+        pricing_unit: 1
+      - id: gateways
+        display_name: Gateway count
+        scope: order
+        pricing_unit: 1
+      - id: forwarders
+        display_name: Forwarder count
+        scope: order
+        pricing_unit: 1
+      - id: public_ips
+        display_name: Public IP count
+        scope: order
+        pricing_unit: 1
   quantity:
     description: A single quantity defined in the system
     type: object
@@ -591,14 +728,35 @@ definitions:
         type: string
         enum:
         - bytes
+        - bps
       pricing_unit:
         description: The basic amount of the quantity for which prices are expressed
         type: integer
-  quantity_set:
-    description: A set of quantities. The object maps quantity identifiers to values. See https://api.ridge.co/compute/v1alpha/quantities for possible properties.
+  quantity_range_set:
+    description: A set of quantities. The object maps quantity identifiers to value ranges. See https://api.ridge.co/compute/v1alpha/quantities for possible properties.
     type: object
     additionalProperties:
-      type: integer
+      type: object
+      $ref: '#/definitions/quantity_range'
+  quantity_range:
+    description: A single quantity
+    type: object
+    required:
+      - min
+      - max
+    properties:
+      min:
+        description: A minimum value of the quantity
+        type: integer
+      max:
+        description: A maximum value of the quantity
+        type: integer
+      step:
+        description: |
+          A value change step.
+          When step is present, the scale is linear. Allowed values are min, min + step, min + step*2, ... not exceeding max.
+          When step is absent, the scale is powers-of-two. Allowed values are min, min*2, min*4, ... not exceeding max.
+        type: integer
   vm_price_set:
     description: A set of VM catalog item prices. The object maps resource identifiers to price.
     type: object

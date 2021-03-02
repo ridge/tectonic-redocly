@@ -1,7 +1,7 @@
 swagger: "2.0"
 info:
   version: v1alpha
-  title: Ridge Kubernetes Service - API
+  title: Ridge Kubernetes Service API
   description: An API for the Managed Kubernetes Service
 basePath: /rks/v1alpha
 host: api.ridge.co
@@ -30,6 +30,7 @@ tags:
     description: Pre-defined sets of node types
   - name: Volumes
     description: The persistent volumes of a Kubernetes cluster
+# For Readme
 x-explorer-enabled: false
 x-samples-enabled: false
 paths:
@@ -213,47 +214,6 @@ paths:
       responses:
         204:
           description: OK
-        400:
-          description: Invalid request parameters
-          schema:
-            type: string
-        403:
-          description: Forbidden
-          schema:
-            type: string
-        404:
-          description: Resource not found
-          schema:
-            type: string
-  /orgs/{org}/projects/{project}/clusters/{cluster}/ca-certificate:
-    parameters:
-      - name: cluster
-        description: The identifier of a cluster.
-        in: path
-        type: string
-        required: true
-      - name: project
-        in: path
-        description: The project identifier.
-        required: true
-        type: string
-      - name: org
-        in: path
-        description: The organization identifier.
-        required: true
-        type: string
-    get:
-      operationId: describeClusterCaCertificate
-      summary: Describe a Kubernetes Cluster's CA Certificate
-      tags:
-        - Clusters
-      responses:
-        200:
-          description: Success
-          schema:
-            description: Base64-encoded public certificate that is the root of trust for the cluster.
-            type: string
-            format: byte
         400:
           description: Invalid request parameters
           schema:
@@ -846,6 +806,12 @@ definitions:
         $ref: '#/definitions/quantity_set'
       qualities:
         $ref: '#/definitions/quality_set'
+      catalog_item_id:
+        description: The chosen catalog item ID.
+        type: string
+      catalog_item_path:
+        description: The chosen catalog item path.
+        type: string
       node_counts:
         type: object
         properties:
@@ -875,6 +841,12 @@ definitions:
           type: string
       shortage:
         description: Indicates the node pool is not fully provisioned due to a shortage at the data center level.
+        type: boolean
+      nonallocatable:
+        description: Indicates the node pool is not fully provisioned because matching VM configurations could not be found
+        type: boolean
+      out_of_quota:
+        description: Indicates the node pool is not fully provisioned due to quota exceeded
         type: boolean
     example:
       id: ibp566nxx5zx6sy59wpjz3xmya
@@ -944,11 +916,14 @@ definitions:
         type: string
         format: ipv4
       catalog_item_id:
-        description: The node chosen catalog-item ID.
+        description: The chosen catalog item ID.
         type: string
       catalog_item_path:
-        description: The path to the catalog-item that includes all the parents.
+        description: The path to the catalog item that includes all the parents.
         type: string
+      quantities:
+        description: The hardware configuration of the node.
+        $ref: '#/definitions/quantity_set'
       volumes:
         description: The volumes that are currently attached to the node.
         type: array
@@ -1005,7 +980,6 @@ definitions:
       - state
       - data_center_id
       - data_center_path
-      - initial_max_cost
       - node_pools
       - highly_available
       - desired_version
@@ -1062,17 +1036,15 @@ definitions:
       data_center_id:
         description: The unique identifier of the data center in which this cluster is provisioned.
         type: string
+        x-nullable: true
       data_center_path:
         description: The full path to the data center in which this cluster is provisioned, including all the parents.
         type: string
         example: /partner/foo/data-center/bar
+        x-nullable: true
       cluster_endpoint:
         description: The address through which the Kubernetes cluster's API can be reached.
         type: string
-      initial_max_cost:
-        description: The maximum acceptable cost per hour in USD. This acts as a constraint on where/if the cluster is created. It will not be taken into consideration if the customer chooses to add a node pool at a later stage. Unlimited indicates that the cost is not a constraint.
-        type: string
-        example: '100.00'
       highly_available:
         description: Indicates whether the cluster has high availability.
         type: boolean
@@ -1095,11 +1067,14 @@ definitions:
       degraded:
         description: The cluster is running in a degraded mode. There might be a delay between issuing a command for controlling this cluster and receiving a response.
         type: boolean
-      over_quota:
-        description: The amount of resources not fully provisioned due to exceeded quota.
-        $ref: '#/definitions/quantity_set'
+      out_of_quota:
+        description: Indicates the cluster is not fully provisioned due to exceeded quota.
+        type: boolean
       shortage:
         description: Indicates the cluster is not fully provisioned due to a shortage at the data center level.
+        type: boolean
+      nonallocatable:
+        description: Indicates the cluster is not fully provisioned because VM configurations could not be found
         type: boolean
     example:
       id: rozyaxyphmbiw5tbgq4sonooje
@@ -1138,7 +1113,6 @@ definitions:
       data_center_id: qk6pua
       data_center_path: "/partners/medone/data-centers/tira"
       cluster_endpoint: https://master.doatqj59rqh6xdkf1s1yy37rdh.public.sat.rdgto.com:6443
-      initial_max_cost: Unlimited
       highly_available: false
       desired_version: v1.17.6
       current_version: v1.17.6
@@ -1157,7 +1131,6 @@ definitions:
     type: object
     required:
       - node_pools
-      - initial_max_cost
     properties:
       name:
         description: A human readable name for the cluster. The name must be unique within the project.
@@ -1179,23 +1152,15 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/location'
-      undesired_locations:
-        description: One or more undesired locations for the cluster.
-        type: array
-        items:
-          $ref: '#/definitions/location'
+      data_center_id:
+        description: The data center uniq ID in which the user wishes the cluster to run. This is mutually exclusive with desired_locations and qualities. Either data_center_id or data_center_path can be specified; if both are present, they must agree.
+        type: string
+      data_center_path:
+        description: The data center path in which the user wishes the cluster to run. This is mutually exclusive with desired_locations and qualities. Either data_center_id or data_center_path can be specified; if both are present, they must agree.
+        type: string
+        example: /partner/foo/data-center/bar
       qualities:
         $ref: '#/definitions/quality_set'
-      data_center_ids:
-        description: The data centers in which the user wishes the cluster to run. This is mutually exclusive with desired_locations, undesired_locations and qualities.
-        type: array
-        items:
-          description: A unique identifier of a data center.
-          type: string
-      initial_max_cost:
-        description: The maximum acceptable cost per hour in USD. This acts as a constraint on where/if the cluster is created. It will not be taken into consideration if the customer chooses to add a node pool at a later stage. Unlimited indicates that the cost is not a constraint.
-        type: string
-        example: Unlimited
       highly_available:
         description: Indicates whether the cluster has high availability. It might results in higher costs. By default, clusters are created with high availability.
         type: boolean
@@ -1218,7 +1183,6 @@ definitions:
           pool: pool1
         initial_taints:
         - workload_size=large:NoSchedule
-      initial_max_cost: Unlimited
       name: test-cluster
       display_name: Test Cluster
       desired_locations:
@@ -1266,8 +1230,15 @@ definitions:
         $ref: '#/definitions/quantity_set'
       qualities:
         $ref: '#/definitions/quality_set'
+      catalog_item_id:
+        description: The chosen catalog item ID, it is availble only when data_center_id and/or data_center_path is specified. catalog_item_id or catalog_item_path may be specified; if both are present, they must agree.
+        type: string
+      catalog_item_path:
+        description: The chosen catalog item path, it is availble only when data_center_id and/or data_center_path is specified. catalog_item_id or catalog_item_path may be specified; if both are present, they must agree.
+        type: string
+        example: /partners/big-partner/data-center/boston/vm-catalog/@7g167ryep3fr8ejr4bxemxju4h
       initial_kubernetes_labels:
-        $ref: '#/definitions/key_values'
+         $ref: '#/definitions/key_values'
       initial_taints:
         description: The initial Kubernetes taints that will be applied to the node.
         type: array
@@ -1300,8 +1271,8 @@ definitions:
         x-nullable: true
   key_values:
     type: object
+    description: The initial Kubernetes labels (key-value pairs) that will be applied to the node.
     additionalProperties:
-      description: The initial Kubernetes labels (key-value pairs) that will be applied to the node.
       type: string
   location:
     description: One or more locations. A location can refer to a country, a subdivision of a country, or a city.  A country is encoded using the Country codes (ISO-3166-1). A country subdivision as encoded as a <country code>-<subdivision code> (subdivision codes are defined in ISO-3166-2). A city is encoded as <country code>-<subdivision code>-<city name>, For example US-MA-Boston. In cases where there is no subdivision in the country it will be left blank. For example IL--TelAviv.
@@ -1396,6 +1367,17 @@ definitions:
       member_path:
         description: The full path to the Ridge member assigned to this token. The member ID will be used as the Kubernetes username.
         type: string
+    example:
+      id: xxkymdd794f1me917t3aqa86iy
+      path: "/orgs/test-org/projects/sandbox/clusters/cluster-1/tokens/sam=token"
+      name: sam-token
+      display_name: sam-token
+      created_at: '2020-12-27T13:16:10.707Z'
+      org_id: di86ihycue5875pb7d5ybfhn9r
+      project_id: g3ker86kt6mir8rbczwkyjotpe
+      cluster_id: hhbmufz5u41yokquakwbq3cbxr
+      member_id: ysyighpz9buqsgi1xjgsjpazqc
+      member_path: "/orgs/test-org/members/@ysyighpz9buqsgi1xjgsjpazqc"
   token_create:
     type: object
     properties:
@@ -1474,7 +1456,6 @@ definitions:
       kubeconfig:
         description: Kubeconfig file for the cluster and token.
         type: string
-        example:
     example:
       id: kec9q64bu4813awu8x9p5ihr3r
       name: token1
@@ -1487,7 +1468,7 @@ definitions:
       member_id: t1fdw9f44d9jj99psnt3bgyh7w
       member_path: "/orgs/test-org/members/my-bot"
       token: 36QSkC0ONemFigEQ3mcRlQ
-      kubeconfig: '{"apiVersion":"v1","clusters":[{"cluster":{"certificate-authority-data":"LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUR1VENDQXFHZ0F3SUJBZ0lGQVBndUw2WXdEUVlKS29aSWh2Y05BUUVMQlFBd1FURS9NRDBHQTFVRUF4TTIKYldGemRHVnlMbVJ2WVhSeGFqVTVjbkZvTm5oa2EyWXhjekY1ZVRNM2NtUm9MbkIxWW14cFl5NXpZWFF1Y21SbgpkRzh1WTI5dE1CNFhEVEl3TVRJeE5qRXpNRGcwT0ZvWERUTXdNVEl4TmpFek1EZzBPRm93UVRFL01EMEdBMVVFCkF4TTJiV0Z6ZEdWeUxtUnZZWFJ4YWpVNWNuRm9ObmhrYTJZeGN6RjVlVE0zY21Sb0xuQjFZbXhwWXk1ellYUXUKY21SbmRHOHVZMjl0TUlJQklqQU5CZ2txaGtpRzl3MEJBUUVGQUFPQ0FROEFNSUlCQ2dLQ0FRRUFsNlM2MnlCYQpBd2V3dEtuVDZuY2kyaHh6MU1hbG5venBZK2RxVHcrT0c2VWVjdFdqMXZZMm9EOW6wVEs3MTEwUDNLbEo1R1Y0CkZNMEs0RXZUZHlScnIvazdnbUxZdlJCTTFzNDFrUWFObk9ZSUg5MWtvQWhhaU83bFlNVytheW5jRFl6enhjRHkKWjJJeEFkNEduNGNxYlZFRVhWcEExM1dIcW9SdDBxd1lUQTNlVTc2R1licGJuSkxqZWs5QTBJY0M0RHZudjJsdQo4eE5SM2w5eThLRkxSbGVqTHZyWElTZXU4eCtFNlRuT2dtSlpUcmpyU2ZBRXlkbi9RWWM1Qkt6U1UvTEpVQkxGCnBZbEloQVNzOTFYRWs4NkNBT3U4OW9DeWo0SVJPcno4NGZjdmxyZjlpRnFmdTF5eHlOeVNuRkdoR2hHR3pKY3cKVnpLUkR4bU1aWDdXUndJREFRQUJvNEczTUlHME1BOEdBMVVkRXdFQi93UUZNQU1CQWY4d0hRWURWUjBPQkJZRQpGS1MwM3pyN3dvZUJxbzdFQVlPNVowMFY4QlpXTUlHQkJnTlZIUkVFZWpCNGdqWnRZWE4wWlhJdVpHOWhkSEZxCk5UbHljV2cyZUdSclpqRnpNWGw1TXpkeVpHZ3VjSFZpYkdsakxuTmhkQzV5WkdkMGJ5NWpiMjJDUG0xaGMzUmwKY2k1a2IyRjBjV28xT1hKeGFEWjRaR3RtTVhNeGVYa3pOM0prYUM1bWJHVmxkQzFwYm5SbGNtNWhiQzV6WVhRdQpjbVJuZEc4dVkyOXRNQTBHQ1NxR1NJYjNEUUVCQ3dVQUE0SUJBUUF5bVhmTE5qZ090blB0dlVnR09VR3dZeDNsCjRJaUN0eVIwOFk0cmlVMCt2c1d0bDFtYTFiSUtXQTgxVmVkN2tFSVpkZ1ZyYzdUNGlVSEhkRE9LS1ROb2RTNTcKQkM4VXdkSG11U1pRcmJjdTVESWU4OExTd1Qya2dIWXdFeXkybmY4T1Y2YXVNMm0yb2V6VnJmSTZZclhhVVBYQgpSd3ZFQTZHTVRON3RURnh2YkZBK3B5ajhWSVFHVnprYUxzZVJoTWxxVTJqbE5YWkZVcGtZRTV2Sm9WbVI5dm9uCklWZk1ZYmtVbXlyT2wrUVRZeStkRDlPQU5QeHJUZVVYWmFpQ0IrbG8rVFBzbmJ0d0R1TTIvN0txbTQ4bXhyRWgKenpQMkpyZklUaHB0K01SV09SNnhIQXh4bFhMT1dYTjcxSE9pMVc1eDNoeW5QWjVtSktJS2NTUyt5Z0UyCi0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0K","server":"https://master.doatqj59rqh6xdkf1s1yy37rdh.public.sat.rdgto.com:6443"},"name":"test-org_test_test-cluster"}],"contexts":[{"context":{"cluster":"test-org_test_test-cluster","user":"token1"},"name":"test-org_test_test-cluster"}],"current-context":"test-org_test_test-cluster","kind":"Config","preferences":{},"users":[{"name":"token1","user":{"token":"36QSkC0ONemFigEQ3mcRlQ"}}]}'
+      kubeconfig: '{"apiVersion":"v1","clusters":[{"cluster":{"certificate-authority-data":"LS0tLS1CRUdJTiBDRVJ...","server":"https://master.doatqj59rqh6xdkf1s1yy37rdh.public.sat.rdgto.com:6443"},"name":"test-org_test_test-cluster"}],"contexts":[{"context":{"cluster":"test-org_test_test-cluster","user":"token1"},"name":"test-org_test_test-cluster"}],"current-context":"test-org_test_test-cluster","kind":"Config","preferences":{},"users":[{"name":"token1","user":{"token":"36QSkC0ONemFigEQ3mcRlQ"}}]}'
   load_balancers:
     description: Defining a Kubernetes service of the "LoadBalancer" type creates a load balancer in the data center, external to the Cluster.
     type: object
@@ -1551,10 +1532,10 @@ definitions:
         format: ipv4
         x-nullable: true
       whitelist:
+        description: List of whitelisted networks in CIDR format (AAA.BBB.CCC.DDD/NN). Field is missing if the whitelist is not present. Field is [] if whitelist present and empty (no networks allowed).
         type: array
         x-nullable: true
         items:
-          description: List of whitelisted networks in CIDR format (AAA.BBB.CCC.DDD/NN). Field is missing if the whitelist is not present. Field is [] if whitelist present and empty (no networks allowed).
           type: string
       ports:
         type: array
@@ -1591,6 +1572,9 @@ definitions:
       degraded:
         description: The load balancer is running in a degraded mode. There might be a delay between issuing a command for controlling this load balancer and a response.
         type: boolean
+      out_of_quota:
+        description: Indicates the load balancer is not provisioned due to exceeded quota.
+        type: boolean
   versions:
     description: A list of Kubernetes versions.
     type: object
@@ -1606,7 +1590,6 @@ definitions:
           "v1.18.3",
           "v1.17.6"
       ]
-
   volumes:
     description: A list of persistent volumes.
     type: object
@@ -1629,6 +1612,7 @@ definitions:
       - pvc_id
       - created_at
       - state
+      - attachment_state
     properties:
       id:
         description: A system-defined unique ID of the volume.
@@ -1665,6 +1649,14 @@ definitions:
           - updating
           - terminating
           - terminated
+      attachment_state:
+        description: The volume attachment state.
+        type: string
+        enum:
+          - attaching
+          - attached
+          - detaching
+          - detached
       attached_node_id:
         description: The ID of the node that the volume is attached to.
         type: string
@@ -1674,24 +1666,27 @@ definitions:
       degraded:
         description: The volume is running in a degraded mode. There might be a delay between issuing a command for controlling this volume and a response.
         type: boolean
+      out_of_quota:
+        description: Indicates the volume is not provisioned due to exceeded quota.
+        type: boolean
   quality_set:
+    description: A set of required qualities. The object maps quality identifiers to values. For qualities defined with no values, the value must be 1. See https://ridge.readme.io/reference/qualities for possible properties.
     type: object
     additionalProperties:
-      description: A set of required qualities. The object maps quality identifiers to values. For qualities defined with no values, the value must be 1. See https://ridge.readme.io/reference/qualities for possible properties.
       type: integer
   quantity_set:
+    description: A set of quantities. The object maps quantity identifiers to values. See https://ridge.readme.io/reference/quantities for possible properties.
     type: object
     additionalProperties:
-      description: A set of quantities. The object maps quantity identifiers to values. See https://ridge.readme.io/reference/quantities for possible properties.
       type: integer
   whitelist_update:
-    items:
-      type: string
     description: List of whitelisted networks in CIDR format (AAA.BBB.CCC.DDD/NN).
+    items:
+      description: A whitelisted network in CIDR format.
+      type: string
     type: array
     x-tectonic-nullable: true
     x-go-type:
-      description: List of whitelisted networks in CIDR format (AAA.BBB.CCC.DDD/NN).
       type: WhitelistArray
       import:
         package: go.tectonic.network/moonstone/api/custom
