@@ -1,20 +1,30 @@
 swagger: "2.0"
 info:
   version: v1alpha
-  title: Credentials API
-  description: An API for managing credentials for external services
+  title: External Credentials API
+  description: An API for managing credentials for external services.
 basePath: /keyring/v1alpha
 schemes:
-  - http
+  - https
 consumes:
   - application/json
 produces:
   - application/json
+tags:
+  - name: API Server Status
+    description: An API for checking the server status
+  - name: Docker Registry Credentials
+    description: Operations for managing Docker registry credentials.
+  - name: AWS Credentials
+    description: Operations for managing AWS credentials.
 paths:
   /status:
     get:
       operationId: status
-      summary: Check if API is ready to serve requests. It is if 204 HTTP response code is returned.
+      summary: Check API server status
+      description: If the API server is ready to serve requests, the response HTTP code 204 is returned.
+      tags:
+        - API Server Status
       responses:
         204:
           description: OK
@@ -26,17 +36,20 @@ paths:
     parameters:
       - name: org
         in: path
-        description: The organization identifier
+        description: The organization identifier.
         required: true
         type: string
       - name: project
         in: path
-        description: The project identifier
+        description: The project identifier.
         required: true
         type: string
     get:
       operationId: listDockerCredentials
-      description: List of external credentials for accessing a Docker registry.
+      summary: List Docker registry credentials
+      description: List the Docker registry credentials.
+      tags:
+        - Docker Registry Credentials
       responses:
         200:
           description: Success
@@ -60,7 +73,10 @@ paths:
             type: string
     post:
       operationId: createDockerCredentials
-      description: Create external credentials for accessing a docker registry
+      summary: Store Docker registry credentials
+      description: Store credentials used for accessing a Docker registry.
+      tags:
+        - Docker Registry Credentials
       parameters:
       - in: body
         name: body
@@ -92,22 +108,25 @@ paths:
     parameters:
     - name: org
       in: path
-      description: The organization identifier
+      description: The organization identifier.
       required: true
       type: string
     - name: project
       in: path
-      description: The project identifier
+      description: The project identifier.
       required: true
       type: string
     - in: path
       name: docker_registry
       type: string
       required: true
-      description: The identifier of the docker-registry's credentials
+      description: The identifier of the  Docker registry's credentials
     get:
       operationId: describeDockerCredentials
-      description: Describe details of a docker-registry's credentials
+      summary: Describe Docker registry's credentials
+      description: Describe a Docker registry's credentials.
+      tags:
+        - Docker Registry Credentials
       responses:
         200:
           description: OK
@@ -131,7 +150,10 @@ paths:
             type: string
     delete:
       operationId: deleteDockerCredentials
-      description: Delete a docker-registry's credentials
+      summary: Delete Docker registry's credentials
+      description: Delete the credentials for a Docker registry. These credentials must not be referenced elsewhere.
+      tags:
+        - Docker Registry Credentials
       responses:
         204:
           description: OK
@@ -153,7 +175,10 @@ paths:
             type: string
     patch:
       operationId: updateDockerCredentials
-      description: Update a docker-registry's credentials
+      summary: Update Docker registry credentials
+      description: Update the credentials for a Docker registry.
+      tags:
+        - Docker Registry Credentials
       parameters:
       - in: body
         name: body
@@ -185,17 +210,20 @@ paths:
     parameters:
       - name: org
         in: path
-        description: The organization identifier
+        description: The organization identifier.
         required: true
         type: string
       - name: project
         in: path
-        description: The project identifier
+        description: The project identifier.
         required: true
         type: string
     get:
       operationId: listAWSAccessKeys
-      description: List of AWS credentials
+      summary: List AWS credentials
+      description: List the AWS credentials.
+      tags:
+        - AWS Credentials
       responses:
         200:
           description: Success
@@ -219,7 +247,10 @@ paths:
             type: string
     post:
       operationId: createAWSAccessKey
-      description: Create AWS credentials
+      summary: Store AWS credentials
+      description: Store credentials for accessing AWS.
+      tags:
+        - AWS Credentials
       parameters:
       - in: body
         name: body
@@ -263,10 +294,13 @@ paths:
       name: aws_key
       type: string
       required: true
-      description: The identifier of the AWS credentials
+      description: The identifier of the AWS credentials.
     get:
       operationId: describeAWSAccessKey
-      description: Describe details of an AWS credentials
+      summary: Describe AWS credentials
+      description: Describe AWS credentials.
+      tags:
+        - AWS Credentials
       responses:
         200:
           description: OK
@@ -290,7 +324,10 @@ paths:
             type: string
     delete:
       operationId: deleteAWSAccessKey
-      description: Delete AWS credentials
+      summary: Delete AWS credentials
+      description: Delete AWS credentials. These credentials must not be referenced elsewhere.
+      tags:
+        - AWS Credentials
       responses:
         204:
           description: OK
@@ -312,7 +349,10 @@ paths:
             type: string
     patch:
       operationId: updateAWSAccessKey
-      description: Update AWS credentials
+      summary: Update AWS credentials
+      description: Update the AWS credentials.
+      tags:
+        - AWS Credentials
       parameters:
       - in: body
         name: body
@@ -345,6 +385,7 @@ definitions:
     type: object
     required:
     - id
+    - name
     - path
     - org_id
     - project_id
@@ -354,34 +395,34 @@ definitions:
     - username
     properties:
       id:
-        description: The unique ID of the docker-registry credential.
+        description: The unique ID of the Docker registry credentials.
         type: string
       name:
-        description: A user readable name of the docker-registry credential.
+        description: A user readable name of the Docker registry credentials.
         type: string
         minLength: 1
         maxLength: 63
         pattern: '^[a-z]([-a-z0-9]*[a-z0-9])?$'
       path:
-        description: The path to the resource that includes all the parents
+        description: The path to the resource that includes all the parents.
         type: string
         example: /orgs/my-org/projects/my-project/docker-registries/my-registry
       org_id:
         description: The unique identifier of the organization.
         type: string
       project_id:
-        description: The unique identifier of the project
+        description: The unique identifier of the project.
         type: string
       created_at:
-        description: The time at which this docker-registry credentials were created
+        description: The time at which this Docker registry credentials were created.
         type: string
         format: date-time
       updated_at:
-        description: The time at which this docker-registry credentials were last updated
+        description: The time at which this Docker registry credentials were last updated.
         type: string
         format: date-time
       display_name:
-        description: The display name of the docker-registry credential
+        description: The display name of the Docker registry credentials.
         type: string
         maxLength: 512
       registry_url:
@@ -389,24 +430,38 @@ definitions:
         type: string
         format: url
         example: https://hub.docker.com
+        minLength: 1
       username:
         description: The username.
         type: string
+        minLength: 1
+    example:
+      id: ktp1uophxps5qft53mpkdztmmo
+      name: docker-hub
+      path: "/orgs/test-org/projects/sandbox/docker-registries/docker-hub"
+      org_id: di86ihycue5875pb7d5ybfhn9r
+      project_id: g3ker86kt6mir8rbczwkyjotpe
+      created_at: '2021-03-02T07:56:50.149771052Z'
+      updated_at: '2021-03-02T07:56:50.149771052Z'
+      display_name: Docker Hub
+      registry_url: https://hub.docker.com
+      username: foo
   docker_create:
     type: object
     required:
+    - name
     - registry_url
-    - password
     - username
+    - password
     properties:
       name:
-        description: A user readable name of the docker-registry credential.
+        description: A user readable name of the Docker registry credentials.
         type: string
         minLength: 1
         maxLength: 63
         pattern: '^[a-z]([-a-z0-9]*[a-z0-9])?$'
       display_name:
-        description: The display name of the docker-registry credential
+        description: The display name of the Docker registry credentials.
         type: string
         maxLength: 512
       registry_url:
@@ -414,38 +469,52 @@ definitions:
         type: string
         format: url
         example: https://hub.docker.com
+        minLength: 1
       username:
         description: The username.
         type: string
+        minLength: 1
       password:
         description: The password.
         type: string
+        minLength: 1
+    example:
+      name: docker-hub
+      registry_url: https://hub.docker.com
+      username: foo
+      password: bar
+      display_name: Docker Hub
   docker_update:
     type: object
     properties:
       name:
-        description: A user readable name of the docker-registry credential.
+        description: A user readable name of the Docker registry credentials.
         type: string
         minLength: 1
         maxLength: 63
         pattern: '^[a-z]([-a-z0-9]*[a-z0-9])?$'
-        x-nullable: true
       display_name:
-        description: The display name of the docker-registry credential
+        description: The display name of the Docker registry credentials.
         type: string
         maxLength: 512
-        x-nullable: true
       username:
         description: The username.
         type: string
-        x-nullable: true
+        minLength: 1
       password:
         description: The password.
         type: string
-        x-nullable: true
+        minLength: 1
+    example:
+      name: docker-hub
+      username: foo
+      password: bar
+      display_name: Docker Hub
   docker_registries:
-    description: a list of docker-registry credentials.
+    description: A list of Docker registry credentials.
     type: object
+    required:
+      - items
     properties:
       items:
         type: array
@@ -455,19 +524,20 @@ definitions:
     type: object
     required:
     - id
+    - name
     - path
     - org_id
     - project_id
     - created_at
     - updated_at
-    - access_key_id
     - region
+    - access_key_id
     properties:
       id:
-        description: The unique ID of the external AWS credentials.
+        description: The unique ID of the AWS credentials.
         type: string
       name:
-        description: A user readable name of the external AWS credentials.
+        description: A user readable name of the AWS credentials.
         type: string
         minLength: 1
         maxLength: 63
@@ -480,90 +550,122 @@ definitions:
         description: The unique identifier of the organization.
         type: string
       project_id:
-        description: The unique identifier of the project
+        description: The unique identifier of the project.
         type: string
       created_at:
-        description: The time at which the external AWS credentials were created
+        description: The time at which the AWS credentials were created.
         type: string
         format: date-time
       updated_at:
-        description: The time at which the external AWS credentials were last updated
+        description: The time at which the AWS credentials were last updated.
         type: string
         format: date-time
       display_name:
-        description: The display name of the external AWS credentials
+        description: The display name of the AWS credentials.
         type: string
         maxLength: 512
       region:
         description: The default AWS region.
         type: string
         example: us-west-2
+        minLength: 1
       access_key_id:
-        description: The AWS access key part of the credentials
+        description: The AWS access key ID part of the credentials.
         type: string
+        minLength: 1
         maxLength: 256
+    example:
+      id: zrmamq4x9monufrh9cmc7hznxe
+      name: aws-key-1
+      path: "/orgs/test-org/projects/sandbox/aws-keys/aws-key-1"
+      org_id: di86ihycue5875pb7d5ybfhn9r
+      project_id: g3ker86kt6mir8rbczwkyjotpe
+      created_at: '2021-03-01T16:04:58.379872112Z'
+      updated_at: '2021-03-01T16:04:58.379872112Z'
+      display_name: AWS Key 1
+      region: us-west-2
+      access_key_id: AKIAIOSFODNN7EXAMPLE
   aws_key_create:
     type: object
     required:
+    - name
+    - region
     - access_key_id
     - access_key_secret
-    - region
     properties:
       name:
-        description: A user readable name of the external AWS credentials.
+        description: A user readable name of the AWS credentials.
         type: string
         minLength: 1
         maxLength: 63
         pattern: '^[a-z]([-a-z0-9]*[a-z0-9])?$'
       display_name:
-        description: display name of the external AWS credentials
+        description: Display name of the AWS credentials.
         type: string
         maxLength: 512
       region:
         description: The AWS region.
         type: string
         example: us-west-2
+        minLength: 1
       access_key_id:
-        description: The AWS access key part of the credentials
+        description: The ID of the AWS access key.
         type: string
         minLength: 16
         maxLength: 128
       access_key_secret:
-        description: The AWS secret access key part of the credentials
+        description: The secret part of the AWS access key.
         type: string
+        minLength: 1
+    example:
+      name: aws-key-1
+      region: us-west-2
+      access_key_id: AKIAIOSFODNN7EXAMPLE
+      access_key_secret: wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+      display_name: AWS Key 1
   aws_key_update:
     type: object
     properties:
       name:
-        description: A user readable name of the external AWS credentials.
+        description: A user readable name of the AWS credentials.
         type: string
         minLength: 1
         maxLength: 63
         pattern: '^[a-z]([-a-z0-9]*[a-z0-9])?$'
-        x-nullable: true
       display_name:
         description: The display name of the AWS credentials.
         type: string
         maxLength: 512
-        x-nullable: true
       region:
         description: The AWS region.
         type: string
         example: us-west-2
-        x-nullable: true
+        minLength: 1
       access_key_id:
-        description: The AWS access key part of the credentials
+        description: The ID of the AWS access key.
         type: string
         minLength: 16
         maxLength: 128
-        x-nullable: true
       access_key_secret:
-        description: The AWS secret access key part of the credentials
+        description: The secret part of the AWS access key.
         type: string
-        x-nullable: true
+        minLength: 1
+    example:
+      id: zrmamq4x9monufrh9cmc7hznxe
+      name: aws-key-1
+      path: "/orgs/test-org/projects/sandbox/aws-keys/aws-key-1"
+      org_id: di86ihycue5875pb7d5ybfhn9r
+      project_id: g3ker86kt6mir8rbczwkyjotpe
+      created_at: '2021-03-01T16:04:58.379872112Z'
+      updated_at: '2021-03-01T16:04:58.379872112Z'
+      display_name: AWS Key 1
+      region: us-west-2
+      access_key_id: AKIAIOSFODNN7EXAMPLE
   aws_keys:
     description: A list of AWS credentials.
     type: object
+    required:
+      - items
     properties:
       items:
         type: array
