@@ -861,7 +861,7 @@ definitions:
       desired_node_count: 1
       quantities:
         cpu_cores: 1
-        ephemeral_storage: 4294967296
+        instance_storage: 4294967296
         ram: 2147483648
       initial_kubernetes_labels:
         pool: pool1
@@ -1102,7 +1102,7 @@ definitions:
           desired_node_count: 1
           quantities:
             cpu_cores: 1
-            ephemeral_storage: 4294967296
+            instance_storage: 4294967296
             ram: 2147483648
           initial_kubernetes_labels:
             pool: pool1
@@ -1177,7 +1177,7 @@ definitions:
         display_name: Pool 1
         quantities:
           cpu_cores: 1
-          ephemeral_storage: 4294967296
+          instance_storage: 4294967296
           ram: 2147483648
         initial_kubernetes_labels:
           pool: pool1
@@ -1251,7 +1251,7 @@ definitions:
       display_name: Pool 2
       quantities:
         cpu_cores: 2
-        ephemeral_storage: 4294967296
+        instance_storage: 4294967296
         ram: 2147483648
       initial_kubernetes_labels:
         pool: pool2
@@ -1308,7 +1308,7 @@ definitions:
       display_name: X-Small
       quantities:
         cpu_cores: 1
-        ephemeral_storage: 10737418240
+        instance_storage: 10737418240
         ram: 1073741824
   tokens:
     description: A list of tokens.

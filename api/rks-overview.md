@@ -64,7 +64,7 @@ The following can be specified during node pool creation:
 
 #### Variables: Quantities Used in Node Pool Creation
 - **cpu_cores:** The minimal number of CPU cores required for each node.
-- **ephemeral_storage:** The minimal amount of storage required for each node (in GiB).
+- **instance_storage:** The minimal amount of storage required for each node (in GiB).
 - **ram:** The minimal amount of RAM required for each node (in GiB).
 - **bandwidth:** The minimal amount of bandwidth required for each node (in Mbps).
 Note that if the data center does not have the exact configuration requested, the actual configuration may be different, however it will not be less than the minimum specified here.

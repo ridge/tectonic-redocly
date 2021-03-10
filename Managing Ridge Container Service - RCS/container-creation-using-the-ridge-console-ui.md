@@ -13,7 +13,7 @@ When you create a new batch of containers, you can specify a set of constraints 
 You can specify the following when creating a batch of containers:
 - The number of desired containers
 - The docker image
-- CPU, memory and ephemeral storage size. Alternatively, specify one of the container presets (similar to instance types that are often used in public clouds) 
+- CPU, memory and instance storage size. Alternatively, specify one of the container presets (similar to instance types that are often used in public clouds)
 
 ## Creating a New Batch
 To create a new batch using the Ridge console UI:
@@ -59,7 +59,7 @@ To create a new batch using the Ridge console UI:
     "4-1": "The desired number of containers.",
     "4-2": "2",
     "9-0": "Environment Variables",
-    "5-1": "The preset container type. This is overridden if you give specific CPU, memory and ephemeral storage requirements in the Resources section.",
+    "5-1": "The preset container type. This is overridden if you give specific CPU, memory and instance storage requirements in the Resources section.",
     "6-1": "The minimal number of CPU cores, RAM (in GiB), and storage (in GiB) that are required for the container.",
     "6-2": "CPU Cores: 1\nRAM (GiB): 2\nStorage (GiB): 4",
     "7-1": "An entry point that overrides the default one provided by the container image.",

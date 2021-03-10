@@ -36,3 +36,8 @@ getting-started:
     - page: Getting Started/api-getting-started/getting-started-with-api.md
     - page: Getting Started/rcs-getting-started/rcs-getting-started.md
     - page: Getting Started/rks-getting-started/rks-getting-started.md
+docs:
+  - page: docs/index.md
+  - page: docs/rks-overview/rks-overview.md
+  - page: docs/rcs-overview/rcs-overview.md
+

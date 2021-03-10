@@ -19,7 +19,7 @@ Ridge Kubernetes Service (RKS) offers developers a fully certified managed Kuber
 The RKS API is used to create, manage, and monitor Kubernetes clusters. The API  includes the following resources
   * Node presets- This is a list (read-only) of suggested configurations of the worker nodes of the cluster. Alternatively, you can explicitly specify the minimal CPU, memory and storage requirements.
   * Clusters- When you create a cluster you will specify at least one pool of worker nodes,  a price constraint and optional location and conformity constraints.
-  * Node pools- When you create a worker node pool you specify the CPU, memory and storage requirements or a node preset. In addition, you specify the desired number of nodes and you may optionally specify Kubernetes labels and taints. You may modify the desired number of nodes. 
+  * Node pools- When you create a worker node pool you specify the CPU, memory and storage requirements or a node preset. In addition, you specify the desired number of nodes and you may optionally specify Kubernetes labels and taints. You may modify the desired number of nodes.
   * Nodes- The API provides a view of the nodes that were created and allows you to delete a node that is no longer desirable,
   * Tokens- Generate tokens for users for whom you want to grant access to the cluster
   * Load Balancers- When you create a "Load Balancer" type service in Kubernetes, Ridge creates a load balancer in the data center, external to the cluster.
@@ -28,25 +28,25 @@ The RKS API is used to create, manage, and monitor Kubernetes clusters. The API 
 # Creating a Cluster
 When creating a cluster with the API, in addition to the basic details, you may specify a set of constraints that the Ridge Allocation Engine will use in order to choose the best-suited data center, before it provisions and creates the cluster.
 
-## Geographic Location 
-The Ridge Cloud is a collection of Data Centers that are located all over the world. You may list desired or undesired locations (such as countries, states, cities, or particular facilities). For example, you may want a cluster in any Data Center in San Jose, CA; or you may want to explicitly require the cluster to be created in a specific Data Center. 
+## Geographic Location
+The Ridge Cloud is a collection of Data Centers that are located all over the world. You may list desired or undesired locations (such as countries, states, cities, or particular facilities). For example, you may want a cluster in any Data Center in San Jose, CA; or you may want to explicitly require the cluster to be created in a specific Data Center.
 
-## Node Pools 
+## Node Pools
 Ridge Kubernetes worker nodes are grouped in node pools. You can add, remove or update a node pool. A node pool definition includes:
 - The number of desired nodes
-- CPU, memory and ephemeral storage size. Alternatively, you can use a Node Preset (similar to instance types that are often used in public clouds) - see [Node Presets](ref:node-presets).
+- CPU, memory and instance storage size. Alternatively, you can use a Node Preset (similar to instance types that are often used in public clouds) - see [Node Presets](ref:node-presets).
 - Whether or not the nodes need to be bare metal
 - Kubernetes labels
 - Kubernetes taints
 
 ## Conformity Requirements
 The definition of each Ridge Data Centers includes details of conformity compliance, such as SOC2, ISO or HIPAA. When Creating a Cluster you can indicate a required compliance conformity.
-## Cluster Provisioning 
+## Cluster Provisioning
 The Ridge Allocation Engine chooses the best suited Data Center and creates the cluster by provisioning the machines, installing, and configuring them. The choice that it makes is based on cost and the constraints that were specified.
 
 # Cluster Monitoring and Auto-healing
-Once the cluster is up, Ridge will monitor it 24/7 to make sure it is fully operational. In case of any malfunction or failure, the system will activate the cluster’s auto-healing mechanism and try to reach a stable state again by ensuring the control plane (master nodes) and worker nodes are all running and healthy. 
-In case the system identifies an unhealthy node by monitoring the state in the cluster, the system will create another node instead, provision, and configure the node so that eventually it will join the cluster and Kubernetes will become stable again. 
+Once the cluster is up, Ridge will monitor it 24/7 to make sure it is fully operational. In case of any malfunction or failure, the system will activate the cluster’s auto-healing mechanism and try to reach a stable state again by ensuring the control plane (master nodes) and worker nodes are all running and healthy.
+In case the system identifies an unhealthy node by monitoring the state in the cluster, the system will create another node instead, provision, and configure the node so that eventually it will join the cluster and Kubernetes will become stable again.
 [block:callout]
 {
   "type": "info",
@@ -55,7 +55,7 @@ In case the system identifies an unhealthy node by monitoring the state in the c
 }
 [/block]
 # Load Balancers
-## Service Description 
+## Service Description
 Ridge Kubernetes cluster is composed of a highly available control plane that consists of three master nodes and a highly available load-balancer, created outside the cluster, that directs the user’s management traffic to the master nodes (to allow users to interact with Kubernetes API). The address of this load balancer is the endpoint of the cluster - provided to the user by our API or console (Kubeconfig can be generated and downloaded from the Ridge console).
 Users can also request external load balancers from within the Kubernetes cluster by creating services of type LoadBalancer. Similar to other managed Kubernetes solutions, each Ridge cluster is installed with a Ridge Cloud-controller component that monitors for internal Kubernetes state changes and interacts with the Ridge Cloud to try and reconcile the desired state, so that when a user makes a load balancer request Ridge can handle and provide the load balancer.
 [block:image]
@@ -76,9 +76,9 @@ Users can also request external load balancers from within the Kubernetes cluste
 ## Basic Load Balancer Flow
 When developers create a service of type “LoadBalancer” on the cluster, Ridge’s Cloud Controller will attempt to fulfill this request by sending the Ridge Cloud a request to create (and also modify and delete) a load balancer. The Ridge Cloud will create and configure a load balancer in the relevant Data Center and will send back to the cloud-provider the IP address that was allocated which in turn will report it back to Kubernetes.
 Note, this entire process is done in a seamless manner and totally transparent to the developer - all the developer needs to care about is the desired state, a load balancer that can forward the data to the application in a secure manner.
-Developers are able to see the state of the load balancer using Ridge’s API or UI console. Being part of the managed cluster offering, these load balancers will be deleted when the cluster is deleted. 
+Developers are able to see the state of the load balancer using Ridge’s API or UI console. Being part of the managed cluster offering, these load balancers will be deleted when the cluster is deleted.
 Load balancers may incur additional fees as they consume a routable IP and compute resources.
-The user only needs to manage load balancing services via the Kubernetes API. **All the rest takes place automatically.** 
+The user only needs to manage load balancing services via the Kubernetes API. **All the rest takes place automatically.**
 [block:image]
 {
   "images": [
@@ -108,17 +108,17 @@ The user only needs to manage PVCs via the Kubernetes API. **All the rest takes 
 In case a node fails, the system shall detach all volumes that were attached to it. Kubernetes will reschedule the pods to a different node and the system will be notified through Ridge CSI driver to attach the volumes to the new node.
 
 # Cluster Scaling
-## Service Description 
+## Service Description
 Ridge offers three ways to scale a running cluster:
-- Update existing node pool using Ridge API or UI console 
+- Update existing node pool using Ridge API or UI console
 - Create a new node pool using Ridge API or UI console
 <!-- * Activate Ridge auto-scaling-->
 
-## Scaling Using the API 
+## Scaling Using the API
 ### Update Existing Node Pool
 Developers can scale an existing node pool by modifying the number of nodes in the pool:
 - Increasing the number of desired worker nodes will result in the system bringing up new nodes (scaling up the cluster).
-- Decreasing the number of worker nodes will not automatically remove nodes from the cluster. The developer will need to select the nodes to remove - giving the developer control over which node should be drained and deleted. 
+- Decreasing the number of worker nodes will not automatically remove nodes from the cluster. The developer will need to select the nodes to remove - giving the developer control over which node should be drained and deleted.
 [block:callout]
 {
   "type": "info",
@@ -126,10 +126,10 @@ Developers can scale an existing node pool by modifying the number of nodes in t
   "body": "Deleting a specific node from the pool, without changing the desired amount in the pool, will trigger the creation of a new node (system will try to reconcile to a stable desired state as determined by the developer)."
 }
 [/block]
-### Create a New Node Pool 
+### Create a New Node Pool
 Creating a new node pool is as simple as calling an API that describes the new node pool (in a similar way to the cluster creation), see [Creating a Cluster](doc:rks-overview#creating-a-cluster).
 
-<!--### Autoscaling 
+<!--### Autoscaling
 Each Ridge cluster is preinstalled with the Cluster Autoscaler (CA). The CA is a Kubernetes tool that automatically adjusts the size of the Kubernetes cluster when one of the following scenarios occurs:
 - There are pods that failed to run in the cluster due to insufficient resources
 - There are nodes in the cluster that have been underutilized for an extended period of time and their pods can be placed on other existing nodes

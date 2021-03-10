@@ -25,7 +25,7 @@ To create a cluster:
 A **Node Pool** is a group of worker nodes that share identical sizing, labels and taints in Kubernetes.
 You can configure a node pool either when you create a new Kubernetes cluster, or from the **Node Pools** tab of an existing cluster.
 
-**Note:** 
+**Note:**
 You **must** create at least one node pool as part of creating a cluster.
 
 To configure a node pool:
@@ -34,14 +34,14 @@ To configure a node pool:
 3. Enter **Node Pool Name**, **Number of Nodes**, and select the minimum configuration and resources required by your node pool (see **Node Pool Parameters** below).
 4. Optionally add **Taints** and **Labels** to the node pool.
 5. Select **Bare Metal Only** if the cluster requires a physical machine.
-6. Click **Create Cluster** (or from the New Node Pool page, click **Add Node Pool**). 
+6. Click **Create Cluster** (or from the New Node Pool page, click **Add Node Pool**).
 
 ### Node Pool Parameters
 The parameters you can specify for the node pool are:
   * **Node Pool Name** - A human-readable name for your node pool. As with the cluster name, Ridge displays the full API path to access the node pool underneath the node pool name.
-  * **Number of Nodes** - You must have a minimum of one node per node pool. **Required** 
+  * **Number of Nodes** - You must have a minimum of one node per node pool. **Required**
   * **Minimal Configuration** - You can either select a preset configuration for the nodes in the pool, or in the Resources section, you can customize the minimum resources you require for each node.
-  * **Resources** - If you prefer to customize the node pool resources, select the minimum number of CPU cores, GiB of RAM, and GiB of ephemeral storage each node requires.
+  * **Resources** - If you prefer to customize the node pool resources, select the minimum number of CPU cores, GiB of RAM, and GiB of instance storage each node requires.
   * **Bare metal only** - Check this box if you require the node pool to use physical machines only.
   * **Taints and Labels** - Ridge supports all of the Kubernetes features, and you can optionally specify initial taints and labels to be added to the node pool.
 
@@ -78,7 +78,7 @@ Ridge maintains, provisions, and monitors the load balancer throughout the life 
 
 ![rks-getting-started-9](rks-getting-started-9.png)
 # Persistent Volumes
-When you create a workload with a persistent volume claim, Ridge creates a persistent volume. 
+When you create a workload with a persistent volume claim, Ridge creates a persistent volume.
 
 You can see the persistent volumes created for the cluster on the **Persistent Volumes** tab of the cluster page in the Ridge console.
 

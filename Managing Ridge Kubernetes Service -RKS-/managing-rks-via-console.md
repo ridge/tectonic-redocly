@@ -45,7 +45,7 @@ To configure a node pool:
 3. Enter a node pool name, number of nodes, and select the minimum configuration and resources required by your node pool (see **Node Pool Parameters** below).
 4. Optionally add taints and labels to the node pool.
 5. Select if the cluster requires a physical machine.
-6. Click **Create Cluster** (or from the New Node Pool page, click **Add Node Pool**). 
+6. Click **Create Cluster** (or from the New Node Pool page, click **Add Node Pool**).
 
 ### Node Pool Parameters
 The parameters you can specify for the node pool are:
@@ -54,7 +54,7 @@ The parameters you can specify for the node pool are:
 | **Node Pool Name**        | A human readable name for your node pool. As with the cluster name, Ridge displays the full API path to access the node pool underneath the node pool name.            |
 | **Number of Nodes**       | You must have a minimum of one node per node pool.            |
 | **Minimal Configuration** | You can either select a preset configuration for the nodes in the pool, or in the Resources section, you can customize the minimum resources you require for each node.            |
-| **Resources**                          | If you prefer to customize the node pool resources, select the minimum number of CPU cores, GiB of RAM, and GiB of ephemeral storage each node requires.            |
+| **Resources**                          | If you prefer to customize the node pool resources, select the minimum number of CPU cores, GiB of RAM, and GiB of instance storage each node requires.            |
 | **Bare metal only**                          | Check this box if you require the node pool to use physical machines only.            |
 | **Taints and Labels**                      | Ridge supports all of the Kubernetes features, and you can optionally specify initial taints and labels to be added to the node pool.        |
 
@@ -79,8 +79,8 @@ To create an access token:
 Creating a token generates a Kubernetes configuration file, which you can copy or download.
 You can revoke a token at any time by clicking the trash can in the UI. A token is also revoked if, for any reason, the member to whom it granted access is deleted from the Identity and Access Management system.
 
-# Viewing Load Balancers and Persistent Volumes 
-When you start deploying workloads on a cluster, Kubernetes begins consuming resources from Ridge. 
+# Viewing Load Balancers and Persistent Volumes
+When you start deploying workloads on a cluster, Kubernetes begins consuming resources from Ridge.
 
 ## Load Balancers
 When you deploy an application on the cluster, one of the services created is a service of the type LoadBalancer. This service prompts Ridge to create a load balancer in the data center, external to the cluster. You can view the cluster's load balancers on the **Load Balancers** tab of the cluster page.

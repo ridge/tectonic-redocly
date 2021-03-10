@@ -5298,14 +5298,14 @@ definitions:
     example:
       limits:
         cpu_cores: 1000
-        ephemeral_storage: 1073741824000
+        instance_storage: 1073741824000
         networks: 1000
         public_ips: 1000
         ram: 1073741824000
         vms: 1000
       usage:
         cpu_cores: 10
-        ephemeral_storage: 182536110080
+        instance_storage: 182536110080
         forwarders: 2
         gateways: 2
         networks: 2

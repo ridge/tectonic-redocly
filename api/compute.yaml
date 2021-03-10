@@ -357,7 +357,7 @@ definitions:
         cpu_cores:
           min: 1
           max: 1
-        ephemeral_storage:
+        instance_storage:
           min: 10737418240
           max: 10737418240
         ram:
@@ -666,8 +666,8 @@ definitions:
         scope: vm
         unit: bytes
         pricing_unit: 1073741824
-      - id: ephemeral_storage
-        display_name: Ephemeral storage size
+      - id: instance_storage
+        display_name: Instance storage size
         scope: vm
         unit: bytes
         pricing_unit: 1073741824
@@ -766,7 +766,7 @@ definitions:
       vms: "0.123"
       cpu_cores: "0.12"
       ram: "0.012"
-      ephemeral_storage: "0.00123"
+      instance_storage: "0.00123"
   data_center_price_set:
     description: A set of data center resource prices. The object maps resource identifiers to price.
     type: object
