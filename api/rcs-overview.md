@@ -35,14 +35,14 @@ When you create a batch, you must configure the following parameters:
 You must also configure **either** the `container_preset` parameter, **or** the following three parameters (within the **Quantities** parameter):
 - `vcpus`
 - `memory`
-- `ephemeral_storage`
+- `instance_storage`
 For detailed explanations of all the required and optional parameters, see Create a Batch.
 
 #### Variables: Quantities Used in Container Creation
 When creating a batch of containers, you must specify the minimum requirements for each container. To customize these requirements, you can specify quantity values in the API request.
 The quantity values you can specify are:
 * `cpu_cores`: The minimal number of CPU cores required for each container.
-* `ephemeral_storage`: The minimal amount of storage required for each container (in GiB).
+* `instance_storage`: The minimal amount of storage required for each container (in GiB).
 * `ram`: The minimal amount of RAM required for each container (in GiB).
 Note that if the data center does not have the exact configuration requested, the actual configuration may be different, however it will not be less than the minimum specified here.
 
@@ -81,3 +81,4 @@ For List Containers, the states that can be used for filtering are:
 - `starting`
 - `running`
 - `terminating`
+- `terminated`
