@@ -6,22 +6,20 @@ info:
 basePath: /rcs/v1alpha
 host: api.ridge.co
 schemes:
-  - http
+  - https
 consumes:
   - application/json
 produces:
   - application/json
 tags:
-  - name: Batches
-    description: Operations on Batches
-  - name: Containers
-    description: Operations on Containers
   - name: API Server Status
-    description: An API for checking the server status
+    description: An API for checking the server status.
   - name: Container Presets
-    description: Pre-defined sets of container types
-x-explorer-enabled: false
-x-samples-enabled: false
+    description: Pre-defined sets of container types.
+  - name: Batches
+    description: Operations on Batches.
+  - name: Containers
+    description: Operations on Containers.
 paths:
   /status:
     get:
@@ -41,7 +39,7 @@ paths:
     get:
       operationId: listContainerPresets
       summary: List Container Presets
-      description: Gives a list of the container presets (suggested container sizes).
+      description: Returns a list of the container presets (suggested container sizes).
       tags:
         - Container Presets
       responses:
@@ -53,45 +51,20 @@ paths:
     parameters:
       - name: project
         in: path
-        description: The project identifier
+        description: The project identifier.
         required: true
         type: string
       - name: org
         in: path
-        description: The organization identifier
+        description: The organization identifier.
         required: true
         type: string
     get:
       operationId: listBatches
       summary: List Batches
-      description: Gives a list of all the batches that have been created for the current project.
+      description: Returns a list of all the batches that have been created for the specified project.
       tags:
         - Batches
-      #parameters:
-      # READ ME: all parameters related to pagination and sorting commented out temporary.
-      #          KSQL does not support pagination, so it does not make sense to implement it now.
-      # - name: sort_batch
-      #   in: query
-      #   description: The sorting batch for get response
-      #   type: string
-      #   enum:
-      #   - ascending
-      #   - descending
-      #   default: ascending
-      # - name: sort_by
-      #   in: query
-      #   description: The field by which to sort
-      #   type: string
-      # - name: page_token
-      #   in: query
-      #   description: Specify the first entity that you want to retrieve
-      #   type: integer
-      #   default: 0
-      # - name: page_size
-      #   in: query
-      #   description: Specify the number of entities that you want to retrieve
-      #   type: integer
-      #   default: 50
       responses:
         200:
           description: Success
@@ -112,7 +85,7 @@ paths:
     post:
       operationId: createBatch
       summary: Create a Batch
-      description: Creates a new batch in the current project. When you create a new batch, you must also specify properties for at least one container. See additional information after Body Params for details of qualities and quantities needed for batch and container creation.
+      description: Creates a new batch of containers in the specified project.
       tags:
         - Batches
       parameters:
@@ -146,23 +119,23 @@ paths:
     parameters:
       - in: path
         name: batch
-        description: A unique identifier of a batch
+        description: A unique identifier of a batch.
         type: string
         required: true
       - name: project
         in: path
-        description: The project identifier
+        description: The project identifier.
         required: true
         type: string
       - name: org
         in: path
-        description: The organization identifier
+        description: The organization identifier.
         required: true
         type: string
     get:
       operationId: describeBatch
       summary: Describe a Batch
-      description: Gives information about a specific batch.
+      description: Returns information about a specific batch.
       tags:
         - Batches
       responses:
@@ -185,7 +158,7 @@ paths:
     patch:
       operationId: updateBatch
       summary: Update a Batch
-      description: Lets you update the batch's display name, the desired version, or its AWS roles.
+      description: Update the batch properties.
       tags:
         - Batches
       parameters:
@@ -218,7 +191,7 @@ paths:
     delete:
       operationId: deleteBatch
       summary: Delete a Batch
-      description: Deletes the selected batch including all its related resources.
+      description: Deletes the selected batch including all its containers.
       tags:
         - Batches
       responses:
@@ -248,45 +221,34 @@ paths:
         required: true
       - name: project
         in: path
-        description: The project identifier
+        description: The project identifier.
         required: true
         type: string
       - name: org
         in: path
-        description: The organization identifier
+        description: The organization identifier.
         required: true
         type: string
     get:
       operationId: listBatchContainers
-      summary: List the Containers in a Batch
-      description: Gives a list of all containers in the desired batch.
+      summary: List the containers in a Batch
+      description: Returns a list of all containers in the batch.
       tags:
       - Containers
       parameters:
         - name: state
-          description: Filter the containers by specified states
+          description: Filter the containers by specified states.
           in: query
           type: array
           items:
             type: string
-          enum:
+            enum:
             - creating
             - starting
             - running
             - terminating
             - terminated
-      # READ ME: all parameters related to pagination and sorting commented out temporary.
-      #          KSQL does not support pagination, so it does not make sense to implement it now.
-      # - name: page_token
-      #   in: query
-      #   description: Specify the first entity that you want to retrieve
-      #   type: integer
-      #   default: 0
-      # - name: page_size
-      #   in: query
-      #   description: Specify the number of entities that you want to retrieve
-      #   type: integer
-      #   default: 50
+          default: [creating, starting, running, terminating]
       responses:
         200:
           description: OK
@@ -317,23 +279,23 @@ paths:
         required: true
       - in: path
         name: batch
-        description: The batch identifier
+        description: The batch identifier.
         type: string
         required: true
       - name: project
         in: path
-        description: The project identifier
+        description: The project identifier.
         required: true
         type: string
       - name: org
         in: path
-        description: The organization identifier
+        description: The organization identifier.
         required: true
         type: string
     get:
       operationId: describeContainer
       summary: Describe a Container
-      description: Gives information about the specified container.
+      description: Returns information about the specified container.
       tags:
         - Containers
       responses:
@@ -362,17 +324,17 @@ paths:
         required: true
       - in: path
         name: batch
-        description: The batch identifier
+        description: The batch identifier.
         type: string
         required: true
       - name: project
         in: path
-        description: The project identifier
+        description: The project identifier.
         required: true
         type: string
       - name: org
         in: path
-        description: The organization identifier
+        description: The organization identifier.
         required: true
         type: string
     post:
@@ -410,7 +372,6 @@ definitions:
       - state
       - container_image
       - desired_number
-      - max_price
       - actual_number
     properties:
       id:
@@ -430,18 +391,18 @@ definitions:
         description: The unique identifier of the organization.
         type: string
       project_id:
-        description: The unique identifier of the project
+        description: The unique identifier of the project.
         type: string
       created_at:
-        description: The time at which this batch was created
+        description: The time at which this batch was created.
         type: string
         format: date-time
       updated_at:
-        description: The time at which this batch was last updated
+        description: The time at which this batch was last updated.
         type: string
         format: date-time
       display_name:
-        description: The display name of the batch
+        description: The display name of the batch.
         type: string
         maxLength: 512
       state:
@@ -454,14 +415,14 @@ definitions:
           - failed
           - partiallyFulfilled
       container_image:
-        description: The path where the container image can be found
+        description: The path where the container image can be found.
         type: string
         example: myregistry.local:5000/testing/test-image
       docker_credentials_id:
         description: The reference to set of credentials that are required to access the container-image repository.
         type: string
       elasticsearch_endpoint:
-        description: URL of Elastic Search instance where logs produced by containers are sent
+        description: URL of Elastic Search instance where logs produced by containers are sent.
         type: string
         example: http://elasticsearch.example.com:9200
       container_preset:
@@ -471,38 +432,37 @@ definitions:
         description: The desired number of containers.
         type: integer
       shortage:
-        description: Indicates the batch is not fully provisioned due to a shortage at partner's level
+        description: Indicates the batch is not fully provisioned due to a shortage at the data center.
         type: boolean
-      max_price:
-        description: The maximum price in USD per hour that the customer is willing to pay. "unlimited" is used to indicate that the price is not a constraint.
-        type: string
       actual_number:
         description: The actual number of running or completed containers.
         type: integer
       aws_role:
         $ref: '#/definitions/aws_role'
       desired_locations:
-        description: One or more country codes (ISO-3166-1) or country subdivision codes (ISO-3166-2) in which the batch may be instantiated.
+        description: One or more locations. A location can refer to a country, a subdivision of a country, or a city. A country is encoded using the Country codes (ISO-3166-1). A country subdivision as encoded as a <country code>-<subdivision code> (subdivision codes are defined in ISO-3166-2). A city is encoded as <country code>-<subdivision code>-<city name>. For example, US-MA-Boston. In cases where there is no subdivision in the country it will be left blank. For example IL--TelAviv.
         type: array
         items:
           type: string
         x-nullable: true
-      undesired_locations:
-        description: One or more country codes (ISO-3166-1) or country subdivision codes (ISO-3166-2) in which the batch may not be instantiated.
-        type: array
-        items:
-          type: string
-        x-nullable: true
+      data_center_id:
+        description: The unique ID of a data center in which the user wishes the containers to run. This is mutually exclusive with desired_locations.
+        type: string
+      data_center_path:
+        description: The data center path in which the user wishes the containers to run. This is mutually exclusive with desired_locations.
+        type: string
+        example: /partner/foo/data-center/bar
       qualities:
         $ref: '#/definitions/quality_set'
       quantities:
         $ref: '#/definitions/quantity_set'
-      data_center_ids:
-        description: The data centers in which the user requested the containers to run.
-        type: array
-        items:
-          description: A unique identifier of a resource group
-          type: string
+      catalog_item_id:
+        description: The chosen catalog item's unique ID.
+        type: string
+      catalog_item_path:
+        description: The chosen catalog item's path.
+        type: string
+        example: /partners/big-partner/data-center/boston/vm-catalog/@7g167ryep3fr8ejr4bxemxju4h
       deleted:
         description: Indicates if this batch was deleted.
         type: boolean
@@ -516,11 +476,34 @@ definitions:
         type: array
         items:
           type: string
-      over_quota:
-        description: The amount of resources not fully provisioned due to exceeded quota.
-        $ref: '#/definitions/quantity_set'
+      out_of_quota:
+        description: Indicates the batch is not fully provisioned due to quota limitation.
+        type: boolean
+    example:
+      id: jizh77chbfcnyu7p79omf5rx5a
+      name: batch1
+      path: "/orgs/test-org/projects/sandbox/batches/batch1"
+      org_id: di86ihycue5875pb7d5ybfhn9r
+      project_id: g3ker86kt6mir8rbczwkyjotpe
+      created_at: '2021-03-08T16:29:06.265Z'
+      updated_at: '2021-03-08T16:29:06.265Z'
+      display_name: Batch 1
+      state: fulfilled
+      container_image: docker.io/library/bash:latest
+      elasticsearch_endpoint: http://elasticsearch.example.com:9200
+      desired_number: 3
+      actual_number: 3
+      desired_locations:
+      data_center_id: n6wicf
+      catalog_item_id: s1r37s
+      catalog_item_path: "/partners/medone/data-centers/ptv/vm-catalog/@s1r37s"
+      env:
+      - FOO=bar
+      args:
+      - "/bin/sleep"
+      - '360'
   batches:
-    description: a list of batches
+    description: A list of batches.
     type: object
     required:
       - items
@@ -542,26 +525,26 @@ definitions:
       - state
     properties:
       id:
-        description: A unique identifier of a container
+        description: A unique identifier of a container.
         type: string
       batch_id:
-        description: The batch that resulted in the creation of this container.
+        description: The batch to which this container belongs.
         type: string
       path:
-        description: The path to the resource that includes all the parents
+        description: The path to the resource that includes all the parents.
         type: string
         example: /orgs/my-org/projects/my-project/containers/@cxh5jywfn7y5tdj76go8ijxh7a
       org_id:
         description: The unique identifier of the organization.
         type: string
       project_id:
-        description: The unique identifier of the project
+        description: The unique identifier of the project.
         type: string
       data_center_id:
-        description: The data center in which the container is placed.
+        description: The data center in which the container is provisioned.
         type: string
       data_center_path:
-        description: The path to the data center in which this container is provisioned, that includes all the parents
+        description: The path to the data center in which this container is provisioned, that includes all the parents.
         type: string
         example: /partner/foo/data-center/bar
       quantities:
@@ -586,7 +569,7 @@ definitions:
           - terminating
           - terminated
       state_reason:
-        description: Information on why the container has reached its state
+        description: Information on why the container has reached its state.
         type: string
       exit_code:
         description: Exit code of containerized application.
@@ -594,14 +577,24 @@ definitions:
         format: int
         x-nullable: true
       error:
-        description: Error which occurred during container's lifetime
+        description: Error which occurred during container's lifetime.
         type: string
       shortage:
-        description: Indicates the container is not fully provisioned due to a shortage at partner's level
+        description: Indicates the container is not fully provisioned due to a shortage at the data center.
         type: boolean
       degraded:
         description: The container is running in a degraded mode. There might be a delay between issuing a command for controlling this container and a response.
         type: boolean
+    example:
+      id: bg3c131wpdrjbi5ugmosis4aqy
+      batch_id: jizh77chbfcnyu7p79omf5rx5a
+      path: "/orgs/test-org/projects/sandbox/batches/batch1/containers/@bg3c131wpdrjbi5ugmosis4aqy"
+      org_id: di86ihycue5875pb7d5ybfhn9r
+      project_id: g3ker86kt6mir8rbczwkyjotpe
+      data_center_id: n6wicf
+      data_center_path: "/partners/medone/data-centers/ptv"
+      start_time: '2021-03-08T16:35:22.899Z'
+      state: running
   containers:
     type: object
     required:
@@ -611,12 +604,41 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/container'
+    example:
+      items:
+        - id: bg3c131wpdrjbi5ugmosis4aqy
+          batch_id: jizh77chbfcnyu7p79omf5rx5a
+          path: "/orgs/test-org/projects/sandbox/batches/batch1/containers/@bg3c131wpdrjbi5ugmosis4aqy"
+          org_id: di86ihycue5875pb7d5ybfhn9r
+          project_id: g3ker86kt6mir8rbczwkyjotpe
+          data_center_id: n6wicf
+          data_center_path: "/partners/medone/data-centers/ptv"
+          start_time: '2021-03-08T16:35:22.899Z'
+          state: running
+        - id: ftapca1guorg77dooqzkoh14te
+          batch_id: jizh77chbfcnyu7p79omf5rx5a
+          path: "/orgs/test-org/projects/sandbox/batches/batch1/containers/@ftapca1guorg77dooqzkoh14te"
+          org_id: di86ihycue5875pb7d5ybfhn9r
+          project_id: g3ker86kt6mir8rbczwkyjotpe
+          data_center_id: n6wicf
+          data_center_path: "/partners/medone/data-centers/ptv"
+          start_time: '2021-03-08T16:35:21.868Z'
+          state: running
+        - id: rooaohnuc8hk7zeafkb8az8mww
+          batch_id: jizh77chbfcnyu7p79omf5rx5a
+          path: "/orgs/test-org/projects/sandbox/batches/batch1/containers/@rooaohnuc8hk7zeafkb8az8mww"
+          org_id: di86ihycue5875pb7d5ybfhn9r
+          project_id: g3ker86kt6mir8rbczwkyjotpe
+          data_center_id: n6wicf
+          data_center_path: "/partners/medone/data-centers/ptv"
+          start_time: '2021-03-08T16:35:31.169Z'
+          state: running
   aws_role:
-    description: AWS role and access key for the containers
     type: object
     required:
       - role_arn
       - aws_access_key_id
+    description: The AWS IAM role ans the AWS credentials that will be used to grant the container permission to access AWS services. The container will receive temporary credentials.
     properties:
       role_arn:
         description: The unique identifier of the role in AWS.
@@ -628,28 +650,27 @@ definitions:
     required:
       - desired_number
       - container_image
-      - max_price
     type: object
     properties:
       name:
         type: string
-        description: A name for this batch
+        description: A name for this batch.
         minLength: 1
         maxLength: 63
         pattern: '^[a-z]([-a-z0-9]*[a-z0-9])?$'
       display_name:
-        description: The display name of the batch
+        description: The display name of the batch.
         type: string
         maxLength: 512
       container_image:
-        description: The path where the container image can be found
+        description: The path where the container image can be found.
         type: string
         example: myregistry.local:5000/testing/test-image
       docker_credentials_id:
         description: The reference to set of credentials that are required to access the container-image repository.
         type: string
       elasticsearch_endpoint:
-        description: URL of Elastic Search instance where logs produced by containers are sent
+        description: URL of Elastic Search instance where logs produced by containers are sent.
         type: string
         example: http://elasticsearch.example.com:9200
       container_preset:
@@ -659,28 +680,28 @@ definitions:
         $ref: '#/definitions/quantity_set'
       qualities:
         $ref: '#/definitions/quality_set'
-      max_price:
-        description: The maximum price in USD per hour that the customer is willing to pay. "unlimited" is used to indicate that the price is not a constraint.
-        type: string
       desired_number:
         description: The desired number of containers.
         type: integer
       desired_locations:
-        description: One or more country codes (ISO-3166-1) or country subdivision codes (ISO-3166-2) in which the batch may be instantiated.
+        description: One or more locations. A location can refer to a country, a subdivision of a country, or a city. A country is encoded using the Country codes (ISO-3166-1). A country subdivision as encoded as a <country code>-<subdivision code> (subdivision codes are defined in ISO-3166-2). A city is encoded as <country code>-<subdivision code>-<city name>. For example, US-MA-Boston. In cases where there is no subdivision in the country it will be left blank. For example IL--TelAviv.
         type: array
         items:
           type: string
-      undesired_locations:
-        description: One or more country codes (ISO-3166-1) or country subdivision codes (ISO-3166-2) in which the batch may not be instantiated.
-        type: array
-        items:
-          type: string
-      data_center_ids:
-        description: The data centers in which the user wishes the containers to run.
-        type: array
-        items:
-          description: A unique identifier of a data center
-          type: string
+      data_center_id:
+        description: The unique ID of a data center in which the user wishes the containers to run. This is mutually exclusive with desired_locations. If data_center_path is also specified, it must refer to the same data center.
+        type: string
+      data_center_path:
+        description: The data center path in which the user wishes the containers to run. This is mutually exclusive with desired_locations. If data_center_id is also specified, it must refer to the same data center.
+        type: string
+        example: /partner/foo/data-center/bar
+      catalog_item_id:
+        description: The chosen catalog item ID. Should only be specified if data_center_id and/or data_center_path are specified. If catalog_item_path is also specified, it must refer to the same catalog item.
+        type: string
+      catalog_item_path:
+        description: The chosen catalog item path. Should only be specified if data_center_id and/or data_center_path are specified. If catalog_item_id is also specified, it must refer to the same catalog item.
+        type: string
+        example: /partners/big-partner/data-center/boston/vm-catalog/@7g167ryep3fr8ejr4bxemxju4h
       aws_role:
         $ref: '#/definitions/aws_role'
       env:
@@ -693,6 +714,19 @@ definitions:
         type: array
         items:
           type: string
+    example:
+      desired_number: 3
+      container_image: docker.io/library/bash:latest
+      name: batch1
+      display_name: Batch 1
+      elasticsearch_endpoint: http://elasticsearch.example.com:9200
+      data_center_id: n6wicf
+      catalog_item_id: s1r37s
+      env:
+      - FOO=bar
+      args:
+      - "/bin/sleep"
+      - '360'
   batch_update:
     type: object
     properties:
@@ -704,7 +738,7 @@ definitions:
         pattern: '^[a-z]([-a-z0-9]*[a-z0-9])?$'
         x-nullable: true
       display_name:
-        description: The display name of the batch
+        description: The display name of the batch.
         type: string
         maxLength: 512
         x-nullable: true
@@ -712,13 +746,12 @@ definitions:
       #        description: The desired number of containers.
       #        type: integer
       #        x-nullable: true
-      #      max_price:
-      #        description: The maximum price in USD per hour that the customer is willing to pay. Unlimited is used to indicate that the price is not a constraint.
-      #        type: string
-      #        x-nullable: true
       aws_role:
         $ref: '#/definitions/aws_role'
         x-nullable: true
+    example:
+      name: batch1
+      display_name: Batch 1
   container_presets:
     description: A list of container presets.
     type: object
@@ -737,28 +770,34 @@ definitions:
       - quantities
     properties:
       name:
-        description: The human readable name of this preset
+        description: The human readable name of this preset.
         type: string
       display_name:
-        description: The display name of this preset
+        description: The display name of this preset.
         type: string
       quantities:
         $ref: '#/definitions/quantity_set'
+    example:
+      name: xsmall
+      display_name: X-Small
+      quantities:
+        cpu_cores: 1
+        instance_storage: 10737418240
+        ram: 1073741824
   env:
     description: A list of environment variables to be passed to the containers. Each environment variable must be specified as <name>=<value>.
     type: array
     items:
-      description: A list of environment variables to be passed to the containers. Each environment variable must be specified as <name>=<value>.
       type: string
       pattern: '^.+=.+$'
       example: FOO=bar
   quality_set:
+    description: A set of required qualities. The object maps quality identifiers to values. For qualities defined with no values, the value must be 1. See https://api.ridge.co/compute/v1alpha/qualities for possible properties.
     type: object
     additionalProperties:
-      description: A set of required qualities. The object maps quality identifiers to values. For qualities defined with no values, the value must be 1. See https://api.ridge.co/compute/v1alpha/qualities for possible properties.
       type: integer
   quantity_set:
+    description: A set of quantities. The object maps quantity identifiers to values. See https://api.ridge.co/compute/v1alpha/quantities for possible properties.
     type: object
     additionalProperties:
-      description: A set of quantities. The object maps quantity identifiers to values. See https://api.ridge.co/compute/v1alpha/quantities for possible properties.
       type: integer
