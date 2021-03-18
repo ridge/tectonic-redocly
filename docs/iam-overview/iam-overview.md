@@ -57,11 +57,11 @@ Following is a detailed description of roles.
 
 These roles are granted for a specific project.
 
-#### `Project Operator`
+#### Project Operator
 
 A project operator can create, delete, view and update the resources in the project.
 
-#### `Project Administrator`
+#### Project Administrator
 
 A project administrator has all the permissions of a project operator. In addition the role allows to:
 
@@ -79,17 +79,17 @@ Note that a member of an organization without any organization roles can:
 - View the properties of the organization
 - View the list and properties of projects in the organization
 
-#### `Organization Operator`
+#### Organization Operator
 
 An organization operator can:
 
 - Do anything a project operator can do, for any project in the organization.
 
-#### `Organization Accountant`
+#### Organization Accountant
 
 An organization accountant can view organization's accounting reports
 
-#### `Organization administrator`
+#### Organization administrator
 
 An organization administrator can:
 
