@@ -1,17 +1,5 @@
 # Getting Started with Identity and Access Management
 
-- [Getting Started with Identity and Access Management](#getting-started-with-identity-and-access-management)
-  - [Overview](#overview)
-  - [Prerequisites](#prerequisites)
-  - [Creating a Project](#creating-a-project)
-  - [Inviting a Member](#inviting-a-member)
-    - [Creating an API Key](#creating-an-api-key)
-  - [Allowing Applications to Access the API](#allowing-applications-to-access-the-api)
-    - [Create an API key for an Application](#create-an-api-key-for-an-application)
-  - [Managing Groups](#managing-groups)
-    - [Adding a Member](#adding-a-member)
-  - [Granting Privileges to a Member](#granting-privileges-to-a-member)
-
 ## Overview
 This is a guide that will walk you through some basic use cases of identity and access management (IAM) in Ridge Cloud. See [IAM overview](../../docs/iam-overview/iam-overview.md).
 In this guide we will walk you through the following tasks:
