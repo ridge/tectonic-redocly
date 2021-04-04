@@ -13,7 +13,7 @@
   - [Granting Privileges to a Member](#granting-privileges-to-a-member)
 
 ## Overview
-This is a guide that will walk you through some basic use cases of identity and access management (IAM) in Ridge Cloud. See ![IAM overview](../../docs/iam-overview/iam-overview).
+This is a guide that will walk you through some basic use cases of identity and access management (IAM) in Ridge Cloud. See [IAM overview](../../docs/iam-overview/iam-overview.md).
 In this guide we will walk you through the following tasks:
 - Creating a project
 - Inviting users to become members
