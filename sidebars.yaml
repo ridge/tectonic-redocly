@@ -33,10 +33,10 @@ api:
         page: api/keying.page.yaml/*
 getting-started:
     - page: Getting Started/index.md
-    - page: Getting Started/iam-getting-started/iam-getting-started.md
-    - page: Getting Started/api-getting-started/getting-started-with-api.md
-    - page: Getting Started/rcs-getting-started/rcs-getting-started.md
-    - page: Getting Started/rks-getting-started/rks-getting-started.md
+#    - page: Getting Started/iam-getting-started/iam-getting-started.md
+#    - page: Getting Started/api-getting-started/getting-started-with-api.md
+#    - page: Getting Started/rcs-getting-started/rcs-getting-started.md
+#    - page: Getting Started/rks-getting-started/rks-getting-started.md
 docs:
   - page: docs/index.md
   - page: docs/rks-overview/rks-overview.md
