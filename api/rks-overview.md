@@ -1,5 +1,5 @@
 ﻿# Ridge Kubernetes Service API Overview
-The RKS API is used to create, manage, and monitor Kubernetes clusters. The API includes functions for:
+The [RKS](https://www.ridge.co/kubernetes) API is used to create, manage, and monitor Kubernetes clusters. The API includes functions for:
 -  **Node Presets**  - This is a list (read-only) of suggested configurations of the worker nodes of the cluster. Alternatively, you can explicitly specify the minimal CPU, memory and storage requirements.
 -  **Clusters**  - When you create a cluster you will specify at least one pool of worker nodes, and optional location and conformity constraints.
 -  **Node Pools**- When you create a worker node pool you specify the CPU, memory and storage requirements or a node preset. In addition, you specify the desired number of nodes and you may optionally specify Kubernetes labels and taints. You may modify the desired number of nodes.

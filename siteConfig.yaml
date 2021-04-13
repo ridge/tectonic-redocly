@@ -41,5 +41,11 @@ footer:
           href: 'https://www.ridge.co/legal/eula'
     - group: Support
       items:
-        - label: Contact us
-          href: 'https://www.ridge.co/contact-us'
+        - label: Talk to Our Expert
+          href: 'https://www.ridge.co/talk-to-expert'
+    - group: Ridge.co
+      items:
+        - label: Homepage
+          href: 'https://www.ridge.co'
+        - label: Blog
+          href: 'https://www.ridge.co/blog'

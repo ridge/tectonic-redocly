@@ -16,7 +16,7 @@ Organizations (orgs) are the top level of the hierarchy.
 The organization provides full visibility of all consumed cloud resources and the ability to segment and manage them.
 The organization is also the level at which you manage membership of users and applications (bots).
 ## Projects
-Projects provide the ability to logically group resources within an organization. Consumption of  a Ridge service results in allocation of infrastructure resources such as compute, network and storage resources. Every resource you consume from one of the Ridge locations is associated with a project.
+Projects provide the ability to logically group resources within an organization. Consumption of  a Ridge service [Ridge service](https://www.ridge.co) results in allocation of infrastructure resources such as compute, network and storage resources. Every resource you consume from one of the [Ridge locations](https://www.ridge.co/global-infrastructure) is associated with a project.
 
 A project is a convenient construct for managing access control. As an administrator of your organization, you have permissions to create and manage projects. You also control which groups and/or members have permissions to consume and manage services in this project.
 

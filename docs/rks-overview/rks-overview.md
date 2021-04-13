@@ -1,6 +1,6 @@
 ﻿# Ridge Managed Kubernetes Service
 ## Overview
-Ridge Kubernetes Service (RKS) offers a fully certified managed Kubernetes service similar to Google GKE or Amazon EKS.
+[Ridge Kubernetes Service](https://www.ridge.co/kubernetes) (RKS) offers a fully certified managed Kubernetes service similar to Google GKE or Amazon EKS.
 Using the Ridge tools (Console or API) you define the essential requirements for your Cluster, the heart of a Kubernetes service, and Ridge does the rest. Once your Cluster is set up,  you work with it using standard Kubernetes tools. When needed, you can update the Cluster using Ridge tools.
 
 ## What You Define
@@ -40,7 +40,7 @@ After your Cluster has been created, you can:
   * Add Nodes to Node Pools
 
 ## Data Center Location and Conformity Requirements
-The Ridge Cloud is a collection of Data Centers located all over the world. When you create a Cluster, you may list desired or undesired locations (such as countries, states, cities, or specific Data Centers). For example, you may want a cluster in any Data Center in California; not in a specific country; or you may want to require the cluster to be at a *specific *Data Center.
+The [Ridge Cloud](https://www.ridge.co) is a collection of Data Centers located all over the world. When you create a Cluster, you may list desired or undesired locations (such as countries, states, cities, or specific Data Centers). For example, you may want a cluster in any Data Center in California; not in a specific country; or you may want to require the cluster to be at a *specific *Data Center.
 
 Rather than defining desired/undesired locations, you can also define a requirement for a Data Center that is compliant with a specific industry standard, such as SOC2, ISO or HIPAA and Ridge will base its choice of location on that requirement.
 

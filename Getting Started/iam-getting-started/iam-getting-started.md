@@ -35,7 +35,7 @@ Use the Add Project button to create a new project. In this example we name the 
 ![create project](project-create.png)
 
 
-At this stage, you can start using Ridge Cloud services.
+At this stage, you can start using [Ridge Cloud services](https://www.ridge.co).
 
 
 ## Inviting a Member

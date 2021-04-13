@@ -1,5 +1,5 @@
 ﻿# Managing Kubernetes Clusters with the Ridge Console
-Clicking on Kubernetes in the left side menu brings you to the Clusters page, where you can see a list of any existing Kubernetes clusters. You can then manage existing clusters or add new ones.
+Clicking on Kubernetes in the left side menu brings you to the Clusters page, where you can see a list of all existing Kubernetes clusters. You can then manage existing clusters or add new ones.
 
 
 # Creating a Cluster

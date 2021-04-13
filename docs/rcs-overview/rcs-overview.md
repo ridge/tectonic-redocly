@@ -1,6 +1,6 @@
 ﻿# Ridge Container Service
 ## Introduction
-Ridge Managed Container Service (RCS) lets you deploy a batch of identical containers.
+[Ridge Container Service](https://www.ridge.co/container) (RCS) lets you deploy a batch of identical containers.
 After you specify the container characteristics, Ridge creates the underlying infrastructure, spins up the desired number of containers with your specified Docker image, and makes sure the containers are running. RCS manages all the servers, Docker, and networking, behind the scenes.
 
 ## Creating a Batch of Containers
