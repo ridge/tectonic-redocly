@@ -30,7 +30,7 @@ Organizations (Orgs) are the top level of the hierarchy and provide Ridge custom
 
 ### Projects
 
-Projects are part of an Organization. Projects provide the ability to logically segment resources within an Org. Projects contain infrastructure resources, (Compute, Network and Storage) that are consumed using ![Ridge Services](/https://www.ridge.co). User and/or groups may be granted roles in each project.
+Projects are part of an Organization. Projects provide the ability to logically segment resources within an Org. Projects contain infrastructure resources, (Compute, Network and Storage) that are consumed using [Ridge Services](https://www.ridge.co). User and/or groups may be granted roles in each project.
 
 ### Resource Identifiers
 
