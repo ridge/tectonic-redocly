@@ -52,7 +52,7 @@ paths:
     get:
       operationId: listVersions
       summary: List Supported Kubernetes Versions
-      description: Returns a list of the supported Kubernetes versions.
+      description: Returns a list of the supported Kubernetes versions, in descending order.
       tags:
         - Kubernetes Versions
       responses:
@@ -138,21 +138,21 @@ paths:
             type: string
   /orgs/{org}/projects/{project}/clusters/{cluster}:
     parameters:
-      - name: cluster
-        description: The identifier of a cluster.
-        in: path
-        type: string
-        required: true
-      - name: project
-        in: path
-        description: The project identifier.
-        required: true
-        type: string
       - name: org
         in: path
         description: The organization identifier.
         required: true
         type: string
+      - name: project
+        in: path
+        description: The project identifier.
+        required: true
+        type: string
+      - name: cluster
+        description: The identifier of a cluster.
+        in: path
+        type: string
+        required: true
     get:
       operationId: describeCluster
       summary: Describe a Kubernetes Cluster
@@ -179,7 +179,7 @@ paths:
     patch:
       operationId: updateCluster
       summary: Update Kubernetes Cluster Parameters
-      description: Lets you update the cluster's display name, the desired version, or its whitelist.
+      description: Lets you update the cluster's display name, the desired version, or API server whitelist.
       tags:
         - Clusters
       parameters:
@@ -228,21 +228,21 @@ paths:
             type: string
   /orgs/{org}/projects/{project}/clusters/{cluster}/node-pools:
     parameters:
-      - name: cluster
-        description: The identifier of a cluster.
-        in: path
-        type: string
-        required: true
-      - name: project
-        in: path
-        description: The project identifier.
-        required: true
-        type: string
       - name: org
         in: path
         description: The organization identifier.
         required: true
         type: string
+      - name: project
+        in: path
+        description: The project identifier.
+        required: true
+        type: string
+      - name: cluster
+        description: The identifier of a cluster.
+        in: path
+        type: string
+        required: true
     get:
       operationId: listClusterNodePools
       summary: List the Node Pools of a Kubernetes Cluster
@@ -297,21 +297,21 @@ paths:
             type: string
   /orgs/{org}/projects/{project}/clusters/{cluster}/node-pools/{node_pool}:
     parameters:
-      - name: cluster
-        description: The identifier of a cluster.
-        in: path
-        type: string
-        required: true
-      - name: project
-        in: path
-        description: The project identifier.
-        required: true
-        type: string
       - name: org
         in: path
         description: The organization identifier.
         required: true
         type: string
+      - name: project
+        in: path
+        description: The project identifier.
+        required: true
+        type: string
+      - name: cluster
+        description: The identifier of a cluster.
+        in: path
+        type: string
+        required: true
       - name: node_pool
         in: path
         description: The identifier of a node pool in a cluster.
@@ -392,26 +392,26 @@ paths:
             type: string
   /orgs/{org}/projects/{project}/clusters/{cluster}/node-pools/{node_pool}/nodes:
     parameters:
-      - name: node_pool
-        description: The identifier of a node pool.
-        in: path
-        type: string
-        required: true
-      - name: cluster
-        description: The identifier of a cluster.
-        in: path
-        type: string
-        required: true
-      - name: project
-        in: path
-        description: The project identifier.
-        required: true
-        type: string
       - name: org
         in: path
         description: The organization identifier.
         required: true
         type: string
+      - name: project
+        in: path
+        description: The project identifier.
+        required: true
+        type: string
+      - name: cluster
+        description: The identifier of a cluster.
+        in: path
+        type: string
+        required: true
+      - name: node_pool
+        description: The identifier of a node pool.
+        in: path
+        type: string
+        required: true
     get:
       operationId: listClusterNodes
       summary: List the Worker Nodes of a Kubernetes Cluster
@@ -445,26 +445,26 @@ paths:
             type: string
   /orgs/{org}/projects/{project}/clusters/{cluster}/node-pools/{node_pool}/nodes/{node}:
     parameters:
-      - name: node_pool
-        description: The identifier of a node pool.
-        in: path
-        type: string
-        required: true
-      - name: cluster
-        description: The identifier of a cluster.
-        in: path
-        type: string
-        required: true
-      - name: project
-        in: path
-        description: The project identifier.
-        required: true
-        type: string
       - name: org
         in: path
         description: The organization identifier.
         required: true
         type: string
+      - name: project
+        in: path
+        description: The project identifier.
+        required: true
+        type: string
+      - name: cluster
+        description: The identifier of a cluster.
+        in: path
+        type: string
+        required: true
+      - name: node_pool
+        description: The identifier of a node pool.
+        in: path
+        type: string
+        required: true
       - name: node
         in: path
         description: The unique identifier of a worker node in a cluster.
@@ -516,21 +516,21 @@ paths:
             type: string
   /orgs/{org}/projects/{project}/clusters/{cluster}/tokens:
     parameters:
-      - name: cluster
-        description: The identifier of a cluster.
-        in: path
-        type: string
-        required: true
-      - name: project
-        in: path
-        description: The project identifier.
-        required: true
-        type: string
       - name: org
         in: path
         description: The organization identifier.
         required: true
         type: string
+      - name: project
+        in: path
+        description: The project identifier.
+        required: true
+        type: string
+      - name: cluster
+        description: The identifier of a cluster.
+        in: path
+        type: string
+        required: true
     get:
       operationId: listClusterTokens
       summary: List the Access Tokens for a Kubernetes Cluster
@@ -585,26 +585,26 @@ paths:
             type: string
   /orgs/{org}/projects/{project}/clusters/{cluster}/tokens/{token}:
     parameters:
-      - name: token
-        description: The token for a Kubernetes Cluster.
-        in: path
-        type: string
-        required: true
-      - name: cluster
-        description: The identifier of a cluster.
-        in: path
-        type: string
-        required: true
-      - name: project
-        in: path
-        description: The project identifier.
-        required: true
-        type: string
       - name: org
         in: path
         description: The organization identifier.
         required: true
         type: string
+      - name: project
+        in: path
+        description: The project identifier.
+        required: true
+        type: string
+      - name: cluster
+        description: The identifier of a cluster.
+        in: path
+        type: string
+        required: true
+      - name: token
+        description: The token for a Kubernetes Cluster.
+        in: path
+        type: string
+        required: true
     get:
       operationId: describeClusterToken
       summary: Get Information About a Cluster Token
@@ -651,21 +651,21 @@ paths:
             type: string
   /orgs/{org}/projects/{project}/clusters/{cluster}/load-balancers:
     parameters:
-      - name: cluster
-        description: The identifier of a cluster.
-        in: path
-        type: string
-        required: true
-      - name: project
-        in: path
-        description: The project identifier.
-        required: true
-        type: string
       - name: org
         in: path
         description: The organization identifier.
         required: true
         type: string
+      - name: project
+        in: path
+        description: The project identifier.
+        required: true
+        type: string
+      - name: cluster
+        description: The identifier of a cluster.
+        in: path
+        type: string
+        required: true
     get:
       operationId: listClusterLBs
       summary: List Cluster's External Load Balancers
@@ -699,21 +699,21 @@ paths:
             type: string
   /orgs/{org}/projects/{project}/clusters/{cluster}/volumes:
     parameters:
-      - name: cluster
-        description: The identifier of a cluster.
-        in: path
-        type: string
-        required: true
-      - name: project
-        in: path
-        description: The project identifier.
-        required: true
-        type: string
       - name: org
         in: path
         description: The organization identifier.
         required: true
         type: string
+      - name: project
+        in: path
+        description: The project identifier.
+        required: true
+        type: string
+      - name: cluster
+        description: The identifier of a cluster.
+        in: path
+        type: string
+        required: true
     get:
       operationId: listClusterVolumes
       summary: List Cluster's Persistent Volumes
@@ -755,11 +755,14 @@ definitions:
       - org_id
       - project_id
       - cluster_id
+      - cluster_path
       - path
       - created_at
       - desired_node_count
       - initial_kubernetes_labels
       - initial_taints
+      - quantities
+      - qualities      
     properties:
       id:
         description: A system-defined unique ID of the node pool.
@@ -783,6 +786,9 @@ definitions:
         type: string
       cluster_id:
         description: The unique identifier of the Kubernetes cluster to which this node pool belongs.
+        type: string
+      cluster_path:
+        description: The path to the cluster resource.
         type: string
       created_at:
         description: The time at which this node pool was created.
@@ -813,26 +819,12 @@ definitions:
         description: The chosen catalog item path.
         type: string
       node_counts:
-        type: object
-        properties:
-          starting:
-            description: The number of nodes in the provisioning stage.
-            type: integer
-          running:
-            description: The number of nodes that are running.
-            type: integer
-          terminating:
-            description: The number of nodes that are in the process of being terminated.
-            type: integer
-          shortage:
-            description: The number of nodes that can't be provisioned at this time due to a shortage at the provider's level.
-            type: integer
-          queued:
-            description: The number of nodes waiting to be allocated.
-            type: integer
+        $ref: '#/definitions/node_counts'
       initial_kubernetes_labels:
         description: The initial Kubernetes labels (key-value pairs) that will be applied to the node.
-        $ref: '#/definitions/key_values'
+        type: object
+        additionalProperties:
+          type: string
       initial_taints:
         description: The initial Kubernetes taints that will be applied to the node.
         type: array
@@ -869,6 +861,30 @@ definitions:
       - workload_size=large:NoSchedule
       node_counts:
         running: 1
+  node_counts:
+    required:
+      - starting
+      - running
+      - terminating
+      - shortage
+      - queued
+    type: object
+    properties:
+      starting:
+        description: The number of nodes in the provisioning stage.
+        type: integer
+      running:
+        description: The number of nodes that are running.
+        type: integer
+      terminating:
+        description: The number of nodes that are in the process of being terminated.
+        type: integer
+      shortage:
+        description: The number of nodes that can't be provisioned at this time due to a shortage at the provider's level.
+        type: integer
+      queued:
+        description: The number of nodes waiting to be allocated.
+        type: integer
   node_pools:
     description: A list of node pools.
     type: object
@@ -888,6 +904,7 @@ definitions:
       - path
       - created_at
       - state
+      - quantities
     properties:
       id:
         description: A unique identifier for the worker node.
@@ -927,20 +944,8 @@ definitions:
       volumes:
         description: The volumes that are currently attached to the node.
         type: array
-        required:
-          - items
         items:
-          type: object
-          required:
-            - catalog_item_id
-            - catalog_item_path
-          properties:
-            volume_id:
-              description: The volume internal ID.
-              type: string
-            volume_path:
-              description: The full path to the volume including all the parents.
-              type: string
+          $ref: '#/definitions/node_volume'
       shortage:
         description: Indicates the node is not provisioned due to a shortage at the provider's level
         type: boolean
@@ -957,6 +962,18 @@ definitions:
       catalog_item_id: rfzcfc
       catalog_item_path: "/partners/medone/data-centers/tira/vm-catalog/@rfzcfc"
       volumes:
+  node_volume:
+    type: object
+    required:
+      - volume_id
+      - volume_path
+    properties:
+      volume_id:
+        description: The volume's internal ID.
+        type: string
+      volume_path:
+        description: The full path to the volume including all the parents.
+        type: string
   nodes:
     description: A list of worker nodes.
     type: object
@@ -975,16 +992,15 @@ definitions:
       - name
       - org_id
       - project_id
+      - project_path
       - path
       - created_at
       - state
-      - data_center_id
-      - data_center_path
       - node_pools
       - highly_available
       - desired_version
       - current_version
-      - whitelist
+      - api_server_whitelist
     properties:
       id:
         description: A system-defined unique ID for the Kubernetes cluster.
@@ -1001,6 +1017,9 @@ definitions:
         example: /orgs/my-org/projects/my-project/clusters/my-cluster
       project_id:
         description: The unique identifier of a project.
+        type: string
+      project_path:
+        description: The path to the project resource.
         type: string
       org_id:
         description: The unique identifier of the organization.
@@ -1036,12 +1055,10 @@ definitions:
       data_center_id:
         description: The unique identifier of the data center in which this cluster is provisioned.
         type: string
-        x-nullable: true
       data_center_path:
         description: The full path to the data center in which this cluster is provisioned, including all the parents.
         type: string
         example: /partner/foo/data-center/bar
-        x-nullable: true
       cluster_endpoint:
         description: The address through which the Kubernetes cluster's API can be reached.
         type: string
@@ -1054,12 +1071,11 @@ definitions:
       current_version:
         description: The current Kubernetes cluster version. Might differ from the desired_version during an upgrade to the cluster.
         type: string
-      whitelist:
-        description: The desired list of whitelisted networks in CIDR format (AAA.BBB.CCC.DDD/NN) or single IP (AAA.BBB.CCC.DDD).
+      api_server_whitelist:
+        description: A list of subnets that are allowed to access the Kubernetes API server in CIDR format (AAA.BBB.CCC.DDD/NN).        
         type: array
-        x-nullable: true
         items:
-          description: A whitelisted network in CIDR format or single IP.
+          description: An allowed subnet in CIDR format.
           type: string
       offline:
         description: Indicates if the cluster is currently offline (API server is unreachable).
@@ -1076,6 +1092,8 @@ definitions:
       nonallocatable:
         description: Indicates the cluster is not fully provisioned because VM configurations could not be found
         type: boolean
+      aws_role:
+        $ref: '#/definitions/aws_role'
     example:
       id: rozyaxyphmbiw5tbgq4sonooje
       name: test-cluster
@@ -1116,7 +1134,7 @@ definitions:
       highly_available: false
       desired_version: v1.17.6
       current_version: v1.17.6
-      whitelist:
+      api_server_whitelist:
   clusters:
     description: A list of Kubernetes clusters.
     type: object
@@ -1126,10 +1144,26 @@ definitions:
       items:
         type: array
         items:
-          $ref: '#/definitions/cluster'
+          $ref: '#/definitions/cluster'  
+  aws_role:
+    type: object
+    required:
+      - role_arn
+      - aws_access_key_id
+    description: The IAM role that will grant the cluster permissions (using temporary credentials) to access AWS services.
+    properties:
+      role_arn:
+        description: The unique identifier of the role in AWS.
+        type: string
+        example: arn:aws:iam::123868749533:role/s3-full-access
+      aws_access_key_id:
+        description: The unique identifier of the AWS key that should be used to create temporary credentials for the cluster.
+        type: string
+        example: AKIAIOSFODNN7EXAMPLE
   cluster_create:
     type: object
     required:
+      - name
       - node_pools
     properties:
       name:
@@ -1151,7 +1185,9 @@ definitions:
         description: One or more desired locations for the cluster.
         type: array
         items:
-          $ref: '#/definitions/location'
+          description: One or more locations. A location can refer to a country, a subdivision of a country, or a city.  A country is encoded using the Country codes (ISO-3166-1). A country subdivision as encoded as a <country code>-<subdivision code> (subdivision codes are defined in ISO-3166-2). A city is encoded as <country code>-<subdivision code>-<city name>, For example US-MA-Boston. In cases where there is no subdivision in the country it will be left blank. For example IL--TelAviv.
+          type: string
+          example: US-MA-Boston
       data_center_id:
         description: The data center uniq ID in which the user wishes the cluster to run. This is mutually exclusive with desired_locations and qualities. Either data_center_id or data_center_path can be specified; if both are present, they must agree.
         type: string
@@ -1164,12 +1200,17 @@ definitions:
       highly_available:
         description: Indicates whether the cluster has high availability. It might results in higher costs. By default, clusters are created with high availability.
         type: boolean
-        x-nullable: true
       desired_version:
         description: The desired Kubernetes version of the cluster. If not specified, the default v1.17.6 will be chosen.
         type: string
-      whitelist:
-        $ref: "#/definitions/whitelist_update"
+      api_server_whitelist:
+        description: A list of subnets that are allowed to access the Kubernetes API server in CIDR format (AAA.BBB.CCC.DDD/NN).
+        type: array
+        items:
+          description: Ab allowed subnet in CIDR format.
+          type: string
+      aws_role:
+        $ref: '#/definitions/aws_role'
     example:
       node_pools:
       - desired_node_count: 1
@@ -1197,17 +1238,23 @@ definitions:
       display_name:
         description: The display name of the cluster.
         type: string
-        x-nullable: true
         maxLength: 512
       desired_version:
         description: The desired Kubernetes version of the cluster. Updating this field will trigger an upgrade flow. Upgrade is a long operation where the cluster nodes are replaced. During the upgrade, any request to add or delete a node will be blocked.
         type: string
+      api_server_whitelist:
+        description: A list of subnets that are allowed to access the Kubernetes API server in CIDR format (AAA.BBB.CCC.DDD/NN).
+        type: array
+        items:
+          description: An allowed subnet in CIDR format.
+          type: string
+      aws_role:
+        $ref: '#/definitions/aws_role'
         x-nullable: true
-      whitelist:
-        $ref: "#/definitions/whitelist_update"
   node_pool_create:
     type: object
     required:
+      - name
       - desired_node_count
     properties:
       name:
@@ -1223,6 +1270,7 @@ definitions:
       desired_node_count:
         description: The desired number of worker nodes in the node pool.
         type: integer
+        minimum: 0
       node_preset:
         description: The preset VM specifications for the node. If you specify quantity values explicitly, these override those from the preset.
         type: string
@@ -1238,7 +1286,10 @@ definitions:
         type: string
         example: /partners/big-partner/data-center/boston/vm-catalog/@7g167ryep3fr8ejr4bxemxju4h
       initial_kubernetes_labels:
-         $ref: '#/definitions/key_values'
+        type: object
+        description: The initial Kubernetes labels (key-value pairs) that will be applied to the node.
+        additionalProperties:
+          type: string
       initial_taints:
         description: The initial Kubernetes taints that will be applied to the node.
         type: array
@@ -1264,20 +1315,10 @@ definitions:
         description: The display name of the node pool.
         type: string
         maxLength: 512
-        x-nullable: true
       desired_node_count:
         description: The desired number of worker nodes in the node pool.
         type: integer
-        x-nullable: true
-  key_values:
-    type: object
-    description: The initial Kubernetes labels (key-value pairs) that will be applied to the node.
-    additionalProperties:
-      type: string
-  location:
-    description: One or more locations. A location can refer to a country, a subdivision of a country, or a city.  A country is encoded using the Country codes (ISO-3166-1). A country subdivision as encoded as a <country code>-<subdivision code> (subdivision codes are defined in ISO-3166-2). A city is encoded as <country code>-<subdivision code>-<city name>, For example US-MA-Boston. In cases where there is no subdivision in the country it will be left blank. For example IL--TelAviv.
-    type: string
-    example: US-MA-Boston
+        minimum: 0
   node_presets:
     description: A list of node presets.
     type: object
@@ -1298,9 +1339,13 @@ definitions:
       name:
         description: The human readable name of this preset.
         type: string
+        minLength: 1
+        maxLength: 63
+        pattern: '^[a-z]([-a-z0-9]*[a-z0-9])?$'
       display_name:
         description: The display name of this preset.
         type: string
+        maxLength: 512
       quantities:
         $ref: '#/definitions/quantity_set'
     example:
@@ -1348,6 +1393,7 @@ definitions:
       display_name:
         description: The display name of this token.
         type: string
+        maxLength: 512
       created_at:
         description: The time at which this token was created.
         type: string
@@ -1380,6 +1426,8 @@ definitions:
       member_path: "/orgs/test-org/members/@ysyighpz9buqsgi1xjgsjpazqc"
   token_create:
     type: object
+    required:
+      - name
     properties:
       member_id:
         description: The unique identifier of the Ridge member assigned to this token. The member ID will be used as the Kubernetes username. Either member_id or member_path must be specified; if both are present, they must agree.
@@ -1390,9 +1438,13 @@ definitions:
       name:
         description: The human readable name of this token.
         type: string
+        minLength: 1
+        maxLength: 63
+        pattern: '^[a-z]([-a-z0-9]*[a-z0-9])?$'
       display_name:
         description: The display name of this token.
         type: string
+        maxLength: 512
     example:
       id: kec9q64bu4813awu8x9p5ihr3r
       path: "/orgs/test-org/projects/test/clusters/test-cluster/tokens/token1"
@@ -1425,9 +1477,13 @@ definitions:
       name:
         description: The human readable name of this token.
         type: string
+        minLength: 1
+        maxLength: 63
+        pattern: '^[a-z]([-a-z0-9]*[a-z0-9])?$'
       display_name:
         description: The display name of this token.
         type: string
+        maxLength: 512
       path:
         description: The path to the resource that includes all the parents.
         type: string
@@ -1491,6 +1547,7 @@ definitions:
       - kubernetes_namespace
       - kubernetes_service
       - created_at
+      - whitelist
     properties:
       id:
         description: A system-defined unique ID of the load balancer.
@@ -1530,16 +1587,49 @@ definitions:
         description: The public IP address that is assigned to this load balancer.
         type: string
         format: ipv4
-        x-nullable: true
       whitelist:
-        description: List of whitelisted networks in CIDR format (AAA.BBB.CCC.DDD/NN). Field is missing if the whitelist is not present. Field is [] if whitelist present and empty (no networks allowed).
+        description: A list of subnets that are allowed to access the Kubernetes service in CIDR format (AAA.BBB.CCC.DDD/NN).
         type: array
-        x-nullable: true
         items:
           type: string
       ports:
         type: array
         items:
+          $ref: '#/definitions/load_balancer_port'
+      degraded:
+        description: The load balancer is running in a degraded mode. There might be a delay between issuing a command for controlling this load balancer and a response.
+        type: boolean
+      out_of_quota:
+        description: Indicates the load balancer is not provisioned due to exceeded quota.
+        type: boolean
+    example:
+      items:
+      - id: h1c5hohqg6qwfsw9m8szseeyya
+        path: "/orgs/test-org/projects/sandbox/clusters/demo-cluster/load-balancers/@h1c5hohqg6qwfsw9m8szseeyya"
+        org_id: di86ihycue5875pb7d5ybfhn9r
+        project_id: g3ker86kt6mir8rbczwkyjotpe
+        cluster_id: fkwsnunegang7ttrocjyax7ghe
+        kubernetes_service: my-wordpress
+        kubernetes_namespace: default
+        created_at: '2021-03-30T12:46:50.034553916Z'
+        state: running
+        ip_address: 107.6.88.152
+        whitelist:
+        - 0.0.0.0/0
+        ports:
+        - protocol: tcp
+          port: 443
+          target_port: 31715
+          target_ips:
+          - 172.30.52.7
+          - 172.30.52.19
+        - protocol: tcp
+          port: 80
+          target_port: 30665
+          target_ips:
+          - 172.30.52.7
+          - 172.30.52.19
+  load_balancer_port:
           type: object
           required:
             - protocol
@@ -1569,12 +1659,6 @@ definitions:
                 description: The IPv4 address of the target vm.
                 type: string
                 format: ipv4
-      degraded:
-        description: The load balancer is running in a degraded mode. There might be a delay between issuing a command for controlling this load balancer and a response.
-        type: boolean
-      out_of_quota:
-        description: Indicates the load balancer is not provisioned due to exceeded quota.
-        type: boolean
   versions:
     description: A list of Kubernetes versions.
     type: object
@@ -1632,6 +1716,7 @@ definitions:
       size:
         description: The size of the volume in bytes.
         type: integer
+        format: int64
         minimum: 0
       pvc_id:
         description: The persistent volume claim that resulted in this volume.
@@ -1669,6 +1754,17 @@ definitions:
       out_of_quota:
         description: Indicates the volume is not provisioned due to exceeded quota.
         type: boolean
+    example:
+      id: da8hrdn6wtjjb5ntd8uqsbihmo
+      path: "/orgs/test-org/projects/sandbox/clusters/demo-cluster/volumes/@da8hrdn6wtjjb5ntd8uqsbihmo"
+      org_id: di86ihycue5875pb7d5ybfhn9r
+      project_id: g3ker86kt6mir8rbczwkyjotpe
+      cluster_id: fkwsnunegang7ttrocjyax7ghe
+      size: 10737418240
+      pvc_id: pvc-30e7d3a3-59c5-4e6d-9c4a-1aa632ab5ba6
+      created_at: '2021-03-30T12:46:50.87279159Z'
+      state: terminated
+      attachment_state: detached
   quality_set:
     description: A set of required qualities. The object maps quality identifiers to values. For qualities defined with no values, the value must be 1. See https://ridge.readme.io/reference/qualities for possible properties.
     type: object
@@ -1679,14 +1775,4 @@ definitions:
     type: object
     additionalProperties:
       type: integer
-  whitelist_update:
-    description: List of whitelisted networks in CIDR format (AAA.BBB.CCC.DDD/NN).
-    items:
-      description: A whitelisted network in CIDR format.
-      type: string
-    type: array
-    x-tectonic-nullable: true
-    x-go-type:
-      type: WhitelistArray
-      import:
-        package: go.tectonic.network/moonstone/api/custom
+      format: int64

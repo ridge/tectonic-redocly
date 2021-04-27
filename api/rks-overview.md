@@ -38,7 +38,8 @@ To create a kubernetes cluster you need to determine the following:
 - Node pool(s)
 - The kubernetes version
 - Whether or not you would like the cluster to be highly available
-- A Whitelist for controlling the source IPs from which the cluster is accessed.
+- A Whitelist for controlling the source IPs from which the cluster's API is accessed
+- An optional AWS role. This will grant the pods that are running in the cluster temporary AWS credentials. An AWS SDK running in the cluster will seamlessly retrieve these credentials from a metadata server that Ridge provisioned and configured on the cluster.
 
 #### Variables: Qualities Used in Cluster Creation
 If your cluster requires a specific certification for the data center in which it is created, you can add this as a quality, in the form of `certification_name:1`. The value of this quality is always `1`.

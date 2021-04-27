@@ -107,3 +107,21 @@ You can scale up a Node Pool, by adding a Node. After its creation, pods will be
 
 **Note:**
 Deleting a specific node from the pool, without changing the desired amount in the pool, will trigger the creation of a new node (Ridge will try to reconcile to a stable desired state as determined by the developer).
+
+## AWS Credentials for Containers
+Containers that run in your cluster may need access to AWS services. For example, the containers may need to write data to S3. These containers need AWS credentials for this purpose. Placing these credentials in the container image is not secure and configuring each container is complex and inconvenient.
+Ridge stores AWS credentials for you, in a secure, reusable manner and uses them to generate temporary credentials for containers. The AWS SDK that you install in your container will automatically locate these credentials. The Ridge implementation makes the AWS credentials available in the same manner that AWS does.
+### Basic Flow
+The first step is to store AWS credentials on Ridge Cloud.  See [External Credentials API](https://dev.ridge.co/api/keying/overview/).
+You will need to specify yhe following parameters:
+  - AWS region
+  - Access key ID
+  - Access key secret
+  - Name for these credentials
+These credentials must allow for creating temporary AWS credentials (using AWS STS service API).
+
+When you create a cluster you can choose to make **temporary** AWS credentials available to the containers that will run on the cluster. To do this you will beed to specify:
+  - The identifier of the above mentioned AWS credentials, referenced by name
+  - The ARN of the role that you wish the containers to assume
+  
+A container that will run in this cluster can make use of the AWS SDK. This SDK will search for the credentials on the metadata server (169.254.169.254). The metadata server is part of the managed Kubernetes service and Ridge Cloud will make **temporary** AWS credentials available on it for the specified role.
