@@ -125,3 +125,35 @@ When you create a cluster you can choose to make **temporary** AWS credentials a
   - The ARN of the role that you wish the containers to assume
   
 A container that will run in this cluster can make use of the AWS SDK. This SDK will search for the credentials on the metadata server (169.254.169.254). The metadata server is part of the managed Kubernetes service and Ridge Cloud will make **temporary** AWS credentials available on it for the specified role.
+
+## Metadata Service
+All containers that run on a Kubernetes cluster have access to Ridge Cloud metadata.
+
+The metadata includes the following information:
+- Data center information. The name, ID, and path (in the Ridge API) of the data center in which the container is running.
+- Organization abd project information. The name, ID, and path (in the Ridge API) of the organization and project to which the container belongs.
+- The name, ID and path of the cluster in which the container is running.
+- The node ID. The ID of the worker node on which the container is running. The ID's prefix is the name of the node pool to which the worker node belongs. For example pool1-bfnmngg41jh7di69konzr3pt9o
+
+
+To obtain all the metadata issue a GET request to `https://169.254.169.254/v1`. The response will be in JSON format:
+
+
+```
+{
+  "data_center_id": "{data-center-id}",
+  "data_center_name": "{data-center}",
+  "data_center_path": "/partners/{partner}/data-centers/{data-center}",
+  "org_id": "{org-id}",
+  "org_name": "{org}",
+  "org_path": "/orgs/{org}",
+  "project_id": "{project-id}",
+  "project_name": "{project}",
+  "project_path": "/orgs/{org}/projects/{project}",
+  "cluster_id": "{cluster-id}",
+  "cluster_name": "{cluster}",
+  "cluster_path": "/orgs/{org}/projects/{project}/clusters/{cluster}",
+  "node_id": "{node-id}",
+}
+```
+To retrieve a specific parameter in text format, append its name to the path. For example,  `https://169.254.169.254//v1/data-center-id` returns the data center ID in plaintext. 
