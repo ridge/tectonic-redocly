@@ -156,4 +156,4 @@ To obtain all the metadata issue a GET request to `https://169.254.169.254/v1`. 
   "node_id": "{node-id}",
 }
 ```
-To retrieve a specific parameter in text format, append its name to the path. For example,  `https://169.254.169.254//v1/data-center-id` returns the data center ID in plaintext. 
+To retrieve a specific parameter in text format, append its name to the path. For example,  `https://169.254.169.254/v1/data-center-id` returns the data center ID in plaintext. 
