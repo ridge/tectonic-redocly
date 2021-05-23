@@ -42,4 +42,4 @@ docs:
   - page: docs/rks-overview/rks-overview.md
   - page: docs/rcs-overview/rcs-overview.md
   - page: docs/iam-overview/iam-overview.md
-
+  - page: docs/quotas/quotas.md
