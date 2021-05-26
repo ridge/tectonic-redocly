@@ -19,7 +19,7 @@ To create a batch:
   * **Batch Name** - A unique name for your batch. Note that the API path to access the batch appears below the name.
 Example - `my_batch`
   * **Container Image** - **Required.** The path of the Docker repository where the container image can be found.
-Example - `http://docker.io/library/hello-world:latest`
+Example - `docker.io/library/hello-world:latest`
 
 ## Part B: Setting Optional Parameters
 When you create a batch, you have the option of defining:
