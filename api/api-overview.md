@@ -82,3 +82,13 @@ Each Ridge resource can have an optional **display_name** that is used only for 
 Upon resource creation, the **display_name**, by default, is equal to the name.
 
 The **display_name** may include up to 512 Unicode characters, including up to 64 lowercase Latin letters, numbers or dashes.
+
+
+## OpenAPI Specifications
+
+You may see the OpenAPI specifications here:
+- [Data Centers](compute.yaml)
+- [IAM](iam.yaml)
+- [RCS](rcs.yaml)
+- [RKS](rks.yaml)
+- [External Credentials](keyring.yaml)
