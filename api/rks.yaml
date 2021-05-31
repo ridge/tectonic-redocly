@@ -1766,12 +1766,11 @@ definitions:
       state: terminated
       attachment_state: detached
   quality_set:
-    description: A set of required qualities. The object maps quality identifiers to values. For qualities defined with no values, the value must be 1. See https://ridge.readme.io/reference/qualities for possible properties.
-    type: object
+    description: A set of required qualities. The object maps quality identifiers to values. For qualities defined with no values, the value must be 1. See the qualities endpoint in the data center API for a list of qualities.
     additionalProperties:
       type: integer
   quantity_set:
-    description: A set of quantities. The object maps quantity identifiers to values. See https://ridge.readme.io/reference/quantities for possible properties.
+    description: A set of quantities. The object maps quantity identifiers to values. See the quantities endpoint in the data center API for a list of quantities.
     type: object
     additionalProperties:
       type: integer
