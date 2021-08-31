@@ -49,14 +49,14 @@ paths:
             $ref: '#/definitions/container_presets'
   /orgs/{org}/projects/{project}/batches:
     parameters:
-      - name: org
-        in: path
-        description: The organization identifier.
-        required: true
-        type: string
       - name: project
         in: path
         description: The project identifier.
+        required: true
+        type: string
+      - name: org
+        in: path
+        description: The organization identifier.
         required: true
         type: string
     get:
@@ -117,21 +117,21 @@ paths:
             type: string
   /orgs/{org}/projects/{project}/batches/{batch}:
     parameters:
-      - name: org
-        in: path
-        description: The organization identifier.
-        required: true
+      - in: path
+        name: batch
+        description: A unique identifier of a batch.
         type: string
+        required: true
       - name: project
         in: path
         description: The project identifier.
         required: true
         type: string
-      - name: batch
+      - name: org
         in: path
-        description: A unique identifier of a batch.
-        type: string
+        description: The organization identifier.
         required: true
+        type: string
     get:
       operationId: describeBatch
       summary: Describe a Batch
@@ -215,19 +215,18 @@ paths:
             type: string
   /orgs/{org}/projects/{project}/batches/{batch}/containers:
     parameters:
-      - name: org
-        in: path
-        description: The organization identifier.
-        required: true
+      - in: path
+        name: batch
         type: string
+        required: true
       - name: project
         in: path
         description: The project identifier.
         required: true
         type: string
-      - name: batch
+      - name: org
         in: path
-        description: The batch identifier.
+        description: The organization identifier.
         required: true
         type: string
     get:
@@ -238,8 +237,8 @@ paths:
       - Containers
       parameters:
         - name: state
+          description: Filter the containers by specified states.
           in: query
-          description: Filter the containers by the specified states.
           type: array
           items:
             type: string
@@ -273,26 +272,26 @@ paths:
             type: string
   /orgs/{org}/projects/{project}/batches/{batch}/containers/{container}:
     parameters:
-      - name: org
+      - name: container
+        description: The unique identifier of a container.
         in: path
-        description: The organization identifier.
-        required: true
         type: string
+        required: true
+      - in: path
+        name: batch
+        description: The batch identifier.
+        type: string
+        required: true
       - name: project
         in: path
         description: The project identifier.
         required: true
         type: string
-      - name: batch
+      - name: org
         in: path
-        description: The batch identifier.
-        type: string
+        description: The organization identifier.
         required: true
-      - name: container
-        in: path
-        description: The unique identifier of a container.
         type: string
-        required: true
     get:
       operationId: describeContainer
       summary: Describe a Container
@@ -316,7 +315,29 @@ paths:
           description: Resource not found
           schema:
             type: string
-    delete:
+  /orgs/{org}/projects/{project}/batches/{batch}/containers/{container}/terminate:
+    parameters:
+      - name: container
+        description: The unique identifier of a container.
+        in: path
+        type: string
+        required: true
+      - in: path
+        name: batch
+        description: The batch identifier.
+        type: string
+        required: true
+      - name: project
+        in: path
+        description: The project identifier.
+        required: true
+        type: string
+      - name: org
+        in: path
+        description: The organization identifier.
+        required: true
+        type: string
+    post:
       operationId: terminateContainer
       summary: Terminate a Container
       description: Terminates the specified container.
@@ -338,172 +359,30 @@ paths:
           schema:
             type: string
 definitions:
-  batch_create:
-    type: object
-    required:
-      - name
-      - container_image
-      - number
-    properties:
-      name:
-        description: A user-readable name of the batch.
-        type: string
-        minLength: 1
-        maxLength: 63
-        pattern: '^[a-z]([-a-z0-9]*[a-z0-9])?$'
-      display_name:
-        description: The display name of the batch.
-        type: string
-        maxLength: 512
-      number:
-        description: The requested number of containers.
-        type: integer
-        minimum: 0
-      container_image:
-        description: The path where the container image can be found.
-        type: string
-        minLength: 1
-        example: myregistry.local:5000/testing/test-image
-      env:
-        $ref: '#/definitions/env'
-      entry_point:
-        description: An entry point that overrides the default one provided by the container image.
-        type: string
-      args:
-        description: Arguments that override the default ones provided by the container image. If you define args, but do not define an entry point, the default one is used with these arguments.
-        type: array
-        items:
-          type: string
-      docker_credentials_id:
-        description: The ID of Docker credentials to access the container-image repository.
-        type: string
-      docker_credentials_path:
-        description: The path of Docker credentials to access the container-image repository.
-        type: string
-      elasticsearch_endpoint:
-        description: URL of Elastic Search instance to send logs produced by containers.
-        type: string
-        example: http://elasticsearch.example.com:9200
-      aws_role:
-        $ref: '#/definitions/aws_role'
-      container_preset:
-        description: The preset container type.
-        type: string
-      locations:
-        description: One or more locations. A location can refer to a country, a subdivision of a country, or a city. A country is encoded using the Country codes (ISO-3166-1). A country subdivision as encoded as a <country code>-<subdivision code> (subdivision codes are defined in ISO-3166-2). A city is encoded as <country code>-<subdivision code>-<city name>. For example, US-MA-Boston. In cases where there is no subdivision in the country it will be left blank. For example IL--TelAviv.
-        type: array
-        items:
-          type: string
-      data_center_id:
-        description: The ID of a data center to run the containers.
-        type: string
-      data_center_path:
-        description: The data center path to run the containers.
-        type: string
-        example: /partner/foo/data-center/bar
-      catalog_item_id:
-        description: The VM catalog item ID. May only be specified if data center is specified.
-        type: string
-      catalog_item_path:
-        description: The VM catalog item path. May only be specified if data center is specified.
-        type: string
-        example: /partners/big-partner/data-center/boston/vm-catalog/@7g167ryep3fr8ejr4bxemxju4h
-      qualities:
-        $ref: '#/definitions/quality_set'
-      quantities:
-        $ref: '#/definitions/quantity_set'
-  batch_spec:
-    type: object
-    required:
-      - name
-      - container_image
-      - number
-    properties:
-      name:
-        description: A user-readable name of the batch.
-        type: string
-        minLength: 1
-        maxLength: 63
-        pattern: '^[a-z]([-a-z0-9]*[a-z0-9])?$'
-      display_name:
-        description: The display name of the batch.
-        type: string
-        maxLength: 512
-      deleted:
-        description: Indicates if this batch was deleted.
-        type: boolean
-      number:
-        description: The requested number of containers.
-        type: integer
-        minimum: 0
-      container_image:
-        description: The path where the container image can be found.
-        type: string
-        minLength: 1
-        example: myregistry.local:5000/testing/test-image
-      env:
-        $ref: '#/definitions/env'
-      entry_point:
-        description: An entry point that overrides the default one provided by the container image.
-        type: string
-      args:
-        description: Arguments that override the default ones provided by the container image. If you define args, but do not define an entry point, the default one is used with these arguments.
-        type: array
-        items:
-          type: string
-      docker_credentials_id:
-        description: The ID of Docker credentials to access the container-image repository.
-        type: string
-      docker_credentials_path:
-        description: The path of Docker credentials to access the container-image repository.
-        type: string
-      elasticsearch_endpoint:
-        description: URL of Elastic Search instance where logs produced by containers are sent.
-        type: string
-        example: http://elasticsearch.example.com:9200
-      aws_role:
-        $ref: '#/definitions/aws_role'
-      container_preset:
-        description: The preset container type. Will only be provided if it was specified at creation.
-        type: string
-      locations:
-        description: One or more locations. A location can refer to a country, a subdivision of a country, or a city. A country is encoded using the Country codes (ISO-3166-1). A country subdivision as encoded as a <country code>-<subdivision code> (subdivision codes are defined in ISO-3166-2). A city is encoded as <country code>-<subdivision code>-<city name>. For example, US-MA-Boston. In cases where there is no subdivision in the country it will be left blank. For example IL--TelAviv.
-        type: array
-        items:
-          type: string
-      data_center_id:
-        description: The ID of a data center to run the containers.
-        type: string
-      data_center_path:
-        description: The data center path to run the containers.
-        type: string
-        example: /partner/foo/data-center/bar
-      catalog_item_id:
-        description: The VM catalog item ID.
-        type: string
-      catalog_item_path:
-        description: The VM catalog item path.
-        type: string
-        example: /partners/big-partner/data-center/boston/vm-catalog/@7g167ryep3fr8ejr4bxemxju4h
-      qualities:
-        $ref: '#/definitions/quality_set'
-      quantities:
-        $ref: '#/definitions/quantity_set'
-  batch_status:
+  batch:
     type: object
     required:
       - id
+      - name
       - path
       - org_id
       - project_id
       - created_at
       - updated_at
       - state
-      - number
+      - container_image
+      - desired_number
+      - actual_number
     properties:
       id:
         description: The unique ID of the batch.
         type: string
+      name:
+        description: A user readable name of the batch.
+        type: string
+        minLength: 1
+        maxLength: 63
+        pattern: '^[a-z]([-a-z0-9]*[a-z0-9])?$'
       path:
         description: The path to the resource that includes all the parents
         type: string
@@ -522,6 +401,10 @@ definitions:
         description: The time at which this batch was last updated.
         type: string
         format: date-time
+      display_name:
+        description: The display name of the batch.
+        type: string
+        maxLength: 512
       state:
         description: The current state of the batch.
         type: string
@@ -530,82 +413,95 @@ definitions:
           - fulfilling
           - fulfilled
           - failed
-      number:
-        description: The actual number of running or completed containers.
+          - partiallyFulfilled
+      container_image:
+        description: The path where the container image can be found.
+        type: string
+        example: myregistry.local:5000/testing/test-image
+      docker_credentials_id:
+        description: The reference to set of credentials that are required to access the container-image repository.
+        type: string
+      elasticsearch_endpoint:
+        description: URL of Elastic Search instance where logs produced by containers are sent.
+        type: string
+        example: http://elasticsearch.example.com:9200
+      container_preset:
+        description: The preset container type. Will only be provided if it was specified at creation.
+        type: string
+      desired_number:
+        description: The desired number of containers.
         type: integer
-      data_center_id:
-        description: The ID of a data center to run the containers.
-        type: string
-      data_center_path:
-        description: The data center path to run the containers.
-        type: string
-        example: /partner/foo/data-center/bar
       shortage:
         description: Indicates the batch is not fully provisioned due to a shortage at the data center.
         type: boolean
+      actual_number:
+        description: The actual number of running or completed containers.
+        type: integer
+      aws_role:
+        $ref: '#/definitions/aws_role'
+      desired_locations:
+        description: One or more locations. A location can refer to a country, a subdivision of a country, or a city. A country is encoded using the Country codes (ISO-3166-1). A country subdivision as encoded as a <country code>-<subdivision code> (subdivision codes are defined in ISO-3166-2). A city is encoded as <country code>-<subdivision code>-<city name>. For example, US-MA-Boston. In cases where there is no subdivision in the country it will be left blank. For example IL--TelAviv.
+        type: array
+        items:
+          type: string
+        x-nullable: true
+      data_center_id:
+        description: The unique ID of a data center in which the user wishes the containers to run. This is mutually exclusive with desired_locations.
+        type: string
+      data_center_path:
+        description: The data center path in which the user wishes the containers to run. This is mutually exclusive with desired_locations.
+        type: string
+        example: /partner/foo/data-center/bar
+      qualities:
+        $ref: '#/definitions/quality_set'
+      quantities:
+        $ref: '#/definitions/quantity_set'
+      catalog_item_id:
+        description: The chosen catalog item's unique ID.
+        type: string
+      catalog_item_path:
+        description: The chosen catalog item's path.
+        type: string
+        example: /partners/big-partner/data-center/boston/vm-catalog/@7g167ryep3fr8ejr4bxemxju4h
+      deleted:
+        description: Indicates if this batch was deleted.
+        type: boolean
+      env:
+        $ref: '#/definitions/env'
+      entry_point:
+        description: An entry point that override the default one provided by the container image.
+        type: string
+      args:
+        description: Arguments that override the default ones provided by the container image. If you define args, but do not define an entry point, the default one is used with these arguments.
+        type: array
+        items:
+          type: string
       out_of_quota:
         description: Indicates the batch is not fully provisioned due to quota limitation.
         type: boolean
-  batch:
-    type: object
-    required:
-      - spec
-      - status
-    properties:
-      spec:
-        $ref: '#/definitions/batch_spec'
-      status:
-        $ref: '#/definitions/batch_status'
     example:
-      spec:
-        name: batch1
-        display_name: Batch 1
-        container_image: docker.io/library/bash:latest
-        env:
-        - FOO=bar
-        args:
-        - "/bin/sleep"
-        - '360'
-        elasticsearch_endpoint: http://elasticsearch.example.com:9200
-        number: 3
-        locations:
-        data_center_id: n6wicf
-        catalog_item_id: s1r37s
-        catalog_item_path: "/partners/medone/data-centers/ptv/vm-catalog/@s1r37s"
-      status:
-        id: jizh77chbfcnyu7p79omf5rx5a
-        path: "/orgs/test-org/projects/sandbox/batches/batch1"
-        org_id: di86ihycue5875pb7d5ybfhn9r
-        project_id: g3ker86kt6mir8rbczwkyjotpe
-        created_at: '2021-03-08T16:29:06.265Z'
-        updated_at: '2021-03-08T16:29:06.265Z'
-        state: fulfilled
-        number: 3
-        data_center_id: n6wicf
-        data_center_path: "/partners/medone/data-centers/ptv"
-  batch_update:
-    type: object
-    properties:
-      name:
-        description: A human-readable name of the batch.
-        type: string
-        minLength: 1
-        maxLength: 63
-        pattern: '^[a-z]([-a-z0-9]*[a-z0-9])?$'
-      display_name:
-        description: The display name of the batch.
-        type: string
-        maxLength: 512
-      #      desired_number:
-      #        description: The desired number of containers.
-      #        type: integer
-      #        minimum: 0
-      aws_role:
-        $ref: '#/definitions/aws_role'
-        x-nullable: true
-    example:
+      id: jizh77chbfcnyu7p79omf5rx5a
       name: batch1
+      path: "/orgs/test-org/projects/sandbox/batches/batch1"
+      org_id: di86ihycue5875pb7d5ybfhn9r
+      project_id: g3ker86kt6mir8rbczwkyjotpe
+      created_at: '2021-03-08T16:29:06.265Z'
+      updated_at: '2021-03-08T16:29:06.265Z'
       display_name: Batch 1
+      state: fulfilled
+      container_image: docker.io/library/bash:latest
+      elasticsearch_endpoint: http://elasticsearch.example.com:9200
+      desired_number: 3
+      actual_number: 3
+      desired_locations:
+      data_center_id: n6wicf
+      catalog_item_id: s1r37s
+      catalog_item_path: "/partners/medone/data-centers/ptv/vm-catalog/@s1r37s"
+      env:
+      - FOO=bar
+      args:
+      - "/bin/sleep"
+      - '360'
   batches:
     description: A list of batches.
     type: object
@@ -653,14 +549,16 @@ definitions:
         example: /partner/foo/data-center/bar
       quantities:
         $ref: '#/definitions/quantity_set'
-      started_at:
+      start_time:
         description: The time when the container has been started.
         type: string
         format: date-time
-      terminated_at:
+        x-nullable: true
+      end_time:
         description: The time when the container has been terminated.
         type: string
         format: date-time
+        x-nullable: true
       state:
         description: The state of the container.
         type: string
@@ -676,6 +574,8 @@ definitions:
       exit_code:
         description: Exit code of containerized application.
         type: integer
+        format: int
+        x-nullable: true
       error:
         description: Error which occurred during container's lifetime.
         type: string
@@ -746,6 +646,112 @@ definitions:
       aws_access_key_id:
         description: The unique identifier of the AWS key that should be used to create temporary credentials for the container.
         type: string
+  batch_create:
+    required:
+      - desired_number
+      - container_image
+    type: object
+    properties:
+      name:
+        type: string
+        description: A name for this batch.
+        minLength: 1
+        maxLength: 63
+        pattern: '^[a-z]([-a-z0-9]*[a-z0-9])?$'
+      display_name:
+        description: The display name of the batch.
+        type: string
+        maxLength: 512
+      container_image:
+        description: The path where the container image can be found.
+        type: string
+        example: myregistry.local:5000/testing/test-image
+      docker_credentials_id:
+        description: The reference to set of credentials that are required to access the container-image repository.
+        type: string
+      elasticsearch_endpoint:
+        description: URL of Elastic Search instance where logs produced by containers are sent.
+        type: string
+        example: http://elasticsearch.example.com:9200
+      container_preset:
+        description: The preset container type. Any quantity values specified explicitly override those from the preset.
+        type: string
+      quantities:
+        $ref: '#/definitions/quantity_set'
+      qualities:
+        $ref: '#/definitions/quality_set'
+      desired_number:
+        description: The desired number of containers.
+        type: integer
+      desired_locations:
+        description: One or more locations. A location can refer to a country, a subdivision of a country, or a city. A country is encoded using the Country codes (ISO-3166-1). A country subdivision as encoded as a <country code>-<subdivision code> (subdivision codes are defined in ISO-3166-2). A city is encoded as <country code>-<subdivision code>-<city name>. For example, US-MA-Boston. In cases where there is no subdivision in the country it will be left blank. For example IL--TelAviv.
+        type: array
+        items:
+          type: string
+      data_center_id:
+        description: The unique ID of a data center in which the user wishes the containers to run. This is mutually exclusive with desired_locations. If data_center_path is also specified, it must refer to the same data center.
+        type: string
+      data_center_path:
+        description: The data center path in which the user wishes the containers to run. This is mutually exclusive with desired_locations. If data_center_id is also specified, it must refer to the same data center.
+        type: string
+        example: /partner/foo/data-center/bar
+      catalog_item_id:
+        description: The chosen catalog item ID. Should only be specified if data_center_id and/or data_center_path are specified. If catalog_item_path is also specified, it must refer to the same catalog item.
+        type: string
+      catalog_item_path:
+        description: The chosen catalog item path. Should only be specified if data_center_id and/or data_center_path are specified. If catalog_item_id is also specified, it must refer to the same catalog item.
+        type: string
+        example: /partners/big-partner/data-center/boston/vm-catalog/@7g167ryep3fr8ejr4bxemxju4h
+      aws_role:
+        $ref: '#/definitions/aws_role'
+      env:
+        $ref: '#/definitions/env'
+      entry_point:
+        description: An entry point that overrides the default one provided by the container image.
+        type: string
+      args:
+        description: Arguments that override the default ones provided by the container image. If you define args, but do not define an entry point, the default one is used with these arguments.
+        type: array
+        items:
+          type: string
+    example:
+      desired_number: 3
+      container_image: docker.io/library/bash:latest
+      name: batch1
+      display_name: Batch 1
+      elasticsearch_endpoint: http://elasticsearch.example.com:9200
+      data_center_id: n6wicf
+      catalog_item_id: s1r37s
+      env:
+      - FOO=bar
+      args:
+      - "/bin/sleep"
+      - '360'
+  batch_update:
+    type: object
+    properties:
+      name:
+        description: A human-readable name of the batch.
+        type: string
+        minLength: 1
+        maxLength: 63
+        pattern: '^[a-z]([-a-z0-9]*[a-z0-9])?$'
+        x-nullable: true
+      display_name:
+        description: The display name of the batch.
+        type: string
+        maxLength: 512
+        x-nullable: true
+      #      desired_number:
+      #        description: The desired number of containers.
+      #        type: integer
+      #        x-nullable: true
+      aws_role:
+        $ref: '#/definitions/aws_role'
+        x-nullable: true
+    example:
+      name: batch1
+      display_name: Batch 1
   container_presets:
     description: A list of container presets.
     type: object
@@ -766,13 +772,9 @@ definitions:
       name:
         description: The human readable name of this preset.
         type: string
-        minLength: 1
-        maxLength: 63
-        pattern: '^[a-z]([-a-z0-9]*[a-z0-9])?$'
       display_name:
         description: The display name of this preset.
         type: string
-        maxLength: 512
       quantities:
         $ref: '#/definitions/quantity_set'
     example:
@@ -783,10 +785,11 @@ definitions:
         instance_storage: 10737418240
         ram: 1073741824
   env:
-    description: A list of environment variables to be passed to the containers, usually in the form <name>=<value>.
+    description: A list of environment variables to be passed to the containers. Each environment variable must be specified as <name>=<value>.
     type: array
     items:
       type: string
+      pattern: '^.+=.+$'
       example: FOO=bar
   quality_set:
     description: A set of required qualities. The object maps quality identifiers to values. For qualities defined with no values, the value must be 1. See https://api.ridge.co/compute/v1alpha/qualities for possible properties.
@@ -798,4 +801,3 @@ definitions:
     type: object
     additionalProperties:
       type: integer
-      format: int64
