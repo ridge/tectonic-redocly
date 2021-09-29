@@ -6,7 +6,7 @@ Start ny selecting the project in which you wish to use ROS. Selecting **Object 
 ![image_1](ros-getting-started-1.png)
 
 Select the **Access Keys** tab. 
-![image_2](ros-getting-started-.png)
+![image_2](ros-getting-started-2.png)
 
 Press the **Add Own Key** button to create your first key. Select the ROS site that you wish to access and provide a meaningful name for the key. In this example we create an access key for the ROS site in Si Racha Thailand and name it my-first-storage-key, 
 ![image_3](ros-getting-started-3.png)
