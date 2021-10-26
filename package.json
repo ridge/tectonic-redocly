@@ -10,12 +10,13 @@
     "clean": "redocly-portal clean"
   },
   "dependencies": {
-    "@redocly/developer-portal": "1.0.0-beta.96"
+    "@redocly/developer-portal": "1.0.0-beta.167"
   },
   "devDependencies": {
     "core-js": "^3.8.2",
     "gatsby": "^2.29.3",
     "react-refresh": "^0.8.3",
     "styled-components": "^5.2.1"
-  }
+  },
+  "packageManager": "yarn@3.1.0"
 }
