@@ -12,8 +12,16 @@ api:
     pages:
       - label: Overview
         page: api/rcs-overview.md
-      - label: rcs
-        page: api/rcs.page.yaml/*
+      - group:  V1 Alpha
+        expanded: false
+        pages:
+            - label: rcs
+              page: api/rcs.page.yaml/*
+      - group: Unstable
+        expanded: false
+        pages:
+            - label: rcs-unstable
+              page: api/rcs-unstable.page.yaml/*       
   - group: Identity and Access Management (IAM)
     expanded: false
     pages:

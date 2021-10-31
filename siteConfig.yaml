@@ -7,6 +7,7 @@ enableToc: true
 oasDefinitions:
   rks: ./api/rks.yaml
   rcs: ./api/rcs.yaml
+  rcs-unstable: ./api/rcs-unstable.yaml
   iam: ./api/iam.yaml
   compute: ./api/compute.yaml
   keying: ./api/keyring.yaml

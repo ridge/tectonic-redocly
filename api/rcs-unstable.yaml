@@ -1,0 +1,788 @@
+swagger: "2.0"
+info:
+  title: Ridge Container Service API
+  description: An API for managing containers
+  version: unstable
+basePath: /rcs/unstable
+schemes:
+- https
+consumes:
+- application/json
+produces:
+- application/json
+paths:
+  /orgs/{org}/projects/{project}/batches:
+    parameters:
+    - name: org
+      in: path
+      description: The organization identifier.
+      required: true
+      type: string
+    - name: project
+      in: path
+      description: The project identifier.
+      required: true
+      type: string
+    get:
+      operationId: listBatches
+      summary: List Batches
+      description: Returns a list of all the batches that have been created for the
+        specified project.
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/batches'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - Batches
+    post:
+      operationId: createBatch
+      summary: Create a Batch
+      description: Creates a new batch of containers in the specified project.
+      parameters:
+      - name: body
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/batch_create'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/batch'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - Batches
+  /orgs/{org}/projects/{project}/batches/{batch}:
+    parameters:
+    - name: org
+      in: path
+      description: The organization identifier.
+      required: true
+      type: string
+    - name: project
+      in: path
+      description: The project identifier.
+      required: true
+      type: string
+    - name: batch
+      in: path
+      description: A unique identifier of a batch.
+      required: true
+      type: string
+    get:
+      operationId: describeBatch
+      summary: Describe a Batch
+      description: Returns information about a specific batch.
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/batch'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - Batches
+    patch:
+      operationId: updateBatch
+      summary: Update a Batch
+      description: Update the batch properties.
+      parameters:
+      - name: body
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/batch_update'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/batch'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - Batches
+    delete:
+      operationId: deleteBatch
+      summary: Delete a Batch
+      description: Deletes the selected batch including all its containers.
+      responses:
+        204:
+          description: Success
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - Batches
+  /orgs/{org}/projects/{project}/batches/{batch}/containers:
+    parameters:
+    - name: org
+      in: path
+      description: The organization identifier.
+      required: true
+      type: string
+    - name: project
+      in: path
+      description: The project identifier.
+      required: true
+      type: string
+    - name: batch
+      in: path
+      description: The batch identifier.
+      required: true
+      type: string
+    get:
+      operationId: listBatchContainers
+      summary: List the containers in a Batch
+      description: Returns a list of all containers in the batch.
+      parameters:
+      - name: phase
+        in: query
+        description: Filter the containers by the specified life cycle phases.
+        type: array
+        items:
+          type: string
+          enum: [creating, starting, running, terminating, terminated]
+        default: [creating, starting, running, terminating]
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/containers'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - Containers
+  /orgs/{org}/projects/{project}/batches/{batch}/containers/{container}:
+    parameters:
+    - name: org
+      in: path
+      description: The organization identifier.
+      required: true
+      type: string
+    - name: project
+      in: path
+      description: The project identifier.
+      required: true
+      type: string
+    - name: batch
+      in: path
+      description: The batch identifier.
+      required: true
+      type: string
+    - name: container
+      in: path
+      description: The unique identifier of a container.
+      required: true
+      type: string
+    get:
+      operationId: describeContainer
+      summary: Describe a Container
+      description: Returns information about the specified container.
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/container'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - Containers
+    delete:
+      operationId: terminateContainer
+      summary: Terminate a Container
+      description: Terminates the specified container.
+      responses:
+        204:
+          description: Success
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - Containers
+  /status:
+    get:
+      operationId: status
+      summary: Check if API Server is Ready to Serve Requests
+      description: If the API server is ready to serve requests, the response code
+        204 HTTP is returned.
+      responses:
+        204:
+          description: Success
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+      tags:
+      - Other
+definitions:
+  aws_role:
+    description: The AWS IAM role ans the AWS credentials that will be used to grant
+      the container permission to access AWS services. The container will receive
+      temporary credentials.
+    type: object
+    required:
+    - role_arn
+    - aws_access_key_id
+    properties:
+      role_arn:
+        description: The unique identifier of the role in AWS.
+        type: string
+      aws_access_key_id:
+        description: The unique identifier of the AWS key that should be used to create
+          temporary credentials for the container.
+        type: string
+  batch:
+    type: object
+    required:
+    - spec
+    - status
+    properties:
+      spec:
+        $ref: '#/definitions/batch_spec'
+      status:
+        $ref: '#/definitions/batch_status'
+    example:
+      spec:
+        args:
+        - /bin/sleep
+        - "360"
+        catalog_item_id: s1r37s
+        catalog_item_path: /partners/medone/data-centers/ptv/vm-catalog/@s1r37s
+        container_image: docker.io/library/bash:latest
+        data_center_id: n6wicf
+        display_name: Batch 1
+        elasticsearch_endpoint: http://elasticsearch.example.com:9200
+        env:
+        - FOO=bar
+        locations: null
+        name: batch1
+        number: 3
+      status:
+        created_at: "2021-03-08T16:29:06.265Z"
+        data_center_id: n6wicf
+        data_center_path: /partners/medone/data-centers/ptv
+        id: jizh77chbfcnyu7p79omf5rx5a
+        number: 3
+        org_id: di86ihycue5875pb7d5ybfhn9r
+        path: /orgs/test-org/projects/sandbox/batches/batch1
+        phase: fulfilled
+        project_id: g3ker86kt6mir8rbczwkyjotpe
+        updated_at: "2021-03-08T16:29:06.265Z"
+  batch_create:
+    type: object
+    required:
+    - name
+    - container_image
+    - number
+    properties:
+      name:
+        description: A user-readable name of the batch.
+        type: string
+        minLength: 1
+        maxLength: 63
+        pattern: ^[a-z]([-a-z0-9]*[a-z0-9])?$
+      display_name:
+        description: The display name of the batch.
+        type: string
+        maxLength: 512
+      number:
+        description: The requested number of containers.
+        type: integer
+        minimum: 0
+      container_image:
+        description: The path where the container image can be found.
+        type: string
+        minLength: 1
+        example: myregistry.local:5000/testing/test-image
+      env:
+        $ref: '#/definitions/env'
+      entry_point:
+        description: An entry point that overrides the default one provided by the
+          container image.
+        type: string
+      args:
+        description: Arguments that override the default ones provided by the container
+          image. If you define args, but do not define an entry point, the default
+          one is used with these arguments.
+        type: array
+        items:
+          type: string
+      docker_credentials_id:
+        description: The ID of Docker credentials to access the container-image repository.
+        type: string
+      docker_credentials_path:
+        description: The path of Docker credentials to access the container-image
+          repository.
+        type: string
+      elasticsearch_endpoint:
+        description: URL of Elastic Search instance to send logs produced by containers.
+        type: string
+        example: http://elasticsearch.example.com:9200
+      aws_role:
+        $ref: '#/definitions/aws_role'
+      locations:
+        description: One or more locations. A location can refer to a country, a subdivision
+          of a country, or a city. A country is encoded using the Country codes (ISO-3166-1).
+          A country subdivision as encoded as a <country code>-<subdivision code>
+          (subdivision codes are defined in ISO-3166-2). A city is encoded as <country
+          code>-<subdivision code>-<city name>. For example, US-MA-Boston. In cases
+          where there is no subdivision in the country it will be left blank. For
+          example IL--TelAviv.
+        type: array
+        items:
+          type: string
+      data_center_id:
+        description: The ID of a data center to run the containers.
+        type: string
+      data_center_path:
+        description: The data center path to run the containers.
+        type: string
+        example: /partner/foo/data-center/bar
+      catalog_item_id:
+        description: The VM catalog item ID. May only be specified if data center
+          is specified.
+        type: string
+      catalog_item_path:
+        description: The VM catalog item path. May only be specified if data center
+          is specified.
+        type: string
+        example: /partners/big-partner/data-center/boston/vm-catalog/@7g167ryep3fr8ejr4bxemxju4h
+      qualities:
+        $ref: '#/definitions/quality_set'
+      quantities:
+        $ref: '#/definitions/quantity_set'
+  batch_spec:
+    type: object
+    required:
+    - name
+    - container_image
+    - number
+    properties:
+      name:
+        description: A user-readable name of the batch.
+        type: string
+        minLength: 1
+        maxLength: 63
+        pattern: ^[a-z]([-a-z0-9]*[a-z0-9])?$
+      display_name:
+        description: The display name of the batch.
+        type: string
+        maxLength: 512
+      deleted:
+        description: Indicates if this batch was deleted.
+        type: boolean
+      number:
+        description: The requested number of containers.
+        type: integer
+        minimum: 0
+      container_image:
+        description: The path where the container image can be found.
+        type: string
+        minLength: 1
+        example: myregistry.local:5000/testing/test-image
+      env:
+        $ref: '#/definitions/env'
+      entry_point:
+        description: An entry point that overrides the default one provided by the
+          container image.
+        type: string
+      args:
+        description: Arguments that override the default ones provided by the container
+          image. If you define args, but do not define an entry point, the default
+          one is used with these arguments.
+        type: array
+        items:
+          type: string
+      docker_credentials_id:
+        description: The ID of Docker credentials to access the container-image repository.
+        type: string
+      docker_credentials_path:
+        description: The path of Docker credentials to access the container-image
+          repository.
+        type: string
+      elasticsearch_endpoint:
+        description: URL of Elastic Search instance where logs produced by containers
+          are sent.
+        type: string
+        example: http://elasticsearch.example.com:9200
+      aws_role:
+        $ref: '#/definitions/aws_role'
+      locations:
+        description: One or more locations. A location can refer to a country, a subdivision
+          of a country, or a city. A country is encoded using the Country codes (ISO-3166-1).
+          A country subdivision as encoded as a <country code>-<subdivision code>
+          (subdivision codes are defined in ISO-3166-2). A city is encoded as <country
+          code>-<subdivision code>-<city name>. For example, US-MA-Boston. In cases
+          where there is no subdivision in the country it will be left blank. For
+          example IL--TelAviv.
+        type: array
+        items:
+          type: string
+      data_center_id:
+        description: The ID of a data center to run the containers.
+        type: string
+      data_center_path:
+        description: The data center path to run the containers.
+        type: string
+        example: /partner/foo/data-center/bar
+      catalog_item_id:
+        description: The VM catalog item ID.
+        type: string
+      catalog_item_path:
+        description: The VM catalog item path.
+        type: string
+        example: /partners/big-partner/data-center/boston/vm-catalog/@7g167ryep3fr8ejr4bxemxju4h
+      qualities:
+        $ref: '#/definitions/quality_set'
+      quantities:
+        $ref: '#/definitions/quantity_set'
+  batch_status:
+    type: object
+    required:
+    - id
+    - path
+    - org_id
+    - project_id
+    - created_at
+    - updated_at
+    - phase
+    - number
+    properties:
+      id:
+        description: The unique ID of the batch.
+        type: string
+      path:
+        description: The path to the resource that includes all the parents
+        type: string
+        example: /orgs/my-org/projects/my-project/batches/my-batch
+      org_id:
+        description: The unique identifier of the organization.
+        type: string
+      project_id:
+        description: The unique identifier of the project.
+        type: string
+      created_at:
+        description: The time at which this batch was created.
+        type: string
+        format: date-time
+      updated_at:
+        description: The time at which this batch was last updated.
+        type: string
+        format: date-time
+      phase:
+        description: The life cycle phase of the batch.
+        type: string
+        enum: [creating, fulfilling, fulfilled, failed]
+      number:
+        description: The actual number of running or completed containers.
+        type: integer
+      data_center_id:
+        description: The ID of a data center to run the containers.
+        type: string
+      data_center_path:
+        description: The data center path to run the containers.
+        type: string
+        example: /partner/foo/data-center/bar
+      nat_gateway_ips:
+        description: The list of IPs that are used for outgoing connections.
+        type: array
+        items:
+          description: A single IP that is used for outgoing connections.
+          type: string
+          format: ipv4
+      shortage:
+        description: Indicates the batch is not fully provisioned due to a shortage
+          at the data center.
+        type: boolean
+      out_of_quota:
+        description: Indicates the batch is not fully provisioned due to quota limitation.
+        type: boolean
+  batch_update:
+    type: object
+    properties:
+      name:
+        description: A human-readable name of the batch.
+        type: string
+        minLength: 1
+        maxLength: 63
+        pattern: ^[a-z]([-a-z0-9]*[a-z0-9])?$
+      display_name:
+        description: The display name of the batch.
+        type: string
+        maxLength: 512
+      aws_role:
+        $ref: '#/definitions/aws_role'
+        x-nullable: true
+    example:
+      display_name: Batch 1
+      name: batch1
+  batches:
+    description: A list of batches.
+    type: object
+    required:
+    - items
+    properties:
+      items:
+        type: array
+        items:
+          $ref: '#/definitions/batch'
+  container:
+    type: object
+    required:
+    - id
+    - batch_id
+    - path
+    - org_id
+    - project_id
+    - data_center_id
+    - data_center_path
+    - phase
+    properties:
+      id:
+        description: A unique identifier of a container.
+        type: string
+      batch_id:
+        description: The batch to which this container belongs.
+        type: string
+      path:
+        description: The path to the resource that includes all the parents.
+        type: string
+        example: /orgs/my-org/projects/my-project/containers/@cxh5jywfn7y5tdj76go8ijxh7a
+      org_id:
+        description: The unique identifier of the organization.
+        type: string
+      project_id:
+        description: The unique identifier of the project.
+        type: string
+      data_center_id:
+        description: The data center in which the container is provisioned.
+        type: string
+      data_center_path:
+        description: The path to the data center in which this container is provisioned,
+          that includes all the parents.
+        type: string
+        example: /partner/foo/data-center/bar
+      quantities:
+        $ref: '#/definitions/quantity_set'
+      started_at:
+        description: The time when the container has been started.
+        type: string
+        format: date-time
+      terminated_at:
+        description: The time when the container has been terminated.
+        type: string
+        format: date-time
+      phase:
+        description: The life cycle phase of the container.
+        type: string
+        enum: [creating, starting, running, terminating, terminated]
+      phase_reason:
+        description: Information on why the container has reached current life cycle
+          phase.
+        type: string
+      exit_code:
+        description: Exit code of containerized application.
+        type: integer
+      error:
+        description: Error which occurred during container's life cycle.
+        type: string
+      shortage:
+        description: Indicates the container is not fully provisioned due to a shortage
+          at the data center.
+        type: boolean
+      degraded:
+        description: The container is running in a degraded mode. There might be a
+          delay between issuing a command for controlling this container and a response.
+        type: boolean
+    example:
+      batch_id: jizh77chbfcnyu7p79omf5rx5a
+      data_center_id: n6wicf
+      data_center_path: /partners/medone/data-centers/ptv
+      id: bg3c131wpdrjbi5ugmosis4aqy
+      org_id: di86ihycue5875pb7d5ybfhn9r
+      path: /orgs/test-org/projects/sandbox/batches/batch1/containers/@bg3c131wpdrjbi5ugmosis4aqy
+      phase: running
+      project_id: g3ker86kt6mir8rbczwkyjotpe
+      start_time: "2021-03-08T16:35:22.899Z"
+  containers:
+    type: object
+    required:
+    - items
+    properties:
+      items:
+        type: array
+        items:
+          $ref: '#/definitions/container'
+    example:
+      items:
+      - batch_id: jizh77chbfcnyu7p79omf5rx5a
+        data_center_id: n6wicf
+        data_center_path: /partners/medone/data-centers/ptv
+        id: bg3c131wpdrjbi5ugmosis4aqy
+        org_id: di86ihycue5875pb7d5ybfhn9r
+        path: /orgs/test-org/projects/sandbox/batches/batch1/containers/@bg3c131wpdrjbi5ugmosis4aqy
+        phase: running
+        project_id: g3ker86kt6mir8rbczwkyjotpe
+        start_time: "2021-03-08T16:35:22.899Z"
+      - batch_id: jizh77chbfcnyu7p79omf5rx5a
+        data_center_id: n6wicf
+        data_center_path: /partners/medone/data-centers/ptv
+        id: ftapca1guorg77dooqzkoh14te
+        org_id: di86ihycue5875pb7d5ybfhn9r
+        path: /orgs/test-org/projects/sandbox/batches/batch1/containers/@ftapca1guorg77dooqzkoh14te
+        phase: running
+        project_id: g3ker86kt6mir8rbczwkyjotpe
+        start_time: "2021-03-08T16:35:21.868Z"
+      - batch_id: jizh77chbfcnyu7p79omf5rx5a
+        data_center_id: n6wicf
+        data_center_path: /partners/medone/data-centers/ptv
+        id: rooaohnuc8hk7zeafkb8az8mww
+        org_id: di86ihycue5875pb7d5ybfhn9r
+        path: /orgs/test-org/projects/sandbox/batches/batch1/containers/@rooaohnuc8hk7zeafkb8az8mww
+        phase: running
+        project_id: g3ker86kt6mir8rbczwkyjotpe
+        start_time: "2021-03-08T16:35:31.169Z"
+  env:
+    description: A list of environment variables to be passed to the containers, usually
+      in the form <name>=<value>.
+    type: array
+    items:
+      type: string
+      example: FOO=bar
+  quality_set:
+    description: A set of required qualities. The object maps quality identifiers
+      to values. For qualities defined with no values, the value must be 1. See https://api.ridge.co/compute/unstable/qualities
+      for possible properties.
+    type: object
+    additionalProperties:
+      type: integer
+  quantity_set:
+    description: A set of quantities. The object maps quantity identifiers to values.
+      See https://api.ridge.co/compute/unstable/quantities for possible properties.
+    type: object
+    additionalProperties:
+      type: integer
+      format: int64
+tags:
+- name: Batches
+  description: Operations on Batches.
+- name: Containers
+  description: Operations on Containers.
