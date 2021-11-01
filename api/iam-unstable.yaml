@@ -3,6 +3,7 @@ info:
   title: IAM API
   description: An API for identity and access management
   version: unstable
+host: api.ridge.co
 basePath: /iam/unstable
 schemes:
 - https

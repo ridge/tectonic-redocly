@@ -3,6 +3,7 @@ info:
   title: External Credentials API
   description: An API for managing credentials for external services.
   version: unstable
+host: api.ridge.co
 basePath: /keyring/unstable
 schemes:
 - https
