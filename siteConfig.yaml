@@ -6,11 +6,15 @@ headerIcon: ./images/ridge.svg
 enableToc: true
 oasDefinitions:
   rks: ./api/rks.yaml
+  rks-unstable: ./api/rks-unstable.yaml
   rcs: ./api/rcs.yaml
   rcs-unstable: ./api/rcs-unstable.yaml
   iam: ./api/iam.yaml
+  iam-unstable: ./api/iam-unstable.yaml
   compute: ./api/compute.yaml
-  keying: ./api/keyring.yaml
+  compute-unstable: ./api/compute-unstable.yaml
+  keyring: ./api/keyring.yaml
+  keyring-unstable: ./api/keyring-unstable.yaml
 stylesheets:
   - https://fonts.googleapis.com/css?family=Roboto+Mono:300,400,600,700
   - https://fonts.googleapis.com/css?family=Nunito+Sans:300,400,600,700&display=swap

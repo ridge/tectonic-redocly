@@ -1,0 +1,668 @@
+swagger: "2.0"
+info:
+  title: External Credentials API
+  description: An API for managing credentials for external services.
+  version: unstable
+basePath: /keyring/unstable
+schemes:
+- https
+consumes:
+- application/json
+produces:
+- application/json
+paths:
+  /orgs/{org}/projects/{project}/aws-keys:
+    parameters:
+    - name: org
+      in: path
+      description: The organization identifier.
+      required: true
+      type: string
+    - name: project
+      in: path
+      description: The project identifier.
+      required: true
+      type: string
+    get:
+      operationId: listAWSAccessKeys
+      summary: List AWS credentials
+      description: List the AWS credentials.
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/aws_keys'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - AWS Credentials
+    post:
+      operationId: createAWSAccessKey
+      summary: Store AWS credentials
+      description: Store credentials for accessing AWS.
+      parameters:
+      - name: body
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/aws_key_create'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/aws_key'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - AWS Credentials
+  /orgs/{org}/projects/{project}/aws-keys/{aws_key}:
+    parameters:
+    - name: org
+      in: path
+      description: The organization identifier
+      required: true
+      type: string
+    - name: project
+      in: path
+      description: The project identifier
+      required: true
+      type: string
+    - name: aws_key
+      in: path
+      description: The identifier of the AWS credentials.
+      required: true
+      type: string
+    get:
+      operationId: describeAWSAccessKey
+      summary: Describe AWS credentials
+      description: Describe AWS credentials.
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/aws_key'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - AWS Credentials
+    patch:
+      operationId: updateAWSAccessKey
+      summary: Update AWS credentials
+      description: Update the AWS credentials.
+      parameters:
+      - name: body
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/aws_key_update'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/aws_key'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - AWS Credentials
+    delete:
+      operationId: deleteAWSAccessKey
+      summary: Delete AWS credentials
+      description: Delete AWS credentials. These credentials must not be referenced
+        elsewhere.
+      responses:
+        204:
+          description: Success
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - AWS Credentials
+  /orgs/{org}/projects/{project}/docker-registries:
+    parameters:
+    - name: org
+      in: path
+      description: The organization identifier.
+      required: true
+      type: string
+    - name: project
+      in: path
+      description: The project identifier.
+      required: true
+      type: string
+    get:
+      operationId: listDockerCredentials
+      summary: List Docker registry credentials
+      description: List the Docker registry credentials.
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/docker_registries_creds'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - Docker Registry Credentials
+    post:
+      operationId: createDockerCredentials
+      summary: Store Docker registry credentials
+      description: Store credentials used for accessing a Docker registry.
+      parameters:
+      - name: body
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/docker_registry_creds_create'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/docker_registry_creds'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - Docker Registry Credentials
+  /orgs/{org}/projects/{project}/docker-registries/{docker_registry}:
+    parameters:
+    - name: org
+      in: path
+      description: The organization identifier.
+      required: true
+      type: string
+    - name: project
+      in: path
+      description: The project identifier.
+      required: true
+      type: string
+    - name: docker_registry
+      in: path
+      description: The identifier of the  Docker registry's credentials
+      required: true
+      type: string
+    get:
+      operationId: describeDockerCredentials
+      summary: Describe Docker registry's credentials
+      description: Describe a Docker registry's credentials.
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/docker_registry_creds'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - Docker Registry Credentials
+    patch:
+      operationId: updateDockerCredentials
+      summary: Update Docker registry credentials
+      description: Update the credentials for a Docker registry.
+      parameters:
+      - name: body
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/docker_registry_creds_update'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/docker_registry_creds'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - Docker Registry Credentials
+    delete:
+      operationId: deleteDockerCredentials
+      summary: Delete Docker registry's credentials
+      description: Delete the credentials for a Docker registry. These credentials
+        must not be referenced elsewhere.
+      responses:
+        204:
+          description: Success
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - Docker Registry Credentials
+  /status:
+    get:
+      operationId: status
+      summary: Check API server status
+      description: If the API server is ready to serve requests, the response HTTP
+        code 204 is returned.
+      responses:
+        204:
+          description: Success
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+      tags:
+      - internal
+definitions:
+  aws_key:
+    type: object
+    required:
+    - spec
+    - status
+    properties:
+      spec:
+        $ref: '#/definitions/aws_key_spec'
+      status:
+        $ref: '#/definitions/aws_key_status'
+    example:
+      spec:
+        access_key_id: AKIAIOSFODNN7EXAMPLE
+        display_name: AWS Key 1
+        name: aws-key-1
+        region: us-west-2
+      status:
+        created_at: "2021-03-01T16:04:58.379872112Z"
+        id: zrmamq4x9monufrh9cmc7hznxe
+        org_id: di86ihycue5875pb7d5ybfhn9r
+        path: /orgs/test-org/projects/sandbox/aws-keys/aws-key-1
+        project_id: g3ker86kt6mir8rbczwkyjotpe
+        updated_at: "2021-03-01T16:04:58.379872112Z"
+  aws_key_create:
+    allOf:
+    - $ref: '#/definitions/aws_key_spec'
+    - $ref: '#/definitions/aws_key_spec_create_only'
+    example:
+      access_key_id: AKIAIOSFODNN7EXAMPLE
+      access_key_secret: wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+      display_name: AWS Key 1
+      name: aws-key-1
+      region: us-west-2
+  aws_key_spec:
+    type: object
+    required:
+    - name
+    - region
+    - access_key_id
+    properties:
+      name:
+        description: A user-readable name of the AWS credentials.
+        type: string
+        minLength: 1
+        maxLength: 63
+        pattern: ^[a-z]([-a-z0-9]*[a-z0-9])?$
+      display_name:
+        description: The display name of the AWS credentials.
+        type: string
+        maxLength: 512
+      region:
+        description: The default AWS region.
+        type: string
+        minLength: 1
+        example: us-west-2
+      access_key_id:
+        description: The AWS access key ID part of the credentials.
+        type: string
+        minLength: 16
+        maxLength: 256
+  aws_key_spec_create_only:
+    type: object
+    required:
+    - access_key_secret
+    properties:
+      access_key_secret:
+        description: The secret part of the AWS access key.
+        type: string
+        minLength: 1
+  aws_key_status:
+    type: object
+    required:
+    - id
+    - path
+    - created_at
+    - updated_at
+    - org_id
+    - project_id
+    properties:
+      id:
+        description: The unique ID of the AWS credentials.
+        type: string
+      path:
+        description: The path to the resource that includes all the parents
+        type: string
+        example: /orgs/my-org/projects/my-project/aws-keys/my-key
+      created_at:
+        description: The time at which the AWS credentials were created.
+        type: string
+        format: date-time
+      updated_at:
+        description: The time at which the AWS credentials were last updated.
+        type: string
+        format: date-time
+      org_id:
+        description: The unique identifier of the organization.
+        type: string
+      project_id:
+        description: The unique identifier of the project.
+        type: string
+  aws_key_update:
+    type: object
+    properties:
+      name:
+        description: A user readable name of the AWS credentials.
+        type: string
+        minLength: 1
+        maxLength: 63
+        pattern: ^[a-z]([-a-z0-9]*[a-z0-9])?$
+      display_name:
+        description: The display name of the AWS credentials.
+        type: string
+        maxLength: 512
+      region:
+        description: The AWS region.
+        type: string
+        minLength: 1
+        example: us-west-2
+      access_key_id:
+        description: The ID of the AWS access key.
+        type: string
+        minLength: 16
+        maxLength: 128
+      access_key_secret:
+        description: The secret part of the AWS access key.
+        type: string
+        minLength: 1
+    example:
+      access_key_id: AKIAIOSFODNN7EXAMPLE
+      access_key_secret: wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+      display_name: AWS Key 1
+      name: aws-key-1
+      region: us-west-2
+  aws_keys:
+    description: A list of AWS credentials.
+    type: object
+    required:
+    - items
+    properties:
+      items:
+        type: array
+        items:
+          $ref: '#/definitions/aws_key'
+  docker_registries_creds:
+    description: A list of Docker registry credentials.
+    type: object
+    required:
+    - items
+    properties:
+      items:
+        type: array
+        items:
+          $ref: '#/definitions/docker_registry_creds'
+  docker_registry_creds:
+    type: object
+    required:
+    - spec
+    - status
+    properties:
+      spec:
+        $ref: '#/definitions/docker_registry_creds_spec'
+      status:
+        $ref: '#/definitions/docker_registry_creds_status'
+    example:
+      spec:
+        display_name: Docker Hub
+        name: docker-hub
+        registry_url: https://hub.docker.com
+        username: foo
+      status:
+        created_at: "2021-03-02T07:56:50.149771052Z"
+        id: ktp1uophxps5qft53mpkdztmmo
+        org_id: di86ihycue5875pb7d5ybfhn9r
+        path: /orgs/test-org/projects/sandbox/docker-registries/docker-hub
+        project_id: g3ker86kt6mir8rbczwkyjotpe
+        updated_at: "2021-03-02T07:56:50.149771052Z"
+  docker_registry_creds_create:
+    allOf:
+    - $ref: '#/definitions/docker_registry_creds_spec'
+    - $ref: '#/definitions/docker_registry_creds_spec_create_only'
+    example:
+      display_name: Docker Hub
+      name: docker-hub
+      password: bar
+      registry_url: https://hub.docker.com
+      username: foo
+  docker_registry_creds_spec:
+    type: object
+    required:
+    - name
+    - registry_url
+    - username
+    properties:
+      name:
+        description: A user-readable name of the Docker registry credentials.
+        type: string
+        minLength: 1
+        maxLength: 63
+        pattern: ^[a-z]([-a-z0-9]*[a-z0-9])?$
+      display_name:
+        description: The display name of the Docker registry credentials.
+        type: string
+        maxLength: 512
+      registry_url:
+        description: The URL of the registry.
+        type: string
+        format: url
+        minLength: 1
+        example: https://hub.docker.com
+      username:
+        description: The username.
+        type: string
+        minLength: 1
+  docker_registry_creds_spec_create_only:
+    type: object
+    required:
+    - password
+    properties:
+      password:
+        description: The password.
+        type: string
+        minLength: 1
+  docker_registry_creds_status:
+    type: object
+    required:
+    - id
+    - path
+    - org_id
+    - project_id
+    - created_at
+    - updated_at
+    properties:
+      id:
+        description: The unique ID of the Docker registry credentials.
+        type: string
+      path:
+        description: The path to the resource that includes all the parents.
+        type: string
+        example: /orgs/my-org/projects/my-project/docker-registries/my-registry
+      org_id:
+        description: The unique identifier of the organization.
+        type: string
+      project_id:
+        description: The unique identifier of the project.
+        type: string
+      created_at:
+        description: The time at which this Docker registry credentials were created.
+        type: string
+        format: date-time
+      updated_at:
+        description: The time at which this Docker registry credentials were last
+          updated.
+        type: string
+        format: date-time
+  docker_registry_creds_update:
+    type: object
+    properties:
+      name:
+        description: A user readable name of the Docker registry credentials.
+        type: string
+        minLength: 1
+        maxLength: 63
+        pattern: ^[a-z]([-a-z0-9]*[a-z0-9])?$
+      display_name:
+        description: The display name of the Docker registry credentials.
+        type: string
+        maxLength: 512
+      username:
+        description: The username.
+        type: string
+        minLength: 1
+      password:
+        description: The password.
+        type: string
+        minLength: 1
+    example:
+      display_name: Docker Hub
+      name: docker-hub
+      password: bar
+      username: foo
+tags:
+- name: Docker Registry Credentials
+  description: Operations for managing Docker registry credentials.
+- name: AWS Credentials
+  description: Operations for managing AWS credentials.

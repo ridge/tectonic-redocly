@@ -1,0 +1,5775 @@
+swagger: "2.0"
+info:
+  title: IAM API
+  description: An API for identity and access management
+  version: unstable
+basePath: /iam/unstable
+schemes:
+- https
+consumes:
+- application/json
+produces:
+- application/json
+paths:
+  /admin/groups:
+    get:
+      operationId: listAdminGroups
+      summary: List the groups.
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/groups'
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+      tags:
+      - internal
+    post:
+      operationId: createAdminGroup
+      summary: Create a group.
+      parameters:
+      - name: body
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/group_create'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/group'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+      tags:
+      - internal
+  /admin/groups/{group}:
+    parameters:
+    - name: group
+      in: path
+      description: The identifier of a group
+      required: true
+      type: string
+    get:
+      operationId: describeAdminGroup
+      summary: Describe a group.
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/group'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - internal
+    patch:
+      operationId: updateAdminGroup
+      summary: Update group parameters
+      parameters:
+      - name: body
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/group_update'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/group'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - internal
+    delete:
+      operationId: deleteAdminGroup
+      summary: Delete a group
+      responses:
+        204:
+          description: Success
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - internal
+  /admin/groups/{group}/members:
+    parameters:
+    - name: group
+      in: path
+      description: The identifier of a group
+      required: true
+      type: string
+    get:
+      operationId: listAdminGroupMembers
+      summary: List the members of a group.
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/group_memberships'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - internal
+    post:
+      operationId: createAdminGroupMember
+      summary: Add a member to the group.
+      parameters:
+      - name: body
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/group_membership_create'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/group_membership'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - internal
+  /admin/groups/{group}/members/{member}:
+    parameters:
+    - name: group
+      in: path
+      description: The identifier of a group
+      required: true
+      type: string
+    - name: member
+      in: path
+      description: The identifier of a member
+      required: true
+      type: string
+    get:
+      operationId: describeAdminGroupMembership
+      summary: Describe a member of a group.
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/group_membership'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - internal
+    delete:
+      operationId: deleteAdminGroupMembership
+      summary: Remove a member from the group.
+      responses:
+        204:
+          description: Success
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - internal
+  /admin/groups/{group}/privileges:
+    parameters:
+    - name: group
+      in: path
+      description: The identifier of a group
+      required: true
+      type: string
+    get:
+      operationId: listAdminGroupPrivileges
+      summary: List the policies with this group as a subject
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/policies'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - internal
+    post:
+      operationId: createAdminGroupPrivilege
+      summary: Add a policy with this group as a subject
+      parameters:
+      - name: body
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/subject_policy_create'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/policy'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - internal
+  /admin/members:
+    get:
+      operationId: listAdminMembers
+      summary: List admin members.
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/members'
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+      tags:
+      - internal
+    post:
+      operationId: createAdminMember
+      summary: Invite a user to a become admin member.
+      description: Note that a separate call to /admin/members/{member}/invitation/send
+        is necessary to send the invitation email.
+      parameters:
+      - name: body
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/member_create'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/member'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+      tags:
+      - internal
+  /admin/members/{member}:
+    parameters:
+    - name: member
+      in: path
+      description: The identifier of a member.
+      required: true
+      type: string
+    get:
+      operationId: describeAdminMember
+      summary: Describe an admin member.
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/member'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - internal
+    patch:
+      operationId: updateAdminMember
+      summary: Update the properties of a member. This only applies to members of
+        type `app`.
+      parameters:
+      - name: body
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/member_update'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/member'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - internal
+    delete:
+      operationId: deleteAdminMember
+      summary: Delete an admin member
+      responses:
+        204:
+          description: Success
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - internal
+  /admin/members/{member}/api-keys:
+    parameters:
+    - name: member
+      in: path
+      description: The identifier of a member
+      required: true
+      type: string
+    get:
+      operationId: listAdminMemberAPIKeys
+      summary: List the API keys of a member. This only applies to members of type
+        `app`.
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/api_keys'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - internal
+    post:
+      operationId: createAdminMemberAPIKey
+      summary: Create a new API key. This only applies to members of type `app`.
+      parameters:
+      - name: body
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/api_key_create'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/api_key_details'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - internal
+  /admin/members/{member}/api-keys/{api_key}:
+    parameters:
+    - name: member
+      in: path
+      description: The identifier of a member
+      required: true
+      type: string
+    - name: api_key
+      in: path
+      description: The identifier of an API key
+      required: true
+      type: string
+    get:
+      operationId: describeAdminMemberAPIKey
+      summary: Retrieve information about a member's API key. This only applies to
+        members of type `app`and does not retrieve the key itself.
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/api_key'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - internal
+    patch:
+      operationId: updateAdminMemberAPIKey
+      summary: Update the name and display name of a member's API key. This only applies
+        to members of type `app`.
+      parameters:
+      - name: body
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/api_key_update'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/api_key'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - internal
+    delete:
+      operationId: deleteAdminMemberAPIKey
+      summary: Delete a member's API key. This only applies to members of type `app`.
+      responses:
+        204:
+          description: Success
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - internal
+  /admin/members/{member}/groups:
+    parameters:
+    - name: member
+      in: path
+      description: The identifier of a member.
+      required: true
+      type: string
+    get:
+      operationId: listAdminMemberGroups
+      summary: List the groups the member belongs to.
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/group_memberships'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - internal
+    post:
+      operationId: createAdminMemberGroup
+      summary: Add the member to a group.
+      parameters:
+      - name: body
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/member_group_membership_create'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/group_membership'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - internal
+  /admin/members/{member}/invitation/send:
+    parameters:
+    - name: member
+      in: path
+      description: The identifier of a member
+      required: true
+      type: string
+    post:
+      operationId: sendAdminMemberInvitationEmail
+      summary: Send an invitation email to a provisional user.
+      responses:
+        204:
+          description: Success
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - internal
+  /admin/members/{member}/invitation/token:
+    parameters:
+    - name: member
+      in: path
+      description: The identifier of a member
+      required: true
+      type: string
+    get:
+      operationId: generateAdminMemberInvitationToken
+      summary: Generate an invitation token for a provisional user.
+      responses:
+        200:
+          description: Success
+          schema:
+            type: string
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - internal
+  /admin/members/{member}/privileges:
+    parameters:
+    - name: member
+      in: path
+      description: The identifier of a member
+      required: true
+      type: string
+    get:
+      operationId: listAdminMemberPrivileges
+      summary: List the policies with this member as a subject
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/policies'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - internal
+    post:
+      operationId: createAdminMemberPrivilege
+      summary: Add a policy with this member as a subject
+      parameters:
+      - name: body
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/subject_policy_create'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/policy'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - internal
+  /admin/policies:
+    get:
+      operationId: listAdminPolicies
+      summary: List the policies that apply to the admin realm.
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/policies'
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+      tags:
+      - internal
+    post:
+      operationId: createAdminPolicy
+      summary: Create a policy for the admin realm.
+      parameters:
+      - name: body
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/object_policy_create'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/policy'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+      tags:
+      - internal
+  /admin/policies/{policy}:
+    parameters:
+    - name: policy
+      in: path
+      description: The policy identifier
+      required: true
+      type: string
+    delete:
+      operationId: deleteAdminPolicy
+      summary: Delete a partner's policy.
+      responses:
+        204:
+          description: Success
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - internal
+  /me/api-keys:
+    get:
+      operationId: listOwnAPIKeys
+      summary: List the authenticated user's own API keys.
+      description: Cannot be used when authenticated with an API key.
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/api_keys'
+          examples:
+            application/json:
+              items:
+              - created_at: "2021-02-09T08:22:42.235Z"
+                display_name: Eve 1
+                id: rgenrmhy1phcmeyinzxxcdcq8a
+                name: eve1
+                path: /me/api-keys/eve1
+                updated_at: "2021-02-09T08:22:42.235Z"
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+      tags:
+      - My User
+    post:
+      operationId: createOwnAPIKey
+      summary: Create a new API key for the authenticated user.
+      description: Cannot be used when authenticated with an API key.
+      parameters:
+      - name: body
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/api_key_create'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/api_key_details'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+      tags:
+      - My User
+  /me/api-keys/{api_key}:
+    parameters:
+    - name: api_key
+      in: path
+      description: The identifier of an API key
+      required: true
+      type: string
+    get:
+      operationId: describeOwnAPIKey
+      summary: Retrieve the authenticated user's own API key.
+      description: Cannot be used when authenticated with an API key.
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/api_key'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - My User
+    patch:
+      operationId: updateOwnAPIKey
+      summary: Update the authenticated user's own API key.
+      description: Cannot be used when authenticated with an API key.
+      parameters:
+      - name: body
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/api_key_update'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/api_key'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - My User
+    delete:
+      operationId: deleteOwnAPIKey
+      summary: Delete the authenticated user's own API key.
+      description: Cannot be used when authenticated with an API key.
+      responses:
+        204:
+          description: Success
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - My User
+  /me/memberships:
+    get:
+      operationId: getOwnMemberships
+      summary: Retrieve the authenticated user's own memberships in realms.
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/members'
+          examples:
+            application/json:
+              items:
+              - created_at: "2020-11-17T18:00:50.030Z"
+                id: as8s7axfrq1q1tyfkw4t56jz1y
+                org_id: di86ihycue5875pb7d5ybfhn9r
+                path: /orgs/test-org/members/@as8s7axfrq1q1tyfkw4t56jz1y
+                realm_type: org
+                type: user
+                updated_at: "2020-11-17T19:19:13.896Z"
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+      tags:
+      - My User
+    post:
+      operationId: join
+      summary: Join a realm using an invitation token.
+      description: 'Note: Does not apply to apps.'
+      parameters:
+      - name: body
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/join'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/member'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+      tags:
+      - My User
+  /me/personal:
+    get:
+      operationId: getOwnPersonalInfo
+      summary: Retrieve the authenticated user's own personal info.
+      description: 'Note: Does not apply to apps.'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/personal_info'
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+      tags:
+      - My User
+  /me/storage-keys:
+    get:
+      operationId: listOwnStorageKeys
+      summary: List all storage keys of the authenciated user.
+      description: List all storage keys of the authenticated user.
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/storage_keys'
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+      tags:
+      - Object Storage
+    post:
+      operationId: createOwnStorageKey
+      summary: Create a storage key for the authenticated user
+      description: Create a new storage Key for the authenticated user, for a specific
+        project, under an object storage location.
+      parameters:
+      - name: body
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/storage_key_create'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/storage_key_details'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+      tags:
+      - Object Storage
+  /me/storage-keys/{key}:
+    parameters:
+    - name: key
+      in: path
+      description: The identifier of a key.
+      required: true
+      type: string
+    get:
+      operationId: describeOwnStorageKey
+      summary: Describe a storage key of the authenticated user
+      description: Describe a storage key, including the S3-like secret key, of the
+        authenticated user.
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/storage_key_details'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - Object Storage
+    patch:
+      operationId: updateOwnStorageKey
+      summary: Update an authenticated user's storage key
+      description: Update the name and display name of an authenticated user's storage
+        key.
+      parameters:
+      - name: body
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/storage_key_update'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/storage_key'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - Object Storage
+    delete:
+      operationId: deleteOwnStorageKey
+      summary: Delete a storage key of the authenticated user
+      description: Delete a storage key of the authenticated user.
+      responses:
+        204:
+          description: Success
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - Object storage
+  /orgs:
+    get:
+      operationId: listOrgs
+      summary: List the organizations.
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/orgs'
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+      tags:
+      - internal
+  /orgs/{org}:
+    parameters:
+    - name: org
+      in: path
+      description: The organization identifier
+      required: true
+      type: string
+    get:
+      operationId: describeOrg
+      summary: Describe an organization
+      description: Get information about an organization.
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/org'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - Organizations
+    patch:
+      operationId: updateOrg
+      summary: Update an org
+      parameters:
+      - name: body
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/org_update'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/org'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - Organizations
+    delete:
+      operationId: deleteOrg
+      summary: Delete an organization
+      responses:
+        204:
+          description: Success
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - internal
+  /orgs/{org}/groups:
+    parameters:
+    - name: org
+      in: path
+      description: The organization identifier
+      required: true
+      type: string
+    get:
+      operationId: listOrgGroups
+      summary: List groups
+      description: List the member groups of an organization.
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/groups'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - Groups
+    post:
+      operationId: createOrgGroup
+      summary: Create a group
+      description: Create a group of members.
+      parameters:
+      - name: body
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/group_create'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/group'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - Groups
+  /orgs/{org}/groups/{group}:
+    parameters:
+    - name: org
+      in: path
+      description: The organization identifier
+      required: true
+      type: string
+    - name: group
+      in: path
+      description: The identifier of a group
+      required: true
+      type: string
+    get:
+      operationId: describeOrgGroup
+      summary: Describe a group
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/group'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - Groups
+    patch:
+      operationId: updateOrgGroup
+      summary: Update a group
+      description: Update the name or display name of a group.
+      parameters:
+      - name: body
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/group_update'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/group'
+          examples:
+            application/json:
+              created_at: "2020-12-23T13:24:21.750Z"
+              display_name: Admins
+              id: yhyh6d6pdfoz5hndc6a4ka6bpw
+              name: admins
+              org_id: di86ihycue5875pb7d5ybfhn9r
+              path: /orgs/test-org/groups/admins
+              realm_type: org
+              updated_at: "2021-02-23T17:12:09.645Z"
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - Groups
+    delete:
+      operationId: deleteOrgGroup
+      summary: Delete a group
+      responses:
+        204:
+          description: Success
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - Groups
+  /orgs/{org}/groups/{group}/members:
+    parameters:
+    - name: org
+      in: path
+      description: The organization identifier
+      required: true
+      type: string
+    - name: group
+      in: path
+      description: The identifier of a group
+      required: true
+      type: string
+    get:
+      operationId: listOrgGroupMembers
+      summary: List members
+      description: List the members of a group.
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/group_memberships'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - Groups
+    post:
+      operationId: createOrgGroupMember
+      summary: Add a member to the group
+      parameters:
+      - name: body
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/group_membership_create'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/group_membership'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - Groups
+  /orgs/{org}/groups/{group}/members/{member}:
+    parameters:
+    - name: org
+      in: path
+      description: The organization identifier
+      required: true
+      type: string
+    - name: group
+      in: path
+      description: The identifier of a group
+      required: true
+      type: string
+    - name: member
+      in: path
+      description: The identifier of a member
+      required: true
+      type: string
+    get:
+      operationId: describeOrgGroupMembership
+      summary: Describe a member of a group
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/group_membership'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - Groups
+    delete:
+      operationId: deleteOrgGroupMembership
+      summary: Remove a member from the group
+      responses:
+        204:
+          description: Success
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - Groups
+  /orgs/{org}/groups/{group}/privileges:
+    parameters:
+    - name: org
+      in: path
+      description: The organization identifier
+      required: true
+      type: string
+    - name: group
+      in: path
+      description: The identifier of a group
+      required: true
+      type: string
+    get:
+      operationId: listOrgGroupPrivileges
+      summary: List the policies with this group as a subject
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/policies'
+          examples:
+            application/json:
+              items:
+              - created_at: "2020-12-23T13:24:26.743Z"
+                group_id: yhyh6d6pdfoz5hndc6a4ka6bpw
+                id: m337qtsrm4qu1gr9qkqoucusao
+                object_path: /orgs/test-org
+                object_type: org
+                org_id: di86ihycue5875pb7d5ybfhn9r
+                path: /orgs/test-org/policies/@m337qtsrm4qu1gr9qkqoucusao
+                role_path: /roles/org-admin
+                subject_path: /orgs/test-org/groups/admins
+                subject_type: group
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - Groups
+    post:
+      operationId: createOrgGroupPrivilege
+      summary: Add a policy with this group as a subject
+      parameters:
+      - name: body
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/subject_policy_create'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/policy'
+          examples:
+            application/json:
+              created_at: "2020-12-23T13:24:26.743Z"
+              group_id: yhyh6d6pdfoz5hndc6a4ka6bpw
+              id: m337qtsrm4qu1gr9qkqoucusao
+              object_path: /orgs/test-org
+              object_type: org
+              org_id: di86ihycue5875pb7d5ybfhn9r
+              path: /orgs/test-org/policies/@m337qtsrm4qu1gr9qkqoucusao
+              role_path: /roles/org-admin
+              subject_path: /orgs/test-org/groups/admins
+              subject_type: group
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - Groups
+  /orgs/{org}/members:
+    parameters:
+    - name: org
+      in: path
+      description: The organization identifier
+      required: true
+      type: string
+    get:
+      operationId: listOrgMembers
+      summary: List members
+      description: List the members of an organization.
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/members'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - Members
+    post:
+      operationId: createOrgMember
+      summary: Add a member
+      description: Add an application or invite a user to an organization. Note that
+        a separate call to /orgs/{org}/members/{member}/invitation/send is necessary
+        to send the invitation email.
+      parameters:
+      - name: body
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/member_create'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/member'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - Members
+  /orgs/{org}/members/{member}:
+    parameters:
+    - name: org
+      in: path
+      description: The organization identifier
+      required: true
+      type: string
+    - name: member
+      in: path
+      description: The identifier of a member.
+      required: true
+      type: string
+    get:
+      operationId: describeOrgMember
+      summary: Describe a member
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/member'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - Members
+    patch:
+      operationId: updateOrgMember
+      summary: Update a member
+      description: Update the properties of a member. This only applies to members
+        of type `app`.
+      parameters:
+      - name: body
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/member_update'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/member'
+          examples:
+            application/json:
+              created_at: "2021-02-15T12:57:39.601Z"
+              display_name: New Name
+              id: cymuwhd4dzi6pmtr5oyhue99jh
+              name: new_bame
+              org_id: di86ihycue5875pb7d5ybfhn9r
+              path: /orgs/test-org/members/new_name
+              realm_type: org
+              type: app
+              updated_at: "2021-02-15T13:57:49.601Z"
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - Members
+    delete:
+      operationId: deleteOrgMember
+      summary: Delete a member
+      description: Remove a member from the organization.
+      responses:
+        204:
+          description: Success
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - Members
+  /orgs/{org}/members/{member}/api-keys:
+    parameters:
+    - name: org
+      in: path
+      description: The organization identifier
+      required: true
+      type: string
+    - name: member
+      in: path
+      description: The identifier of a member
+      required: true
+      type: string
+    get:
+      operationId: listOrgMemberAPIKeys
+      summary: List API keys
+      description: List the API keys of a member. This only applies to members of
+        type `app`.
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/api_keys'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - Members
+    post:
+      operationId: createOrgMemberAPIKey
+      summary: Create an API key
+      description: Create a new API key. This only applies to members of type `app`.
+      parameters:
+      - name: body
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/api_key_create'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/api_key_details'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - Members
+  /orgs/{org}/members/{member}/api-keys/{api_key}:
+    parameters:
+    - name: org
+      in: path
+      description: The organization identifier
+      required: true
+      type: string
+    - name: member
+      in: path
+      description: The identifier of a member
+      required: true
+      type: string
+    - name: api_key
+      in: path
+      description: The identifier of an API key
+      required: true
+      type: string
+    get:
+      operationId: describeOrgMemberAPIKey
+      summary: Describe an API key
+      description: Retrieve information about a member's API key. This only applies
+        to members of type `app` and does not return the key itself.
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/api_key'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - Members
+    patch:
+      operationId: updateOrgMemberAPIKey
+      summary: Update an API key
+      description: Update the name and display name of a member's API key. This only
+        applies to members of type `app`.
+      parameters:
+      - name: body
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/api_key_update'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/api_key'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - Members
+    delete:
+      operationId: deleteOrgMemberAPIKey
+      summary: Delete an API key
+      description: Delete a member's API key. This only applies to members of type
+        `app`.
+      responses:
+        204:
+          description: Success
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - Members
+  /orgs/{org}/members/{member}/groups:
+    parameters:
+    - name: org
+      in: path
+      description: The organization identifier
+      required: true
+      type: string
+    - name: member
+      in: path
+      description: The identifier of a member.
+      required: true
+      type: string
+    get:
+      operationId: listOrgMemberGroups
+      summary: List member's groups
+      description: List the groups the member belongs to.
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/group_memberships'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - Members
+    post:
+      operationId: createOrgMemberGroup
+      summary: Add member to a group
+      parameters:
+      - name: body
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/member_group_membership_create'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/group_membership'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - Members
+  /orgs/{org}/members/{member}/invitation/send:
+    parameters:
+    - name: org
+      in: path
+      description: The organization identifier
+      required: true
+      type: string
+    - name: member
+      in: path
+      description: The identifier of a member
+      required: true
+      type: string
+    post:
+      operationId: sendOrgMemberInvitationEmail
+      summary: Send an invitation
+      description: Send an invitation email to a provisional user.
+      responses:
+        204:
+          description: Success
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - Members
+  /orgs/{org}/members/{member}/invitation/token:
+    parameters:
+    - name: org
+      in: path
+      description: The organization identifier
+      required: true
+      type: string
+    - name: member
+      in: path
+      description: The identifier of a member
+      required: true
+      type: string
+    get:
+      operationId: generateOrgMemberInvitationToken
+      summary: Create an invitation token
+      description: Generate an invitation token for a provisional user.
+      responses:
+        200:
+          description: Success
+          schema:
+            type: string
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - Members
+  /orgs/{org}/members/{member}/privileges:
+    parameters:
+    - name: org
+      in: path
+      description: The organization identifier
+      required: true
+      type: string
+    - name: member
+      in: path
+      description: The identifier of a member
+      required: true
+      type: string
+    get:
+      operationId: listOrgMemberPrivileges
+      summary: List the policies with this member as a subject
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/policies'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - Members
+    post:
+      operationId: createOrgMemberPrivilege
+      summary: Add a policy with this member as a subject
+      parameters:
+      - name: body
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/subject_policy_create'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/policy'
+          examples:
+            application/json:
+              created_at: "2021-02-21T16:15:09.263Z"
+              id: umf6zxhohm94xpxhpc61y78o6c
+              member_id: cymuwhd4dzi6pmtr5oyhue99jh
+              object_path: /orgs/test-org
+              object_type: org
+              org_id: di86ihycue5875pb7d5ybfhn9r
+              path: /orgs/test-org/policies/@umf6zxhohm94xpxhpc61y78o6c
+              role_path: /roles/org-admin
+              subject_path: /orgs/test-org/members/app1
+              subject_type: member
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - Members
+  /orgs/{org}/members/{member}/storage-keys:
+    parameters:
+    - name: org
+      in: path
+      description: The organization identifier
+      required: true
+      type: string
+    - name: member
+      in: path
+      description: The identifier of a member.
+      required: true
+      type: string
+    get:
+      operationId: listMemberStorageKeys
+      summary: List all storage keys of a member
+      description: List all storage keys of a member. This only applies to members
+        of type `app`.
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/storage_keys'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - Object Storage
+    post:
+      operationId: createMemberStorageKey
+      summary: Create a storage key for a member
+      description: Create a new storage Key for a member, for a specific project,
+        under an object storage location. This only applies to members of type `app`.
+      parameters:
+      - name: body
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/storage_key_create'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/storage_key_details'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - Object Storage
+  /orgs/{org}/members/{member}/storage-keys/{key}:
+    parameters:
+    - name: org
+      in: path
+      description: The identifier of an organization.
+      required: true
+      type: string
+    - name: member
+      in: path
+      description: The identifier of a member.
+      required: true
+      type: string
+    - name: key
+      in: path
+      description: The identifier of a key.
+      required: true
+      type: string
+    get:
+      operationId: describeMemberStorageKey
+      summary: Describe a storage key of a member
+      description: Describe a storage key, including the S3-like secret key.
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/storage_key_details'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - Object Storage
+    patch:
+      operationId: updateMemberStorageKey
+      summary: Update a storage key
+      description: Update the name and display name of a member's storage key. This
+        only applies to members of type `app`.
+      parameters:
+      - name: body
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/storage_key_update'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/storage_key'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - Object Storage
+    delete:
+      operationId: deleteMemberStorageKey
+      summary: Delete a storage key of a member
+      description: Delete a storage key of a member. This only applies to members
+        of type `app`.
+      responses:
+        204:
+          description: Success
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - Object Storage
+  /orgs/{org}/policies:
+    parameters:
+    - name: org
+      in: path
+      description: The organization identifier
+      required: true
+      type: string
+    get:
+      operationId: listOrgPolicies
+      summary: List policies
+      description: List the access policies that apply to the organization.
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/policies'
+          examples:
+            application/json:
+              items:
+              - created_at: "2020-12-23T13:24:26.743Z"
+                group_id: yhyh6d6pdfoz5hndc6a4ka6bpw
+                id: m337qtsrm4qu1gr9qkqoucusao
+                object_path: /orgs/test-org
+                object_type: org
+                org_id: di86ihycue5875pb7d5ybfhn9r
+                path: /orgs/test-org/policies/@m337qtsrm4qu1gr9qkqoucusao
+                role_path: /roles/org-admin
+                subject_path: /orgs/test-org/groups/admins
+                subject_type: group
+              - created_at: "2020-12-28T10:32:57.644Z"
+                id: wcswmjx88o6md9nfdbnq6gfp5y
+                member_id: b8zsucjct9kth71jrgzgeqc6jr
+                object_path: /orgs/test-org
+                object_type: org
+                org_id: di86ihycue5875pb7d5ybfhn9r
+                path: /orgs/test-org/policies/@wcswmjx88o6md9nfdbnq6gfp5y
+                role_path: /roles/org-admin
+                subject_path: /orgs/test-org/members/@b8zsucjct9kth71jrgzgeqc6jr
+                subject_type: member
+              - created_at: "2020-07-23T06:48:00.023Z"
+                id: t1zd1hju38jo7ob5qna5uh9jdr
+                member_id: cp77fibtdomuy1ph9pucqb1ohy
+                object_path: /orgs/test-org
+                object_type: org
+                org_id: di86ihycue5875pb7d5ybfhn9r
+                path: /orgs/test-org/policies/@t1zd1hju38jo7ob5qna5uh9jdr
+                role_path: /roles/org-admin
+                subject_path: /orgs/test-org/members/@cp77fibtdomuy1ph9pucqb1ohy
+                subject_type: member
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - Organization Policies
+    post:
+      operationId: createOrgPolicy
+      summary: Create a policy
+      description: Create an access policy for the organization.
+      parameters:
+      - name: body
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/object_policy_create'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/policy'
+          examples:
+            application/json:
+              created_at: "2020-12-23T13:24:26.743Z"
+              group_id: yhyh6d6pdfoz5hndc6a4ka6bpw
+              id: m337qtsrm4qu1gr9qkqoucusao
+              object_path: /orgs/test-org
+              object_type: org
+              org_id: di86ihycue5875pb7d5ybfhn9r
+              path: /orgs/test-org/policies/@m337qtsrm4qu1gr9qkqoucusao
+              role_path: /roles/org-admin
+              subject_path: /orgs/test-org/groups/admins
+              subject_type: group
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - Organization Policies
+  /orgs/{org}/policies/{policy}:
+    parameters:
+    - name: org
+      in: path
+      description: The organization identifier
+      required: true
+      type: string
+    - name: policy
+      in: path
+      description: The policy identifier
+      required: true
+      type: string
+    delete:
+      operationId: deleteOrgPolicy
+      summary: Delete a policy
+      description: Delete an organization's access policy.
+      responses:
+        204:
+          description: Success
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - Organization Policies
+  /orgs/{org}/projects:
+    parameters:
+    - name: org
+      in: path
+      description: The organization identifier
+      required: true
+      type: string
+    get:
+      operationId: listProjects
+      summary: List projects
+      description: List the projects of an organization.
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/projects'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - Projects
+    post:
+      operationId: createProject
+      summary: Create a project
+      parameters:
+      - name: body
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/project_create'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/project'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - Projects
+  /orgs/{org}/projects/{project}:
+    parameters:
+    - name: org
+      in: path
+      description: The organization identifier
+      required: true
+      type: string
+    - name: project
+      in: path
+      description: The project identifier
+      required: true
+      type: string
+    get:
+      operationId: describeProject
+      summary: Describe a project
+      description: Get information about a project.
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/project'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - Projects
+    patch:
+      operationId: updateProject
+      summary: Update a project
+      parameters:
+      - name: body
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/project_update'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/project'
+          examples:
+            application/json:
+              created_at: "2020-07-15T14:46:47.944Z"
+              display_name: Manhattan
+              id: g3ker86kt6mir8rbczwkyjotpe
+              name: manhattan
+              org_id: di86ihycue5875pb7d5ybfhn9r
+              path: /orgs/test-org/projects/manhattan
+              updated_at: "2021-02-15T12:44:23.564Z"
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - Projects
+    delete:
+      operationId: deleteProject
+      summary: Delete a project
+      responses:
+        204:
+          description: Success
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - Projects
+  /orgs/{org}/projects/{project}/policies:
+    parameters:
+    - name: org
+      in: path
+      description: The organization identifier
+      required: true
+      type: string
+    - name: project
+      in: path
+      description: The project identifier
+      required: true
+      type: string
+    get:
+      operationId: listProjectPolicies
+      summary: List policies
+      description: List the policies that apply to the project.
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/policies'
+          examples:
+            application/json:
+              items:
+              - created_at: "2021-01-14T12:28:21.609Z"
+                id: ygjibwfaycx47k4e3y3m8mrmzo
+                member_id: icwdxdd37bxw5bojsgkp6x3p6e
+                object_path: /orgs/test-org/projects/sandbox
+                object_type: project
+                org_id: di86ihycue5875pb7d5ybfhn9r
+                path: /orgs/test-org/projects/sandbox/policies/@ygjibwfaycx47k4e3y3m8mrmzo
+                project_id: g3ker86kt6mir8rbczwkyjotpe
+                role_path: /roles/project-admin
+                subject_path: /orgs/test-org/members/bot
+                subject_type: member
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - Project Policies
+    post:
+      operationId: createProjectPolicy
+      summary: Create a policy
+      description: Create an access policy for the project.
+      parameters:
+      - name: body
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/object_policy_create'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/policy'
+          examples:
+            application/json:
+              created_at: "2021-02-17T16:50:06.701Z"
+              id: pguktgf9s9swukjn4m1sh5adqe
+              member_id: t1fdw9f44d9jj99psnt3bgyh7w
+              object_path: /orgs/test-org/projects/sandbox
+              object_type: project
+              org_id: di86ihycue5875pb7d5ybfhn9r
+              path: /orgs/test-org/projects/sandbox/policies/@pguktgf9s9swukjn4m1sh5adqe
+              project_id: g3ker86kt6mir8rbczwkyjotpe
+              role_path: /roles/project-operator
+              subject_path: /orgs/test-org/members/my-bot
+              subject_type: member
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - Project Policies
+  /orgs/{org}/projects/{project}/policies/{policy}:
+    parameters:
+    - name: org
+      in: path
+      description: The organization identifier
+      required: true
+      type: string
+    - name: project
+      in: path
+      description: The project identifier
+      required: true
+      type: string
+    - name: policy
+      in: path
+      description: The policy identifier
+      required: true
+      type: string
+    delete:
+      operationId: deleteProjectPolicy
+      summary: Delete a policy
+      description: Delete a project's access policy.
+      responses:
+        204:
+          description: Success
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - Project Policies
+  /orgs/{org}/quota:
+    parameters:
+    - name: org
+      in: path
+      description: The organization identifier
+      required: true
+      type: string
+    get:
+      operationId: describeOrgQuota
+      summary: Describe quota
+      description: Describe the quota of the organization.
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/quota'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - Organizations
+  /orgs/{org}/transfer:
+    parameters:
+    - name: org
+      in: path
+      description: The organization identifier
+      required: true
+      type: string
+    get:
+      operationId: describeTransfer
+      summary: Get information about the pending organization transfer, if any
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/transfer_for_org'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - internal
+    post:
+      operationId: createTransfer
+      summary: Create or replace an organization transfer request
+      description: Used to request a transfer of the organization to another partner
+        or to make it a direct customer of Ridge. In both cases the transfer is pending
+        approval of the receiver of the request. An empty partner indicates that the
+        organization is being transferred to Ridge.
+      parameters:
+      - name: body
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/transfer_request'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/transfer_for_org'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - internal
+    delete:
+      operationId: deleteTransfer
+      summary: Delete the pending organization transfer
+      responses:
+        204:
+          description: Success
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - internal
+  /partners:
+    get:
+      operationId: listPartners
+      summary: List partners
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/partners'
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+      tags:
+      - Partners
+  /partners/{partner}:
+    parameters:
+    - name: partner
+      in: path
+      description: The partner identifier
+      required: true
+      type: string
+    get:
+      operationId: describePartner
+      summary: Describe a partner
+      description: Get information about a partner.
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/partner'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - Partners
+  /partners/{partner}/clients:
+    parameters:
+    - name: partner
+      in: path
+      description: The partner identifier
+      required: true
+      type: string
+    get:
+      operationId: listClients
+      summary: List clients
+      description: List the clients of the partner
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/clients'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - Partner Clients
+    post:
+      operationId: createClient
+      summary: create client
+      description: Create a client organization.
+      parameters:
+      - name: body
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/client_create'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/client'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - Partner Clients
+  /partners/{partner}/clients/{client}:
+    parameters:
+    - name: partner
+      in: path
+      description: The partner identifier
+      required: true
+      type: string
+    - name: client
+      in: path
+      description: The client organization identifier
+      required: true
+      type: string
+    get:
+      operationId: describeClient
+      summary: Describe  a client
+      description: Get information about a client.
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/client'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - Partner Clients
+    patch:
+      operationId: updateClient
+      summary: Update client
+      description: Update the client organization.
+      parameters:
+      - name: body
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/client_update'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/client'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - Partner Clients
+  /partners/{partner}/groups:
+    parameters:
+    - name: partner
+      in: path
+      description: The partner identifier
+      required: true
+      type: string
+    get:
+      operationId: listPartnerGroups
+      summary: List groups.
+      description: List the member groups of the partner.
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/groups'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - Groups
+    post:
+      operationId: createPartnerGroup
+      summary: Create a group
+      description: Create a member group for thr partner.
+      parameters:
+      - name: body
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/group_create'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/group'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - Groups
+  /partners/{partner}/groups/{group}:
+    parameters:
+    - name: partner
+      in: path
+      description: The partner identifier
+      required: true
+      type: string
+    - name: group
+      in: path
+      description: The identifier of a group
+      required: true
+      type: string
+    get:
+      operationId: describePartnerGroup
+      summary: Describe a group
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/group'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - Groups
+    patch:
+      operationId: updatePartnerGroup
+      summary: Update  a group
+      description: Update the name and display name of a partner's group.
+      parameters:
+      - name: body
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/group_update'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/group'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - Groups
+    delete:
+      operationId: deletePartnerGroup
+      summary: Delete a group
+      responses:
+        204:
+          description: Success
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - Groups
+  /partners/{partner}/groups/{group}/members:
+    parameters:
+    - name: partner
+      in: path
+      description: The partner identifier
+      required: true
+      type: string
+    - name: group
+      in: path
+      description: The identifier of a group
+      required: true
+      type: string
+    get:
+      operationId: listPartnerGroupMembers
+      summary: List members
+      description: List the members of a group.
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/group_memberships'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - Groups
+    post:
+      operationId: createPartnerGroupMember
+      summary: Add member
+      description: Add a member to the group.
+      parameters:
+      - name: body
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/group_membership_create'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/group_membership'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - Groups
+  /partners/{partner}/groups/{group}/members/{member}:
+    parameters:
+    - name: partner
+      in: path
+      description: The partner identifier
+      required: true
+      type: string
+    - name: group
+      in: path
+      description: The identifier of a group
+      required: true
+      type: string
+    - name: member
+      in: path
+      description: The identifier of a member
+      required: true
+      type: string
+    get:
+      operationId: describePartnerGroupMembership
+      summary: Describe a member
+      description: Describe a member of a group.
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/group_membership'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - Groups
+    delete:
+      operationId: deletePartnerGroupMembership
+      summary: Remove member
+      description: Remove a member from the group.
+      responses:
+        204:
+          description: Success
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - Groups
+  /partners/{partner}/groups/{group}/privileges:
+    parameters:
+    - name: partner
+      in: path
+      description: The partner identifier
+      required: true
+      type: string
+    - name: group
+      in: path
+      description: The identifier of a group
+      required: true
+      type: string
+    get:
+      operationId: listPartnerGroupPrivileges
+      summary: List the policies with this group as a subject
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/policies'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - Groups
+    post:
+      operationId: createPartnerGroupPrivilege
+      summary: Add a policy with this group as a subject
+      parameters:
+      - name: body
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/subject_policy_create'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/policy'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - Groups
+  /partners/{partner}/members:
+    parameters:
+    - name: partner
+      in: path
+      description: The partner identifier
+      required: true
+      type: string
+    get:
+      operationId: listPartnerMembers
+      summary: List members
+      description: List members of the partner.
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/members'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - Members
+    post:
+      operationId: createPartnerMember
+      summary: Add member
+      description: Add an application or invite a user to a partner. Note that a separate
+        call to /partners/{partner}/members/{member}/invitation/send is necessary
+        to send the invitation email.
+      parameters:
+      - name: body
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/member_create'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/member'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - Members
+  /partners/{partner}/members/{member}:
+    parameters:
+    - name: partner
+      in: path
+      description: The partner identifier
+      required: true
+      type: string
+    - name: member
+      in: path
+      description: The identifier of a member.
+      required: true
+      type: string
+    get:
+      operationId: describePartnerMember
+      summary: Describe a member
+      description: Describe a member of the partner.
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/member'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - Members
+    patch:
+      operationId: updatePartnerMember
+      summary: Update  a member
+      description: Update the properties of a member . This only applies to members
+        of type `app`.
+      parameters:
+      - name: body
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/member_update'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/member'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - Members
+    delete:
+      operationId: deletePartnerMember
+      summary: Remove member
+      description: Remove a member from the partner.
+      responses:
+        204:
+          description: Success
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - Members
+  /partners/{partner}/members/{member}/api-keys:
+    parameters:
+    - name: partner
+      in: path
+      description: The partner identifier
+      required: true
+      type: string
+    - name: member
+      in: path
+      description: The identifier of a member
+      required: true
+      type: string
+    get:
+      operationId: listPartnerMemberAPIKeys
+      summary: List API keys
+      description: List the partner member's API keys. This only applies to members
+        of type `app`.
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/api_keys'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - Members
+    post:
+      operationId: createPartnerMemberAPIKey
+      summary: Create an API key
+      description: Create a new API key. This only applies to members of type `app`.
+      parameters:
+      - name: body
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/api_key_create'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/api_key_details'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - Members
+  /partners/{partner}/members/{member}/api-keys/{api_key}:
+    parameters:
+    - name: partner
+      in: path
+      description: The partner identifier
+      required: true
+      type: string
+    - name: member
+      in: path
+      description: The identifier of a member
+      required: true
+      type: string
+    - name: api_key
+      in: path
+      description: The identifier of an API key
+      required: true
+      type: string
+    get:
+      operationId: describePartnerMemberAPIKey
+      summary: Describe an API key
+      description: Retrieve information about a member's API key. This only applies
+        to members of type `app` and does not return the key itself.
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/api_key'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - Members
+    patch:
+      operationId: updatePartnerMemberAPIKey
+      summary: Update API key
+      description: Update the name or display name of a member's API key. This only
+        applies to members of type `app`.
+      parameters:
+      - name: body
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/api_key_update'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/api_key'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - Members
+    delete:
+      operationId: deletePartnerMemberAPIKey
+      summary: Delete an API key
+      description: Delete a member's API key. This only applies to members of type
+        `app`.
+      responses:
+        204:
+          description: Success
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - Members
+  /partners/{partner}/members/{member}/groups:
+    parameters:
+    - name: partner
+      in: path
+      description: The partner identifier
+      required: true
+      type: string
+    - name: member
+      in: path
+      description: The identifier of a member.
+      required: true
+      type: string
+    get:
+      operationId: listPartnerMemberGroups
+      summary: List groups
+      description: List the groups the member belongs to.
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/group_memberships'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - Members
+    post:
+      operationId: createPartnerMemberGroup
+      summary: Add to group
+      description: Add the member to a group.
+      parameters:
+      - name: body
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/member_group_membership_create'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/group_membership'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - Members
+  /partners/{partner}/members/{member}/invitation/send:
+    parameters:
+    - name: partner
+      in: path
+      description: The partner identifier
+      required: true
+      type: string
+    - name: member
+      in: path
+      description: The identifier of a member
+      required: true
+      type: string
+    post:
+      operationId: sendPartnerMemberInvitationEmail
+      summary: Send an invitation
+      description: Send an invitation email to a provisional user.
+      responses:
+        204:
+          description: Success
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - Members
+  /partners/{partner}/members/{member}/invitation/token:
+    parameters:
+    - name: partner
+      in: path
+      description: The partner identifier
+      required: true
+      type: string
+    - name: member
+      in: path
+      description: The identifier of a member
+      required: true
+      type: string
+    get:
+      operationId: generatePartnerMemberInvitationToken
+      summary: Create an invitation token
+      description: Generate an invitation token for a provisional user.
+      responses:
+        200:
+          description: Success
+          schema:
+            type: string
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - Members
+  /partners/{partner}/members/{member}/privileges:
+    parameters:
+    - name: partner
+      in: path
+      description: The partner identifier
+      required: true
+      type: string
+    - name: member
+      in: path
+      description: The identifier of a member
+      required: true
+      type: string
+    get:
+      operationId: listPartnerMemberPrivileges
+      summary: List the policies with this member as a subject
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/policies'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - Members
+    post:
+      operationId: createPartnerMemberPrivilege
+      summary: Add a policy with this member as a subject
+      parameters:
+      - name: body
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/subject_policy_create'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/policy'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - Members
+  /partners/{partner}/policies:
+    parameters:
+    - name: partner
+      in: path
+      description: The partner identifier
+      required: true
+      type: string
+    get:
+      operationId: listPartnerPolicies
+      summary: List policies
+      description: List the policies that apply to a partner.
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/policies'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - Partner Policies
+    post:
+      operationId: createPartnerPolicy
+      summary: Create a policy
+      parameters:
+      - name: body
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/object_policy_create'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/policy'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - Partner Policies
+  /partners/{partner}/policies/{policy}:
+    parameters:
+    - name: partner
+      in: path
+      description: The partner identifier
+      required: true
+      type: string
+    - name: policy
+      in: path
+      description: The policy identifier
+      required: true
+      type: string
+    delete:
+      operationId: deletePartnerPolicy
+      summary: Delete a policy
+      description: Delete a partner's policy.
+      responses:
+        204:
+          description: Success
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - Partner Policies
+  /partners/{partner}/transfers:
+    parameters:
+    - name: partner
+      in: path
+      description: The identifier of the partner
+      required: true
+      type: string
+    get:
+      operationId: listTransfers
+      summary: List transfers
+      description: List the pending incoming transfers for the partner.
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/transfers'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - Partners
+  /partners/{partner}/transfers/{transfer}:
+    parameters:
+    - name: partner
+      in: path
+      description: The identifier of the partner
+      required: true
+      type: string
+    - name: transfer
+      in: path
+      description: The identifier of the transfer request
+      required: true
+      type: string
+    get:
+      operationId: describeTransferForPartner
+      summary: Describe  a transfer
+      description: Get information about a pending incoming organization transfer.
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/transfer'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - Partners
+  /partners/{partner}/transfers/{transfer}/accept:
+    parameters:
+    - name: partner
+      in: path
+      description: The identifier of the partner
+      required: true
+      type: string
+    - name: transfer
+      in: path
+      description: The identifier of the transfer request
+      required: true
+      type: string
+    post:
+      operationId: acceptTransfer
+      summary: Accept transfer
+      description: Accept an incoming organization transfer.
+      parameters:
+      - name: body
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/transfer_accept'
+      responses:
+        204:
+          description: Success
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - Partners
+  /partners/{partner}/transfers/{transfer}/reject:
+    parameters:
+    - name: partner
+      in: path
+      description: The identifier of the partner
+      required: true
+      type: string
+    - name: transfer
+      in: path
+      description: The identifier of the transfer request,
+      required: true
+      type: string
+    post:
+      operationId: rejectTransfer
+      summary: Reject transfer
+      description: Reject an incoming organization transfer.
+      responses:
+        204:
+          description: Success
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - Partners
+  /roles:
+    get:
+      operationId: listRoles
+      summary: List roles
+      description: List the predefined roles. A role is a set of permissions.
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/roles'
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+      tags:
+      - Roles
+  /status:
+    get:
+      operationId: status
+      summary: Check API server status
+      description: If the API server is ready to serve requests, the response HTTP
+        code 204 is returned.
+      responses:
+        204:
+          description: Success
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+      tags:
+      - internal
+definitions:
+  api_key:
+    description: Properties of an API key.
+    type: object
+    required:
+    - id
+    - path
+    - name
+    - created_at
+    properties:
+      id:
+        description: The unique ID of the API key.
+        type: string
+      path:
+        description: The path to the API key.
+        type: string
+        example: /orgs/acme/members/robot/api-keys/automation
+      member_id:
+        description: The unique ID of the owning member, if it's an app.
+        type: string
+      name:
+        description: The name of the API key. Must be unique among the keys of the
+          same user or app.
+        type: string
+        minLength: 1
+        maxLength: 63
+        pattern: ^[a-z]([-a-z0-9]*[a-z0-9])?$
+      display_name:
+        description: The display name of the API key.
+        type: string
+        maxLength: 512
+      created_at:
+        description: The time at which this API key was created.
+        type: string
+        format: date-time
+      updated_at:
+        description: The time at which this API key was last updated.
+        type: string
+        format: date-time
+    example:
+      created_at: "2021-02-21T16:24:42.436Z"
+      display_name: Key 1
+      id: ch4prd1ckfwjdiaz9f8ttowdww
+      member_id: cymuwhd4dzi6pmtr5oyhue99jh
+      name: key1
+      path: /orgs/test-org/members/app1/api-keys/key1
+      updated_at: "2021-02-21T16:24:42.436Z"
+  api_key_create:
+    type: object
+    required:
+    - name
+    properties:
+      name:
+        description: The name of the API key. Must be unique among the keys of the
+          same user or app.
+        type: string
+        minLength: 1
+        maxLength: 63
+        pattern: ^[a-z]([-a-z0-9]*[a-z0-9])?$
+        example: api_key
+      display_name:
+        description: The display name of the API key.
+        type: string
+        maxLength: 512
+        example: API Key
+    example:
+      display_name: Key 1
+      name: key1
+  api_key_details:
+    description: Properties of an API key, including the auth token.
+    allOf:
+    - $ref: '#/definitions/api_key'
+    - type: object
+      required:
+      - token
+      properties:
+        token:
+          description: The secret token for API authentication
+          type: string
+    example:
+      created_at: "2021-02-21T16:24:42.436Z"
+      display_name: Key 1
+      id: ch4prd1ckfwjdiaz9f8ttowdww
+      member_id: cymuwhd4dzi6pmtr5oyhue99jh
+      name: key1
+      path: /orgs/test-org/members/app1/api-keys/key1
+      token: 283a41e1d9f5c954e439c9c4e74b17338cd8711f684cdcf295160da2b9468af16f9acd334477d8cc13e6cb939d38d0c6d87b2f2b4b16ad559727db5ff5ad16d0a774783e56200f8a0ad3b4e7bdd7a28cad68b8189af53566a31ee8b78766bbebcf11bbc2f229f8cacd0f1dc720392e00cdab18061e02527c00a2c87ad7760a873e0d60f46e231fa4c0796f568b5928597a787c4d391ed8ac029d2326db85f1461d0d7fe1978187c84d2d3b68585732dacb5e45c76418a90a01e1398019453c672a39204831c51a0ab59eeea8fbdca4e1d2f328e34234003e79228ed019a773f53c3a2c698cfbfec39e7cc90c0443fb0c23489546190e54b2edace3c121495f29
+      updated_at: "2021-02-21T16:24:42.436Z"
+  api_key_update:
+    type: object
+    properties:
+      name:
+        description: The name of the API key. Must be unique among the keys of the
+          same user or app.
+        type: string
+        minLength: 1
+        maxLength: 63
+        pattern: ^[a-z]([-a-z0-9]*[a-z0-9])?$
+        example: key1
+      display_name:
+        description: The display name of the API key.
+        type: string
+        maxLength: 512
+        example: Key 1
+  api_keys:
+    description: A list of API keys.
+    type: object
+    required:
+    - items
+    properties:
+      items:
+        type: array
+        items:
+          $ref: '#/definitions/api_key'
+  client:
+    type: object
+    required:
+    - id
+    - path
+    - partner_id
+    - org_path
+    properties:
+      id:
+        description: The ID of the client, identical to the organization ID.
+        type: string
+      path:
+        description: The path of the client.
+        type: string
+      partner_id:
+        description: The ID of the client partner.
+        type: string
+      org_path:
+        description: The path of the client organization.
+        type: string
+      private_data_centers:
+        description: The list of paths to private data centers the client can access.
+        type: array
+        items:
+          $ref: '#/definitions/data_center_ref'
+  client_create:
+    type: object
+    required:
+    - name
+    properties:
+      name:
+        description: The human readable name of the organization.
+        type: string
+        minLength: 1
+        maxLength: 63
+        pattern: ^[a-z]([-a-z0-9]*[a-z0-9])?$
+        example: acme
+      display_name:
+        description: The display name of the organization.
+        type: string
+        maxLength: 512
+      private_data_centers:
+        description: The list of paths to private data centers the client can access.
+        type: array
+        items:
+          $ref: '#/definitions/data_center_ref_input'
+      trial:
+        description: The flag describing the trial status of this organization
+        type: boolean
+  client_update:
+    type: object
+    properties:
+      private_data_centers:
+        description: The list of paths to private data centers the client can access.
+        type: array
+        items:
+          $ref: '#/definitions/data_center_ref_input'
+      trial:
+        description: The flag describing the trial status of this organization
+        type: boolean
+  clients:
+    type: object
+    required:
+    - items
+    properties:
+      items:
+        type: array
+        items:
+          $ref: '#/definitions/client'
+  data_center_ref:
+    type: object
+    required:
+    - data_center_id
+    - data_center_path
+    properties:
+      data_center_id:
+        description: The unique identifier of the data center.
+        type: string
+      data_center_path:
+        description: The path to the data center resource.
+        type: string
+  data_center_ref_input:
+    type: object
+    properties:
+      data_center_id:
+        description: The unique identifier of the data center. Either data_center_id
+          or data_center_path must be present. If both are specified, they must agree.
+        type: string
+      data_center_path:
+        description: The path to the data center resource. Either data_center_id or
+          data_center_path must be present. If both are specified, they must agree.
+        type: string
+  group:
+    description: A group of users or apps that are associated with the org
+    type: object
+    required:
+    - id
+    - name
+    - path
+    - realm_type
+    - created_at
+    properties:
+      id:
+        description: A system-defined unique ID of the group.
+        type: string
+      name:
+        description: The human readable name of the group. The name is unique within
+          the organization.
+        type: string
+        minLength: 1
+        maxLength: 63
+        pattern: ^[a-z]([-a-z0-9]*[a-z0-9])?$
+        example: admins
+      path:
+        description: The path to the resource that includes all the parents
+        type: string
+        example: /orgs/acme/groups/admins
+      realm_type:
+        description: The type of realm containing the group
+        type: string
+        enum: [partner, org, admin]
+      org_id:
+        description: The unique identifier of the organization, if the group is within
+          one.
+        type: string
+      partner_id:
+        description: The unique identifier of the partner, if the group is within
+          one.
+        type: string
+      created_at:
+        description: The time at which this group was created
+        type: string
+        format: date-time
+      updated_at:
+        description: The time at which this group was last updated
+        type: string
+        format: date-time
+      display_name:
+        description: The display name of the group.
+        type: string
+        maxLength: 512
+    example:
+      created_at: "2020-12-23T13:24:21.750Z"
+      display_name: admins
+      id: yhyh6d6pdfoz5hndc6a4ka6bpw
+      name: admins
+      org_id: di86ihycue5875pb7d5ybfhn9r
+      path: /orgs/test-org/groups/admins
+      realm_type: org
+      updated_at: "2020-12-23T13:24:21.750Z"
+  group_create:
+    type: object
+    required:
+    - name
+    properties:
+      name:
+        description: The human readable name of the group. The name is unique within
+          the organization.
+        type: string
+        minLength: 1
+        maxLength: 63
+        pattern: ^[a-z]([-a-z0-9]*[a-z0-9])?$
+        example: admins
+      display_name:
+        description: The display name of the group.
+        type: string
+        maxLength: 512
+        example: admins
+  group_membership:
+    description: A group membership.
+    type: object
+    required:
+    - id
+    - path
+    - group_id
+    - group_path
+    - member_id
+    - member_path
+    - created_at
+    properties:
+      id:
+        description: The unique ID of the group membership.
+        type: string
+      path:
+        description: The path to the group membership.
+        type: string
+        example: /orgs/acme/groups/admins/members/@42
+      group_id:
+        description: The unique ID of the group.
+        type: string
+      group_path:
+        description: The path to the group.
+        type: string
+        example: /orgs/acme/groups/admins
+      member_id:
+        description: The unique ID of the member.
+        type: string
+      member_path:
+        description: The path to the member.
+        type: string
+        example: /orgs/acme/members/@42
+      created_at:
+        description: The time at which the member was added to the group
+        type: string
+        format: date-time
+    example:
+      created_at: "2021-01-05T17:05:51.329Z"
+      group_id: yhyh6d6pdfoz5hndc6a4ka6bpw
+      group_path: /orgs/test-org/groups/admins
+      id: t1mf43ywwf6jqb49c14k5eobxy
+      member_id: as8s7axfrq1q1tyfkw4t56jz1y
+      member_path: /orgs/test-org/members/@as8s7axfrq1q1tyfkw4t56jz1y
+      path: /orgs/test-org/groups/admins/members/@t1mf43ywwf6jqb49c14k5eobxy
+  group_membership_create:
+    type: object
+    properties:
+      member_id:
+        description: The unique ID of the member. Either member_id or member_path
+          must be specified; if both are present, they must agree.
+        type: string
+      member_path:
+        description: The path to the member. Either member_id or member_path must
+          be specified; if both are present, they must agree.
+        type: string
+        example: /orgs/acme/members/@42
+    example:
+      member_id: as8s7axfrq1q1tyfkw4t56jz1y
+  group_memberships:
+    description: A list of group memberships.
+    type: object
+    required:
+    - items
+    properties:
+      items:
+        type: array
+        items:
+          $ref: '#/definitions/group_membership'
+  group_update:
+    type: object
+    properties:
+      name:
+        description: The human readable name of the group. The name is unique within
+          the organization.
+        type: string
+        minLength: 1
+        maxLength: 63
+        pattern: ^[a-z]([-a-z0-9]*[a-z0-9])?$
+        example: admins
+      display_name:
+        description: The display name of the group.
+        type: string
+        maxLength: 512
+    example:
+      display_name: Admins
+  groups:
+    description: A list of groups.
+    type: object
+    required:
+    - items
+    properties:
+      items:
+        type: array
+        items:
+          $ref: '#/definitions/group'
+  join:
+    type: object
+    required:
+    - token
+    properties:
+      token:
+        description: An invitation token.
+        type: string
+  member:
+    allOf:
+    - type: object
+      required:
+      - id
+      - path
+      - realm_type
+      - type
+      - created_at
+      properties:
+        id:
+          description: The unique ID of the member
+          type: string
+        path:
+          description: The path to the resource that includes all the parents
+          type: string
+          example: /orgs/acme/members/@42
+        org_id:
+          description: The unique ID of the organization, if the member is within
+            one.
+          type: string
+        partner_id:
+          description: The unique identifier of the partner, if the member is within
+            one.
+          type: string
+        realm_type:
+          description: The type of realm containing the member
+          type: string
+          enum: [partner, org, admin]
+        type:
+          description: The type of the member.
+          type: string
+          enum: [user, invitee, app]
+        name:
+          description: The name of the member (apps only).
+          type: string
+          minLength: 1
+          maxLength: 63
+          pattern: ^[a-z]([-a-z0-9]*[a-z0-9])?$
+        display_name:
+          description: The display name of the member (apps only).
+          type: string
+          maxLength: 512
+        created_at:
+          description: The time at which the member was created
+          type: string
+          format: date-time
+        updated_at:
+          description: The time at which the member was last updated
+          type: string
+          format: date-time
+    - $ref: '#/definitions/personal_info'
+    example:
+      created_at: "2021-02-15T12:57:39.601Z"
+      display_name: APP 1
+      id: cymuwhd4dzi6pmtr5oyhue99jh
+      name: app1
+      org_id: di86ihycue5875pb7d5ybfhn9r
+      path: /orgs/test-org/members/app1
+      realm_type: org
+      type: app
+      updated_at: "2021-02-15T12:57:39.601Z"
+  member_create:
+    type: object
+    required:
+    - type
+    properties:
+      type:
+        description: 'Type of the member to add: invitee means invite a user, app
+          means create an app.'
+        type: string
+        enum: [invitee, app]
+      name:
+        description: The name of the app, if creating an app. Must be unique within
+          the organization.
+        type: string
+        minLength: 1
+        maxLength: 63
+        pattern: ^[a-z]([-a-z0-9]*[a-z0-9])?$
+      display_name:
+        description: The display name of the app, if creating an app.
+        type: string
+        maxLength: 512
+      email:
+        description: The email address of the user, if inviting a user.
+        type: string
+        pattern: ^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$
+        example: user@example.com
+      full_name:
+        description: The full name of the user, if inviting a user.
+        type: string
+        minLength: 1
+        example: J. Random User
+    example:
+      display_name: APP 1
+      name: app1
+      type: app
+  member_group_membership_create:
+    type: object
+    properties:
+      group_id:
+        description: The unique ID of the group. Either group_id or group_path must
+          be specified; if both are present, they must agree.
+        type: string
+      group_path:
+        description: The path to the group. Either group_id or group_path must be
+          specified; if both are present, they must agree.
+        type: string
+        example: /orgs/acme/groups/admins
+    example:
+      group_path: /orgs/test-org/groups/admins
+  member_update:
+    type: object
+    properties:
+      name:
+        description: The name of the member (apps only).
+        type: string
+        minLength: 1
+        maxLength: 63
+        pattern: ^[a-z]([-a-z0-9]*[a-z0-9])?$
+        example: new_name
+      display_name:
+        description: The display name of the member (apps only).
+        type: string
+        maxLength: 512
+        example: New NAme
+  members:
+    description: A list of members.
+    type: object
+    required:
+    - items
+    properties:
+      items:
+        type: array
+        items:
+          $ref: '#/definitions/member'
+    example:
+      items:
+      - avatar: https://lh3.googleusercontent.com/a-/AOh22Ggvu8zDMuwMBr9p-VleQAEQV703_o5au6hp5COR=s96-c
+        created_at: "2020-11-17T18:00:50.030Z"
+        email: eve.smith@foo.com
+        full_name: Eve Smith
+        id: as8s7axfrq1q1tyfkw4t56jz1y
+        org_id: di86ihycue5875pb7d5ybfhn9r
+        path: /orgs/test-org/members/@as8s7axfrq1q1tyfkw4t56jz1y
+        realm_type: org
+        type: user
+        updated_at: "2020-11-17T19:19:13.896Z"
+      - created_at: "2021-02-15T12:57:39.601Z"
+        display_name: APP 1
+        id: cymuwhd4dzi6pmtr5oyhue99jh
+        name: app1
+        org_id: di86ihycue5875pb7d5ybfhn9r
+        path: /orgs/test-org/members/app1
+        realm_type: org
+        type: app
+        updated_at: "2021-02-15T12:57:39.601Z"
+  object_policy_create:
+    type: object
+    required:
+    - role_path
+    properties:
+      member_id:
+        description: The unique identifier of the member, if the subject is a member.
+          If specified together with subject_path, they must agree.
+        type: string
+      group_id:
+        description: The unique identifier of the group, if the subject is a group.
+          If specified together with subject_path, they must agree.
+        type: string
+      subject_path:
+        description: The path to the policy subject (member or group). If omitted,
+          one of (member_id, group_id) must be specified.
+        type: string
+        example: /orgs/test-org/members/@42
+      role_path:
+        description: The path to the role.
+        type: string
+        example: /roles/org-admin
+  org:
+    type: object
+    required:
+    - id
+    - name
+    - path
+    - created_at
+    - partner_id
+    - partner_path
+    properties:
+      id:
+        description: A unique ID of the organization.
+        type: string
+      name:
+        description: The human readable name of the organization.
+        type: string
+        minLength: 1
+        maxLength: 63
+        pattern: ^[a-z]([-a-z0-9]*[a-z0-9])?$
+        example: acme
+      path:
+        description: The path to the resource that includes all the parents
+        type: string
+        example: /orgs/acme
+      display_name:
+        description: The display name of the organization.
+        type: string
+        maxLength: 512
+      created_at:
+        description: The time at which this role was created
+        type: string
+        format: date-time
+      updated_at:
+        description: The time at which this organization was last updated
+        type: string
+        format: date-time
+      deleted:
+        description: True if the organization is deleted.
+        type: boolean
+      partner_id:
+        description: The ID of the partner for this organization
+        type: string
+      partner_path:
+        description: The path to the partner for this organization
+        type: string
+        example: /partners/acme
+      trial:
+        description: The flag describing the trial status of this organization
+        type: boolean
+    example:
+      created_at: "2020-06-26T17:03:35.059Z"
+      display_name: Test Org
+      id: di86ihycue5875pb7d56bfhn9r
+      name: test-org
+      path: /orgs/test-org
+      updated_at: "2020-06-26T17:03:35.059Z"
+  org_update:
+    type: object
+    properties:
+      name:
+        description: The human readable name of the organization.
+        type: string
+        minLength: 1
+        maxLength: 63
+        pattern: ^[a-z]([-a-z0-9]*[a-z0-9])?$
+        example: acme
+      display_name:
+        description: The display name of the organization.
+        type: string
+        maxLength: 512
+    example:
+      display_name: Test Org
+      name: test-org
+  orgs:
+    description: A list of organizations.
+    type: object
+    required:
+    - items
+    properties:
+      items:
+        type: array
+        items:
+          $ref: '#/definitions/org'
+  partner:
+    type: object
+    required:
+    - id
+    - name
+    - path
+    - display_name
+    properties:
+      id:
+        description: A unique ID of the partner.
+        type: string
+      name:
+        description: The human readable name of the partner.
+        type: string
+        minLength: 1
+        maxLength: 63
+        pattern: ^[a-z]([-a-z0-9]*[a-z0-9])?$
+        example: test-org
+      path:
+        description: The path to the resource that includes all the parents
+        type: string
+        example: /partners/acme
+      display_name:
+        description: The display name of the partner
+        type: string
+        maxLength: 512
+      subsidiary:
+        description: Indicates that organizations that belong to this partner will
+          be billed by Ridge
+        type: boolean
+      website:
+        type: string
+        format: url
+        example: https://www.partner.com
+  partners:
+    description: A list of partners.
+    type: object
+    required:
+    - items
+    properties:
+      items:
+        type: array
+        items:
+          $ref: '#/definitions/partner'
+  personal_info:
+    type: object
+    properties:
+      email:
+        description: The email address of the user.
+        type: string
+        pattern: ^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$
+        example: user@example.com
+      full_name:
+        description: The full name of the user.
+        type: string
+        minLength: 1
+        example: J. Random User
+      avatar:
+        description: URL to the avatar image.
+        type: string
+        format: url
+    example:
+      avatar: https://lh3.googleusercontent.com/a-/AOh22Ggvu8zDMuwMBr9p-VleQAEQV703_o5au6hp5COR=s96-c
+      email: eve.smith@foo.com
+      full_name: Eve Smith
+  policies:
+    description: A list of policies.
+    type: object
+    required:
+    - items
+    properties:
+      items:
+        type: array
+        items:
+          $ref: '#/definitions/policy'
+  policy:
+    type: object
+    required:
+    - id
+    - path
+    - subject_type
+    - subject_path
+    - role_path
+    - created_at
+    properties:
+      id:
+        description: A unique ID of the policy.
+        type: string
+      path:
+        description: The path to the resource that includes all the parents
+        type: string
+        example: /orgs/test-org/projects/manhattan/policies/@42
+      org_id:
+        description: The unique identifier of the organization, if the policy is within
+          one.
+        type: string
+      partner_id:
+        description: The unique identifier of the partner, if the policy is within
+          one.
+        type: string
+      project_id:
+        description: The unique identifier of the project, if the object of the policy
+          is a project.
+        type: string
+      object_type:
+        description: Type of the policy object.
+        type: string
+        enum: [partner, org, project]
+      object_path:
+        description: The path to the policy object.
+        type: string
+        example: /orgs/test-org/projects/manhattan
+      member_id:
+        description: The unique identifier of the member, if the subject of the policy
+          is a member.
+        type: string
+      group_id:
+        description: The unique identifier of the group, if the subject of the policy
+          is a group.
+        type: string
+      subject_type:
+        description: Type of the policy subject.
+        type: string
+        enum: [member, group]
+      subject_path:
+        description: The path to the policy subject.
+        type: string
+        example: /orgs/test-org/members/@42
+      role_path:
+        description: The path to the role.
+        type: string
+        example: /roles/org-admin
+      created_at:
+        description: The time at which this policy was created
+        type: string
+        format: date-time
+  project:
+    type: object
+    required:
+    - name
+    - id
+    - path
+    - org_id
+    - created_at
+    properties:
+      id:
+        description: A unique ID of the project.
+        type: string
+      name:
+        description: The human readable name of the project.
+        type: string
+        minLength: 1
+        maxLength: 63
+        pattern: ^[a-z]([-a-z0-9]*[a-z0-9])?$
+        example: manhattan
+      path:
+        description: The path to the resource that includes all the parents
+        type: string
+        example: /orgs/acme/projects/manhattan
+      org_id:
+        description: The unique identifier of the organization.
+        type: string
+      display_name:
+        description: The display name of the project.
+        type: string
+        maxLength: 512
+      created_at:
+        description: The time at which this role was created
+        type: string
+        format: date-time
+      updated_at:
+        description: The time at which this project was last updated
+        type: string
+        format: date-time
+      deleted:
+        description: True if the project is deleted.
+        type: boolean
+    example:
+      created_at: "2020-07-15T14:46:47.944Z"
+      display_name: Sandbox
+      id: g3ker86kt6mir8rbczwkyjotpe
+      name: sandbox
+      org_id: di86ihycue5875pb7d5ybfhn9r
+      path: /orgs/test-org/projects/sandbox
+      updated_at: "2020-07-15T14:46:47.944Z"
+  project_create:
+    type: object
+    required:
+    - name
+    properties:
+      name:
+        description: The human readable name of the project.
+        type: string
+        minLength: 1
+        maxLength: 63
+        pattern: ^[a-z]([-a-z0-9]*[a-z0-9])?$
+        example: sandbox
+      display_name:
+        description: The display name of the project.
+        type: string
+        maxLength: 512
+        example: Sandbox
+  project_update:
+    type: object
+    properties:
+      name:
+        description: The human readable name of the project.
+        type: string
+        minLength: 1
+        maxLength: 63
+        pattern: ^[a-z]([-a-z0-9]*[a-z0-9])?$
+        example: manhattan
+      display_name:
+        description: The display name of the project.
+        type: string
+        maxLength: 512
+        example: Manhattan
+  projects:
+    description: A list of projects.
+    type: object
+    required:
+    - items
+    properties:
+      items:
+        type: array
+        items:
+          $ref: '#/definitions/project'
+  quantity_set:
+    description: A set of quantities. The object maps quantity identifiers to values.
+      See https://api.ridge.co/compute/unstable/quantities for possible properties.
+    type: object
+    additionalProperties:
+      type: integer
+      format: int64
+  quota:
+    type: object
+    required:
+    - limits
+    - usage
+    properties:
+      limits:
+        $ref: '#/definitions/quantity_set'
+        description: Maximum resource usage. Omitted parameters are unlimited.
+      usage:
+        $ref: '#/definitions/quantity_set'
+        description: Actual resource usage
+    example:
+      limits:
+        cpu_cores: 16
+        instance_storage: 536870912000
+        instances: 10
+        load_balancers: 3
+        networks: 2
+        persistent_storage: 536870912000
+        ram: 34359738368
+      usage:
+        cpu_cores: 10
+        instance_storage: 182536110080
+        instances: 5
+        load_balancers: 2
+        networks: 2
+        persistent_storage: 6442450944
+        ram: 13958643712
+  role:
+    description: A role that is defined and managed by the system.
+    type: object
+    required:
+    - name
+    - display_name
+    - path
+    - realm_type
+    properties:
+      name:
+        description: The human readable name of the role.
+        type: string
+        minLength: 1
+        maxLength: 63
+        pattern: ^[a-z]([-a-z0-9]*[a-z0-9])?$
+        example: project-admin
+      display_name:
+        description: The display name of the role.
+        type: string
+        maxLength: 512
+      path:
+        description: The path to the resource that includes all the parents
+        type: string
+        example: /roles/project-admin
+      realm_type:
+        description: The type of realm to which the role applies.
+        type: string
+        enum: [partner, org, admin]
+      object_type:
+        description: The type of the object to which the role applies.
+        type: string
+        enum: [partner, org, project]
+  roles:
+    description: A list of roles.
+    type: object
+    required:
+    - items
+    properties:
+      items:
+        type: array
+        items:
+          $ref: '#/definitions/role'
+    example:
+      items:
+      - display_name: Organization accountant
+        name: org-accountant
+        object_type: org
+        path: /roles/org-accountant
+        realm_type: org
+      - display_name: Organization administrator
+        name: org-admin
+        object_type: org
+        path: /roles/org-admin
+        realm_type: org
+      - display_name: Organization operator
+        name: org-operator
+        object_type: org
+        path: /roles/org-operator
+        realm_type: org
+      - display_name: Project administrator
+        name: project-admin
+        object_type: project
+        path: /roles/project-admin
+        realm_type: org
+      - display_name: Project operator
+        name: project-operator
+        object_type: project
+        path: /roles/project-operator
+        realm_type: org
+  storage_key:
+    description: Storage key is an S3-like key, attached to a member and a project.
+      It can be used to access S3-like endpoints directly (id as AccessKey; secret_key
+      is SecretKey).
+    type: object
+    required:
+    - id
+    - name
+    - path
+    - project_id
+    - storage_site_id
+    - storage_site_path
+    - created_at
+    - updated_at
+    properties:
+      id:
+        description: The unique identifier of the storage key, that is also used as
+          S3 AccessKey.
+        type: string
+      name:
+        description: The name of the storage key. Must be unique among the keys of
+          the same member.
+        type: string
+        minLength: 1
+        maxLength: 63
+        pattern: ^[a-z]([-a-z0-9]*[a-z0-9])?$
+      display_name:
+        description: The display name of the storage key.
+        type: string
+        maxLength: 512
+      path:
+        description: The path to the storage key.
+        type: string
+        example: /orgs/acme/members/robot/storage-keys/automation
+      project_id:
+        description: The unique ID of the project.
+        type: string
+      member_id:
+        description: The unique ID of the member, if it's an app.
+        type: string
+      member_path:
+        description: The path of the member, if it's an app.
+        type: string
+        example: /orgs/acme/members/john-doe
+      storage_site_id:
+        description: The unique ID of the storage site.
+        type: string
+      storage_site_path:
+        description: The path the storage site.
+        type: string
+      created_at:
+        description: The time at which this key was created.
+        type: string
+        format: date-time
+      updated_at:
+        description: The time at which this key was last updated.
+        type: string
+        format: date-time
+  storage_key_create:
+    type: object
+    required:
+    - name
+    properties:
+      name:
+        description: The name of the key. Must be unique among the keys of the same
+          member under the same project.
+        type: string
+        minLength: 1
+        maxLength: 63
+        pattern: ^[a-z]([-a-z0-9]*[a-z0-9])?$
+      display_name:
+        description: The display name of the key.
+        type: string
+        maxLength: 512
+      storage_site_path:
+        description: The path of the storage site.
+        type: string
+        example: /orgs/acme/projects/manhattan/storage-sites/new-york
+      storage_site_id:
+        description: The unique identifier of the storage site.
+        type: string
+  storage_key_details:
+    description: Properties of a storage key, including the secret.
+    allOf:
+    - $ref: '#/definitions/storage_key'
+    - type: object
+      required:
+      - secret_key
+      properties:
+        secret_key:
+          description: The S3 SecretKey to authenticate against the object storage
+            location.
+          type: string
+  storage_key_update:
+    type: object
+    properties:
+      name:
+        description: The name of the key. Must be unique among the keys of the same
+          member under the same project.
+        type: string
+        minLength: 1
+        maxLength: 63
+        pattern: ^[a-z]([-a-z0-9]*[a-z0-9])?$
+      display_name:
+        description: The display name of the key.
+        type: string
+        maxLength: 512
+  storage_keys:
+    description: A list of storage keys.
+    type: object
+    required:
+    - items
+    properties:
+      items:
+        type: array
+        items:
+          $ref: '#/definitions/storage_key'
+  subject_policy_create:
+    type: object
+    required:
+    - role_path
+    properties:
+      project_id:
+        description: The unique identifier of the project, if the object is a project.
+          If specified together with object_path, they must agree.
+        type: string
+      object_path:
+        description: The path to the policy object (partner, organization or project).
+          If the object is an organization, object_path must be the path to the subject's
+          organization or omitted. If the object is a project, then object_path, project_id
+          or both must be specified.
+        type: string
+        example: /orgs/test-org
+      role_path:
+        description: The path to the role.
+        type: string
+        example: /roles/org-admin
+    example:
+      object_path: /orgs/test-org
+      role: /roles/org-admin
+  transfer:
+    type: object
+    required:
+    - id
+    - path
+    - org_id
+    - org_path
+    properties:
+      id:
+        description: The unique identifier of the transfer request.
+        type: string
+      path:
+        description: The path to the transfer object that includes all its parents
+        type: string
+        example: /orgs/acme/transfers/@abcdefghij
+      org_id:
+        description: The ID of the organization that is requesting a new partner.
+        type: string
+      org_path:
+        description: The path of the organization that is requesting a new partner.
+        type: string
+  transfer_accept:
+    type: object
+    properties:
+      pricing:
+        description: Not implemented yet, for later use
+        type: string
+      whitelist:
+        description: Not implemented yet, for later use
+        type: string
+  transfer_for_org:
+    type: object
+    required:
+    - partner_id
+    - partner_path
+    properties:
+      partner_id:
+        description: The ID of the pending new partner for this organization.
+        type: string
+      partner_path:
+        description: The path to the pending new partner for this organization.
+        type: string
+  transfer_request:
+    type: object
+    properties:
+      partner_id:
+        description: The ID of the pending new partner for this organization.
+        type: string
+      partner_path:
+        description: The path to the pending new partner for this organization.
+        type: string
+  transfers:
+    type: object
+    required:
+    - items
+    properties:
+      items:
+        type: array
+        items:
+          $ref: '#/definitions/transfer'
+tags:
+- name: Roles
+  description: The predefined roles.
+- name: Organizations
+  description: Operations on organizations
+- name: Organization Policies
+  description: Operations for managing organization policies
+- name: Projects
+  description: Operations for managing projects
+- name: Project Policies
+  description: Operations for managing project policies
+- name: Groups
+  description: Operations for managing groups of members
+- name: Members
+  description: Operations for managing members
+- name: Partners
+  description: Operations on partners
+- name: Partner Policies
+  description: Operations for managing partner policies
+- name: My User
+  description: Operations for managing your identity and credentials
+- name: Object Storage Keys
+  description: Operations for managing object storage keys

@@ -38,7 +38,7 @@ A separate, secure service stores the credentials and makes them available for u
 Containers that run in your batch may need access to AWS services. For example, the containers may need to write data to S3. These containers need AWS credentials for this purpose. Placing these credentials in the container image is not secure and configuring each container is complex and inconvenient.
 Ridge stores AWS credentials for you, in a secure, reusable manner and uses them to generate temporary credentials for containers. The AWS SDK that you install in your container will automatically locate these credentials. The Ridge implementation makes the AWS credentials available in the same manner that AWS does.
 ### Basic Flow
-The first step is to store AWS credentials on Ridge Cloud.  See [External Credentials API](https://dev.ridge.co/api/keying/overview/).
+The first step is to store AWS credentials on Ridge Cloud.  See [External Credentials API](https://dev.ridge.co/api/keyring/overview/).
 You will need to specify yhe following parameters:
   - AWS region
   - Access key ID
