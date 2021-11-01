@@ -3,6 +3,7 @@ info:
   title: Ridge Kubernetes Service API
   description: An API for the Managed Kubernetes Service
   version: unstable
+host: api.ridge.co
 basePath: /rks/unstable
 schemes:
 - https
