@@ -831,6 +831,190 @@ paths:
             type: string
       tags:
       - Volumes
+  /orgs/{org}/projects/{project}/clusters/{cluster}/vpns:
+    parameters:
+    - name: org
+      in: path
+      description: The organization identifier.
+      required: true
+      type: string
+    - name: project
+      in: path
+      description: The project identifier.
+      required: true
+      type: string
+    - name: cluster
+      in: path
+      description: The identifier of a cluster.
+      required: true
+      type: string
+    get:
+      operationId: listVPNs
+      summary: List the VPNs for a Kubernetes Cluster
+      description: Returns a list of all the VPNs of the cluster
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/vpns'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - VPN
+    post:
+      operationId: createVPN
+      summary: Create a VPN for a Kubernetes Cluster
+      description: Lets you create a VPN to connect to the cluster.
+      parameters:
+      - name: body
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/vpn_create'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/vpn_created'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - VPN
+  /orgs/{org}/projects/{project}/clusters/{cluster}/vpns/{vpn}:
+    parameters:
+    - name: org
+      in: path
+      description: The organization identifier.
+      required: true
+      type: string
+    - name: project
+      in: path
+      description: The project identifier.
+      required: true
+      type: string
+    - name: cluster
+      in: path
+      description: The identifier of a cluster.
+      required: true
+      type: string
+    - name: vpn
+      in: path
+      description: The identifier of a VPN.
+      required: true
+      type: string
+    get:
+      operationId: describeVPN
+      summary: Get Information About a VPN
+      description: Returns all information about the specified VPN.
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/vpn'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - VPN
+    patch:
+      operationId: updateVPN
+      summary: Update VPN Parameters
+      description: Lets you update parameters of VPN
+      parameters:
+      - name: body
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/vpn_update'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/vpn'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - VPN
+    delete:
+      operationId: deleteVPN
+      summary: Delete a VPN
+      description: Deletes the specified VPN.
+      responses:
+        204:
+          description: Success
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - VPN
   /status:
     get:
       operationId: status
@@ -881,6 +1065,72 @@ definitions:
       node_pools:
         $ref: '#/definitions/node_pools'
         description: The node pools in the cluster.
+    example:
+      node_pools:
+        items:
+        - spec:
+            auto_scaling: true
+            catalog_item_id: ggif1zusxtp6
+            catalog_item_path: /partners/medone/data-centers/sjc01/vm-catalog/@ggif1zusxtp6
+            cpu_cores: 1
+            display_name: pool 1
+            initial_kubernetes_labels:
+              pool: pool1
+            initial_taints:
+            - workload_size=large:NoSchedule
+            instance_storage: 4294967296
+            max_nodes: 5
+            min_nodes: 1
+            name: pool1
+            quantities: null
+            ram: 2147483648
+          status:
+            cluster_id: fkwsnunegang7ttrocjyax7ghe
+            cluster_path: /orgs/test-org/projects/test-project/clusters/harpoon-existing-cluster
+            created_at: "2021-03-25T16:27:26.081329853Z"
+            id: iqfh374f97gbm9nacio3nnke9h
+            node_counts:
+              queued: 0
+              running: 1
+              shortage: 0
+              starting: 0
+              terminating: 0
+            org_id: di86ihycue5875pb7d5ybfhn9r
+            path: /orgs/test-org/projects/test-project/clusters/harpoon-existing-cluster/node-pools/p1
+            project_id: g3ker86kt6mir8rbczwkyjotpe
+            updated_at: "2021-03-30T14:52:33.005472793Z"
+      spec:
+        api_server_whitelist:
+        - 40.0.0.0/8
+        - 41.0.0.0/8
+        auto_scaling_scale_down_delay: 600
+        display_name: Test Cluster
+        highly_available: false
+        locations:
+        - IL
+        master_quantities:
+          cpu_cores: 2
+          instance_storage: 10737418240
+          ram: 4294967296
+        name: test-cluster
+        qualities:
+          iso_27001: 1
+        version: v1.17.6
+      status:
+        cluster_endpoint: https://master.mk587p1hihjghcp4ar4yu1igty.public.sat.rdgto.com:6443
+        created_at: "2021-03-25T16:27:26.081203669Z"
+        data_center_id: ggif1z
+        data_center_path: /partners/medone/data-centers/sjc01
+        id: fkwsnunegang7ttrocjyax7ghe
+        nat_gateway_ips:
+        - 107.6.88.154
+        org_id: di86ihycue5875pb7d5ybfhn9r
+        path: /orgs/test-org/projects/test-project/clusters/test-cluster
+        phase: running
+        project_id: g3ker86kt6mir8rbczwkyjotpe
+        project_path: /orgs/test-org/projects/test-project
+        updated_at: "2021-03-25T16:27:26.081203669Z"
+        version: v1.17.6
   cluster_create:
     type: object
     required:
@@ -938,6 +1188,12 @@ definitions:
           type: string
       aws_role:
         $ref: '#/definitions/aws_role'
+      auto_scaling_scale_down_delay:
+        description: For how long, in seconds, a node pool is not scaled down after
+          being scaled up
+        type: integer
+        default: 600
+        minimum: 0
       node_pools:
         description: The node pools that are created for this cluster. Additional
           node pools may be added separately.
@@ -945,19 +1201,28 @@ definitions:
         items:
           $ref: '#/definitions/node_pool_create'
     example:
+      api_server_whitelist:
+      - 40.0.0.0/8
+      - 41.0.0.0/8
       display_name: Test Cluster
       highly_available: false
       locations:
       - IL
+      master_quantities:
+        cpu_cores: 2
+        instance_storage: 10737418240
+        ram: 4294967296
       name: test-cluster
       node_pools:
-      - display_name: Pool 1
+      - auto_scaling: true
+        display_name: Pool 1
         initial_kubernetes_labels:
           pool: pool1
         initial_taints:
         - workload_size=large:NoSchedule
+        max_nodes: 5
+        min_nodes: 1
         name: pool1
-        node_count: 1
         quantities:
           cpu_cores: 1
           instance_storage: 4294967296
@@ -965,11 +1230,36 @@ definitions:
       qualities:
         iso_27001: 1
       version: v1.17.6
+  cluster_issues:
+    description: Cluster issues
+    type: object
+    properties:
+      offline:
+        description: Indicates if the cluster is currently offline (API server is
+          unreachable).
+        type: boolean
+      degraded:
+        description: The cluster is running in a degraded mode. There might be a delay
+          between issuing a command for controlling this cluster and receiving a response.
+        type: boolean
+      out_of_quota:
+        description: Indicates the cluster is not fully provisioned due to exceeded
+          quota.
+        type: boolean
+      shortage:
+        description: Indicates the cluster is not fully provisioned due to a shortage
+          at the data center level.
+        type: boolean
+      nonallocatable:
+        description: Indicates the cluster is not fully provisioned because VM configurations
+          could not be found
+        type: boolean
   cluster_spec:
     type: object
     required:
     - name
     - highly_available
+    - auto_scaling_scale_down_delay
     - version
     properties:
       name:
@@ -985,6 +1275,11 @@ definitions:
         maxLength: 512
       qualities:
         $ref: '#/definitions/quality_set'
+      auto_scaling_scale_down_delay:
+        description: For how long, in seconds, a node pool is not scaled down after
+          being scaled up
+        type: integer
+        minimum: 0
       version:
         description: The requested Kubernetes cluster version.
         type: string
@@ -1041,7 +1336,7 @@ definitions:
       path:
         description: The path to the resource that includes all the parents.
         type: string
-        example: /orgs/my-org/projects/my-project/clusters/my-cluster
+        example: /orgs/test-org/projects/test-project/clusters/test-cluster
       project_id:
         description: The unique identifier of a project.
         type: string
@@ -1086,37 +1381,24 @@ definitions:
           description: A single IP that is used for outgoing connections.
           type: string
           format: ipv4
-      offline:
-        description: Indicates if the cluster is currently offline (API server is
-          unreachable).
-        type: boolean
-      degraded:
-        description: The cluster is running in a degraded mode. There might be a delay
-          between issuing a command for controlling this cluster and receiving a response.
-        type: boolean
-      out_of_quota:
-        description: Indicates the cluster is not fully provisioned due to exceeded
-          quota.
-        type: boolean
-      shortage:
-        description: Indicates the cluster is not fully provisioned due to a shortage
-          at the data center level.
-        type: boolean
-      nonallocatable:
-        description: Indicates the cluster is not fully provisioned because VM configurations
-          could not be found
-        type: boolean
+      network:
+        description: The node network in CIDR format (AAA.BBB.CCC.DDD/NN).
+        type: string
+      issues:
+        $ref: '#/definitions/cluster_issues'
     example:
       node_pools:
         items:
         - spec:
+            auto_scaling: true
             display_name: Pool 1
             initial_kubernetes_labels:
               pool: pool1
             initial_taints:
             - workload_size=large:NoSchedule
+            max_nodes: 5
+            min_nodes: 1
             name: pool1
-            node_count: 1
             quantities:
               cpu_cores: 1
               instance_storage: 4294967296
@@ -1128,7 +1410,7 @@ definitions:
             node_counts:
               running: 1
             org_id: di86ihycue5875pb7d5ybfhn9r
-            path: /orgs/test-org/projects/test/clusters/test-cluster/node-pools/pool1
+            path: /orgs/test-org/projects/test-project/clusters/test-cluster/node-pools/pool1
             project_id: fmgiyiqtajxoj59i4hgaubt4tc
             updated_at: "2020-12-16T13:08:48.563Z"
       spec:
@@ -1148,7 +1430,7 @@ definitions:
         data_center_path: /partners/medone/data-centers/tira
         id: rozyaxyphmbiw5tbgq4sonooje
         org_id: di86ihycue5875pb7d5ybfhn9r
-        path: /orgs/test-org/projects/test/clusters/test-cluster
+        path: /orgs/test-org/projects/test-project/clusters/test-cluster
         phase: running
         project_id: fmgiyiqtajxoj59i4hgaubt4tc
         updated_at: "2020-12-16T13:08:48.563Z"
@@ -1179,6 +1461,23 @@ definitions:
       aws_role:
         $ref: '#/definitions/aws_role'
         x-nullable: true
+      auto_scaling_scale_down_delay:
+        description: For how long, in seconds, a node pool is not scaled down after
+          being scaled up
+        type: integer
+        minimum: 0
+    example:
+      api_server_whitelist:
+      - 40.0.0.0/8
+      - 41.0.0.0/8
+      auto_scaling_scale_down_delay: 600
+      display_name: Test Cluster
+      master_quantities:
+        cpu_cores: 2
+        instance_storage: 10737418240
+        ram: 4294967296
+      name: test-cluster
+      version: v1.17.6
   clusters:
     description: A list of Kubernetes clusters.
     type: object
@@ -1246,6 +1545,42 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/load_balancer_port'
+      issues:
+        $ref: '#/definitions/load_balancer_issues'
+    example:
+      cluster_id: fkwsnunegang7ttrocjyax7ghe
+      created_at: "2021-12-05T12:35:47.282743807Z"
+      id: a76gnw5tyrnrt43dkmt15id14r
+      ip_address: 107.6.88.149
+      kubernetes_namespace: default
+      kubernetes_service: my-wordpress
+      org_id: di86ihycue5875pb7d5ybfhn9r
+      path: /orgs/test-org/projects/test-project/clusters/test-cluster/load-balancers/my-wordpress
+      phase: running
+      ports:
+      - port: 80
+        protocol: tcp
+        target_nodes:
+        - checked_at: "2021-12-05T12:35:53.842442003Z"
+          id: rfxoxxsgu7d3mypdyq4cqgafta
+          ip: 172.30.52.19
+          up: true
+        target_port: 30600
+      - port: 443
+        protocol: tcp
+        target_nodes:
+        - checked_at: "2021-12-05T12:35:53.842442003Z"
+          id: rfxoxxsgu7d3mypdyq4cqgafta
+          ip: 172.30.52.19
+          up: true
+        target_port: 30831
+      project_id: g3ker86kt6mir8rbczwkyjotpe
+      whitelist:
+      - 0.0.0.0/0
+  load_balancer_issues:
+    description: Load Balancer issues
+    type: object
+    properties:
       degraded:
         description: The load balancer is running in a degraded mode. There might
           be a delay between issuing a command for controlling this load balancer
@@ -1310,7 +1645,7 @@ definitions:
       path:
         description: The path to the node that includes all the parents.
         type: string
-        example: /orgs/my-org/projects/my-project/clusters/my-cluster/node-pools/my-node-pool/nodes/@cxh5jywfn7y5tdj76go8ijxh7a
+        example: /orgs/test-org/projects/test-project/clusters/test-cluster/node-pools/my-node-pool/nodes/@cxh5jywfn7y5tdj76go8ijxh7a
       created_at:
         description: The time at which this node was created.
         type: string
@@ -1341,14 +1676,8 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/node_volume'
-      shortage:
-        description: Indicates the node is not provisioned due to a shortage at the
-          provider's level
-        type: boolean
-      degraded:
-        description: The node is running in a degraded mode. There might be a delay
-          between issuing a command for controlling this node and receiving a response.
-        type: boolean
+      issues:
+        $ref: '#/definitions/node_issues'
     example:
       catalog_item_id: rfzcfc
       catalog_item_path: /partners/medone/data-centers/tira/vm-catalog/@rfzcfc
@@ -1356,8 +1685,13 @@ definitions:
       id: sgkt646mxg6nrsudt9h3cejf8y
       ip_address: 10.88.179.88
       node_pool_id: ibp566nxx5zx6sy59wpjz3xmya
-      path: /orgs/test-org/projects/test/clusters/test-cluster/node-pools/pool1/nodes/@sgkt646mxg6nrsudt9h3cejf8y
+      path: /orgs/test-org/projects/test-project/clusters/test-cluster/node-pools/pool1/nodes/@sgkt646mxg6nrsudt9h3cejf8y
       phase: running
+      quantities:
+        bandwidth: 100000000
+        cpu_cores: 1
+        instance_storage: 21474836480
+        ram: 1073741824
       volumes: null
   node_counts:
     type: object
@@ -1384,6 +1718,18 @@ definitions:
       queued:
         description: The number of nodes waiting to be allocated.
         type: integer
+  node_issues:
+    description: Node issues
+    type: object
+    properties:
+      shortage:
+        description: Indicates the node is not provisioned due to a shortage at the
+          provider's level
+        type: boolean
+      degraded:
+        description: The node is running in a degraded mode. There might be a delay
+          between issuing a command for controlling this node and receiving a response.
+        type: boolean
   node_pool:
     description: Node pools are a set of nodes (VMs), with a common configuration.
       They may have a set of Kubernetes labels or taints applied to them, which may
@@ -1399,13 +1745,15 @@ definitions:
         $ref: '#/definitions/node_pool_status'
     example:
       spec:
+        auto_scaling: true
         display_name: Pool 1
         initial_kubernetes_labels:
           pool: pool1
         initial_taints:
         - workload_size=large:NoSchedule
+        max_nodes: 5
+        min_nodes: 1
         name: pool1
-        node_count: 1
         quantities:
           cpu_cores: 1
           instance_storage: 4294967296
@@ -1417,14 +1765,14 @@ definitions:
         node_counts:
           running: 1
         org_id: di86ihycue5875pb7d5ybfhn9r
-        path: /orgs/test-org/projects/test/clusters/test-cluster/node-pools/pool1
+        path: /orgs/test-org/projects/test-project/clusters/test-cluster/node-pools/pool1
         project_id: fmgiyiqtajxoj59i4hgaubt4tc
         updated_at: "2020-12-16T13:08:48.563Z"
   node_pool_create:
     type: object
     required:
     - name
-    - node_count
+    - min_nodes
     properties:
       name:
         description: A human-readable name for the node pool. The name has to be unique
@@ -1438,8 +1786,21 @@ definitions:
         description: A display name for the node pool.
         type: string
         maxLength: 512
-      node_count:
-        description: The requested number of worker nodes in the node pool.
+      auto_scaling:
+        description: If true, nodes are created and deleted within the bounds of min_node
+          and max_nodes automatically according to the actual load on them. If false,
+          nodes are created to maintain at least min_nodes, but never deleted automatically.
+        type: boolean
+        default: false
+      min_nodes: {description: Minimum number of nodes in the node pool., type: integer,
+        minimum: 0}
+      max_nodes:
+        description: Maximum number of nodes in the node pool. If auto_scaling is
+          false, this setting does not apply.
+        type: integer
+        minimum: 0
+      initial_node_count:
+        description: The initial number of worker nodes in the node pool.
         type: integer
         minimum: 0
       quantities:
@@ -1469,18 +1830,42 @@ definitions:
           and catalog_item_path are specified, they must match.
         type: string
     example:
-      display_name: Pool of large machines
-      name: pool-large
-      node_count: 10
+      auto_scaling: true
+      display_name: Pool 1
+      initial_kubernetes_labels:
+        pool: pool1
+      initial_taints:
+      - workload_size=large:NoSchedule
+      max_nodes: 5
+      min_nodes: 1
+      name: pool1
       quantities:
-        cpu_cores: 16
+        cpu_cores: 1
         instance_storage: 4294967296
         ram: 2147483648
+  node_pool_issues:
+    description: Node Pool issues
+    type: object
+    properties:
+      shortage:
+        description: Indicates the node pool is not fully provisioned due to a shortage
+          at the data center level.
+        type: boolean
+      nonallocatable:
+        description: Indicates the node pool is not fully provisioned because matching
+          VM configurations could not be found
+        type: boolean
+      out_of_quota:
+        description: Indicates the node pool is not fully provisioned due to quota
+          exceeded
+        type: boolean
   node_pool_spec:
     type: object
     required:
     - name
-    - node_count
+    - auto_scaling
+    - min_nodes
+    - max_nodes
     properties:
       name:
         description: The human-readable name for the node pool. The name is unique
@@ -1494,8 +1879,17 @@ definitions:
         description: The display name of the node pool.
         type: string
         maxLength: 512
-      node_count:
-        description: The requested number of worker nodes in the node pool.
+      auto_scaling:
+        description: If true, nodes are created and deleted within the bounds of min_node
+          and max_nodes automatically according to the actual load on them. If false,
+          nodes are created to maintain at least min_nodes, but never deleted automatically.
+        type: boolean
+        default: false
+      min_nodes: {description: Minimum number of nodes in the node pool., type: integer,
+        minimum: 0}
+      max_nodes:
+        description: Maximum number of nodes in the node pool. If auto_scaling is
+          false, this setting does not apply.
         type: integer
         minimum: 0
       quantities:
@@ -1539,7 +1933,7 @@ definitions:
       path:
         description: The path to the resource that includes all the parents.
         type: string
-        example: /orgs/my-org/projects/my-project/clusters/my-cluster/node-pools/my-node-pool
+        example: /orgs/test-org/projects/test-project/clusters/test-cluster/node-pools/my-node-pool
       org_id:
         description: The unique identifier of the organization.
         type: string
@@ -1563,18 +1957,8 @@ definitions:
         format: date-time
       node_counts:
         $ref: '#/definitions/node_counts'
-      shortage:
-        description: Indicates the node pool is not fully provisioned due to a shortage
-          at the data center level.
-        type: boolean
-      nonallocatable:
-        description: Indicates the node pool is not fully provisioned because matching
-          VM configurations could not be found
-        type: boolean
-      out_of_quota:
-        description: Indicates the node pool is not fully provisioned due to quota
-          exceeded
-        type: boolean
+      issues:
+        $ref: '#/definitions/node_pool_issues'
   node_pool_update:
     type: object
     properties:
@@ -1582,10 +1966,24 @@ definitions:
         description: The display name of the node pool.
         type: string
         maxLength: 512
-      node_count:
-        description: The requested number of worker nodes in the node pool.
+      auto_scaling:
+        description: If true, nodes are created and deleted within the bounds of min_node
+          and max_nodes automatically according to the actual load on them. If false,
+          nodes are created to maintain at least min_nodes, but never deleted automatically.
+        type: boolean
+        default: false
+      min_nodes: {description: Minimum number of nodes in the node pool., type: integer,
+        minimum: 0}
+      max_nodes:
+        description: Maximum number of nodes in the node pool. If auto_scaling is
+          false, this setting does not apply.
         type: integer
         minimum: 0
+    example:
+      auto_scaling: true
+      display_name: Pool 1
+      max_nodes: 5
+      min_nodes: 1
   node_pools:
     description: A list of node pools.
     type: object
@@ -1666,19 +2064,19 @@ definitions:
         $ref: '#/definitions/token_status'
     example:
       spec:
-        display_name: sam-token
+        display_name: Token 1
         groups:
         - admins
         - operators
         member_id: ysyighpz9buqsgi1xjgsjpazqc
         member_path: /orgs/test-org/members/@ysyighpz9buqsgi1xjgsjpazqc
-        name: sam-token
+        name: token1
       status:
         cluster_id: hhbmufz5u41yokquakwbq3cbxr
         created_at: "2020-12-27T13:16:10.707Z"
         id: xxkymdd794f1me917t3aqa86iy
         org_id: di86ihycue5875pb7d5ybfhn9r
-        path: /orgs/test-org/projects/sandbox/clusters/cluster-1/tokens/sam=token
+        path: /orgs/test-org/projects/test-project/clusters/test-cluster/tokens/token1
         project_id: g3ker86kt6mir8rbczwkyjotpe
   token_create:
     type: object
@@ -1712,6 +2110,13 @@ definitions:
         items:
           description: A group token is added to.
           type: string
+    example:
+      display_name: Token 1
+      groups:
+      - admins
+      - operators
+      member_id: t1fdw9f44d9jj99psnt3bgyh7w
+      name: token1
   token_created:
     type: object
     required:
@@ -1737,7 +2142,7 @@ definitions:
         id: kec9q64bu4813awu8x9p5ihr3r
         kubeconfig: '{"apiVersion":"v1","clusters":[{"cluster":{"certificate-authority-data":"LS0tLS1CRUdJTiBDRVJ...","server":"https://master.doatqj59rqh6xdkf1s1yy37rdh.public.sat.rdgto.com:6443"},"name":"test-org_test_test-cluster"}],"contexts":[{"context":{"cluster":"test-org_test_test-cluster","user":"token1"},"name":"test-org_test_test-cluster"}],"current-context":"test-org_test_test-cluster","kind":"Config","preferences":{},"users":[{"name":"token1","user":{"token":"36QSkC0ONemFigEQ3mcRlQ"}}]}'
         org_id: di86ihycue5875pb7d5ybfhn9r
-        path: /orgs/test-org/projects/test/clusters/test-cluster/tokens/token1
+        path: /orgs/test-org/projects/test-project/clusters/test-cluster/tokens/token1
         project_id: fmgiyiqtajxoj59i4hgaubt4tc
         token: 36QSkC0ONemFigEQ3mcRlQ
   token_spec:
@@ -1919,6 +2324,25 @@ definitions:
       attached_node_path:
         description: The full path of the node that the volume is attached to.
         type: string
+      issues:
+        $ref: '#/definitions/volume_issues'
+    example:
+      attached_node_id: rfxoxxsgu7d3mypdyq4cqgafta
+      attached_node_path: /orgs/test-org/projects/test/clusters/test-cluster/node-pools/pool1/nodes/@rfxoxxsgu7d3mypdyq4cqgafta
+      attachment_state: attached
+      cluster_id: fkwsnunegang7ttrocjyax7ghe
+      created_at: "2021-05-10T10:49:52.018797376Z"
+      id: i7iesakk9imfy7ojsbf9tjgkqr
+      org_id: di86ihycue5875pb7d5ybfhn9r
+      path: /orgs/test-org/projects/test-project/clusters/test-cluster/volumes/@i7iesakk9imfy7ojsbf9tjgkqr
+      phase: running
+      project_id: g3ker86kt6mir8rbczwkyjotpe
+      pvc_id: pvc-562c6666-d2fa-47d3-82a8-d84cf9d19082
+      size: 8589934592
+  volume_issues:
+    description: Volume issues
+    type: object
+    properties:
       degraded:
         description: The volume is running in a degraded mode. There might be a delay
           between issuing a command for controlling this volume and a response.
@@ -1936,6 +2360,292 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/volume'
+  vpn:
+    allOf:
+    - $ref: '#/definitions/vpn_common'
+    - type: object
+      required:
+      - wireguard
+      properties:
+        wireguard:
+          $ref: '#/definitions/vpn_wireguard'
+  vpn_common:
+    type: object
+    required:
+    - spec
+    - status
+    properties:
+      spec:
+        $ref: '#/definitions/vpn_spec'
+      status:
+        $ref: '#/definitions/vpn_status'
+    example:
+      spec:
+        local_networks:
+        - 10.10.0.0/16
+        name: vpn1
+      status:
+        cluster_id: m71zro17zsp7j5eham317sy84c
+        created_at: "2021-12-06T11:41:43.219821673Z"
+        endpoint: ridge-vpn.r6r3eo8ehtm3mhr8x8s1djakgc.tctnc.com:51820
+        id: r6r3eo8ehtm3mhr8x8s1djakgc
+        org_id: r1sycfkxjwigsmi4ctk5xnx7ia
+        path: /orgs/test-org/projects/test-proj/clusters/test-cluster/vpns/vpn1
+        project_id: amt41iq55oysg4dnqyey3pcxyo
+        remote_networks:
+        - 172.28.0.0/16
+        - 10.96.0.0/12
+        state: starting
+        updated_at: "2021-12-06T11:43:52.458084144Z"
+  vpn_create:
+    type: object
+    required:
+    - name
+    - local_networks
+    properties:
+      name:
+        description: The humand-readable name of VPN.
+        type: string
+        minLength: 1
+        maxLength: 63
+        pattern: ^[a-z]([-a-z0-9]*[a-z0-9])?$
+      display_name:
+        description: The display name of VPN.
+        type: string
+        maxLength: 512
+      local_networks:
+        description: The list of networks for which the VPN should forward data from
+          cluster, in CIDR format (AAA.BBB.CCC.DDD/NN). These networks mustn't overlap
+          with the pod network (172.28.0.0/16), the service network (10.96.0.0/12),
+          the node network (attached to the cluster), or one of the local network
+          of another VPN of the cluster.
+        type: array
+        items:
+          type: string
+        minItems: 1
+      wireguard:
+        $ref: '#/definitions/vpn_wireguard_create'
+    example:
+      local_networks:
+      - 10.10.0.0/16
+      - 10.160.0.0/16
+      - 192.168.1.1/32
+      - 192.168.1.49/32
+      - 10.180.0.0/16
+      name: vpn1
+      wireguard:
+        client_public_key: gLXeHj3FE8Pm5HWA18lSkUo9Exl1JlNRH9RtWPom3HA=
+  vpn_created:
+    allOf:
+    - $ref: '#/definitions/vpn_common'
+    - type: object
+      required:
+      - wireguard
+      properties:
+        wireguard:
+          $ref: '#/definitions/vpn_wireguard_created'
+    example:
+      spec:
+        local_networks:
+        - 10.10.0.0/16
+        - 10.160.0.0/16
+        - 192.168.1.1/32
+        - 192.168.1.49/32
+        - 10.180.0.0/16
+        name: vpn1
+      status:
+        cluster_id: m71zro17zsp7j5eham317sy84c
+        created_at: "2021-12-06T11:41:43.219821673Z"
+        endpoint: ridge-vpn.r6r3eo8ehtm3mhr8x8s1djakgc.tctnc.com:51820
+        id: r6r3eo8ehtm3mhr8x8s1djakgc
+        org_id: r1sycfkxjwigsmi4ctk5xnx7ia
+        path: /orgs/test-org/projects/test-proj/clusters/test-cluster/vpns/vpn1
+        project_id: amt41iq55oysg4dnqyey3pcxyo
+        remote_networks:
+        - 172.28.0.0/16
+        - 10.96.0.0/12
+        state: starting
+        updated_at: "2021-12-06T11:41:43.219821673Z"
+      wireguard:
+        partial_config: |-
+          [Interface]
+          PrivateKey = <<CLIENT PRIVATE KEY>>
+          [Peer]
+          PublicKey = gLXeHj3FE8Pm5HWA18lSkUo9Exl1JlNRH9RtWPom3HA=
+          Endpoint = ridge-vpn.kube-system..public.alex.box-d.tctnc.com:51820
+          AllowedIPs = 172.28.0.0/16,10.96.0.0/12
+          PersistentKeepalive = 25
+        server_public_key: kdd60CZm6Oilb+cLT+dwhwNwycGjFgVHAyHSD8F4rWA=
+  vpn_issues:
+    description: VPN issues
+    type: object
+    properties:
+      overlaps_node_network:
+        description: Indicates the VPN cannot be created because one of the local
+          network overlaps with it.
+        type: boolean
+  vpn_spec:
+    type: object
+    required:
+    - name
+    - local_networks
+    properties:
+      name:
+        description: The human-readable name of VPN.
+        type: string
+        minLength: 1
+        maxLength: 63
+        pattern: ^[a-z]([-a-z0-9]*[a-z0-9])?$
+      display_name:
+        description: The display name of VPN.
+        type: string
+        maxLength: 512
+      local_networks:
+        description: The list of networks for which the VPN should forward data from
+          cluster, in CIDR format.
+        type: array
+        items:
+          type: string
+  vpn_status:
+    type: object
+    required:
+    - id
+    - path
+    - created_at
+    - updated_at
+    - org_id
+    - project_id
+    - cluster_id
+    - state
+    - remote_networks
+    - endpoint
+    properties:
+      id:
+        description: A system-defined unique ID of the VPN.
+        type: string
+      path:
+        description: The path to the resource that includes all the parents.
+        type: string
+      created_at:
+        description: The time at which this VPN was created.
+        type: string
+        format: date-time
+      updated_at:
+        description: The time at which this VPN was updated.
+        type: string
+        format: date-time
+      org_id:
+        description: The unique identifier of the organization.
+        type: string
+      project_id:
+        description: The unique identifier of the project.
+        type: string
+      cluster_id:
+        description: The unique identifier of the cluster.
+        type: string
+      state:
+        description: The state of VPN server end.
+        type: string
+        enum: [starting, updating, running, terminating, terminated]
+      local_networks:
+        description: The list of networks for which the VPN is forwarding data from
+          cluster, in CIDR format.
+        type: array
+        items:
+          type: string
+      remote_networks:
+        description: The list of networks that should be routed to VPN client for
+          VPN to work, in CIDR format.
+        type: array
+        items:
+          type: string
+      endpoint:
+        description: The FQDN of the Wireguard server.
+        type: string
+      issues:
+        $ref: '#/definitions/vpn_issues'
+  vpn_update:
+    type: object
+    properties:
+      display_name:
+        description: The display name of VPN.
+        type: string
+        maxLength: 512
+      local_networks:
+        description: The list of networks for which the VPN should forward data from
+          cluster, in CIDR format (AAA.BBB.CCC.DDD/NN). These networks mustn't overlap
+          with the pod network (172.28.0.0/16), the service network (10.96.0.0/12),
+          the node network (attached to the cluster), or one of the local network
+          of another VPN of the cluster.
+        type: array
+        items:
+          type: string
+        minItems: 1
+    example:
+      local_networks:
+      - 10.10.0.0/16
+  vpn_wireguard:
+    type: object
+    required:
+    - server_public_key
+    - partial_config
+    properties:
+      server_public_key:
+        description: The public key of the server end of Wireguard VPN.
+        type: string
+      partial_config:
+        description: Partial Wireguard config. This config is missing the client's
+          private key. The place to put his key is marked as "<<CLIENT PRIVATE KEY>>".
+        type: string
+    example:
+      partial_config: |-
+        [Interface]
+        PrivateKey = <<CLIENT PRIVATE KEY>>
+        [Peer]
+        PublicKey = kdd60CZm6Oilb+cLT+dwhwNwycGjFgVHAyHSD8F4rWA=
+        Endpoint = ridge-vpn.kube-system..public.alex.box-d.tctnc.com:51820
+        AllowedIPs = 172.28.0.0/16,10.96.0.0/12
+        PersistentKeepalive = 25
+      server_public_key: kdd60CZm6Oilb+cLT+dwhwNwycGjFgVHAyHSD8F4rWA=
+  vpn_wireguard_create:
+    type: object
+    properties:
+      client_public_key:
+        description: The public key of a client end of Wireguard VPN. If not supplied,
+          a public/private key pair is generated and private key is returned.
+        type: string
+  vpn_wireguard_created:
+    type: object
+    required:
+    - server_public_key
+    properties:
+      client_private_key:
+        description: The private key of a client end of Wireguard VPN. This key is
+          returned only once, and only if the client public key wasn't supplied.
+        type: string
+      server_public_key:
+        description: The public key of the server end of Wireguard VPN.
+        type: string
+      config:
+        description: Wireguard config, returned if client public key wasn't supplied.
+          This config is returned only once, subsequent requests that return this
+          VPN will return a partial config, without client private key.
+        type: string
+      partial_config:
+        description: Partial Wireguard config, returned if client public key was supplied.
+          This config is missing the client's private key. The place to put his key
+          is marked as "<<CLIENT PRIVATE KEY>>".
+        type: string
+  vpns:
+    description: A list of VPNs
+    type: object
+    required:
+    - items
+    properties:
+      items:
+        type: array
+        items:
+          $ref: '#/definitions/vpn_common'
 tags:
 - name: Clusters
   description: Operations on Kubernetes clusters
