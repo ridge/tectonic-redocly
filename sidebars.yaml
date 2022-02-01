@@ -75,7 +75,15 @@ getting-started:
     - page: Getting Started/index.md
     - page: Getting Started/iam-getting-started/iam-getting-started.md
     - page: Getting Started/api-getting-started/getting-started-with-api.md
-    - page: Getting Started/rks-getting-started/rks-getting-started.md
+    - group: Getting Started with RKS
+      expanded: true
+      pages:
+        - label: Overview
+          page: Getting Started/rks-getting-started/rks-gs.md
+        - label: Creating a Cluster
+          page: Getting Started/rks-getting-started/create-cluster/create-cluster.md
+        - label: Managing  a Cluster
+          page: Getting Started/rks-getting-started/manage-cluster/manage-cluster.md
     - page: Getting Started/rcs-getting-started/rcs-getting-started.md
     - page: Getting Started/ros-getting-started/ros-getting-started.md
     
