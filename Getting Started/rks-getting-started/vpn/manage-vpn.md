@@ -20,7 +20,7 @@ Copy or download the WireGuard configuration. If you manually generated your key
 
 ![vpn-properties](vpn-properties.png)
 
-## Configure the `WireGuard` client
+## Configure the __WireGuard__ client
 - You will need to install WireGuard, you can find the installation guide here https://www.wireguard.com/install/
 - Save the WireGuard configuration under `/etc/wireguard/wg0.conf`
 - Launch the VPN client by running `sudo wg-quick up wg0` and you are good to go
