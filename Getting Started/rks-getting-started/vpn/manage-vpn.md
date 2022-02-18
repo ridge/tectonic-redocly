@@ -1,32 +1,32 @@
 # Cluster VPN
-VPN allows secure connections from cluster pods and service to/from an external network based on __WireGuard__ (https://www.wireguard.com).
-Ridge automatically takes care of VPN provisioning, so all you need to define is the __local network__ and Ridge does the rest.
+VPN allows secure connections from cluster pods and service to/from an external network based on _WireGuard_ (https://www.wireguard.com).
+Ridge automatically takes care of VPN provisioning, so all you need to define is the _local network_ and Ridge does the rest.
 
 This document describes how to create and manage a VPN connection.
 
 **Note:** some locations do not support this feature. you may find an indication of VPN support in the data center list page
 
 ## Creating a VPN
-On a __running__ cluster choose the VPN tab and press "Add VPN", this will open the VPN pane.
+On a _running_ cluster choose the VPN tab and press "Add VPN", this will open the VPN pane.
 
 ![vpn](add-vpn.png)
 Configure the following properties:
  - Name - the display name of the VPN
- - WireGuard Public Key - you can bring your own key. if left empty, one will be automatically generated
+ - _WireGuard_ Public Key - you can bring your own key. if left empty, one will be automatically generated
  - Local Networks - the CIDR of the network that you want to connect to the cluster
 
 Press `Create` and Ridge will install and configure the VPN endpoint.
-Copy or download the WireGuard configuration. If you manually generated your keys, replace «CLIENT PRIVATE KEY» by your private key.
+Copy or download the WireGuard configuration. If you manually generated your keys, replace `<<CLIENT PRIVATE KEY>>` by your private key.
 
 ![vpn-properties](vpn-properties.png)
 
-## Configure the __WireGuard__ client
-- You will need to install WireGuard, you can find the installation guide here https://www.wireguard.com/install/
-- Save the WireGuard configuration under `/etc/wireguard/wg0.conf`
+## Configure the _WireGuard_ client
+- You will need to install _WireGuard_, you can find the installation guide here https://www.wireguard.com/install/
+- Save the _WireGuard_ configuration under `/etc/wireguard/wg0.conf`
 - Launch the VPN client by running `sudo wg-quick up wg0` and you are good to go
 
 __Notes:__
-- Launching the VPN client before VPN is __running__ may cause it to fail
+- Launching the VPN client before VPN is _running_ may cause it to fail
 - To verify that the connection is established, run `sudo wg`.
 The connection was successfully established if you see under the peer section of your endpoint:
    - latest handshake
