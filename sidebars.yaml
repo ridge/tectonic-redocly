@@ -86,6 +86,8 @@ getting-started:
           page: Getting Started/rks-getting-started/manage-cluster/manage-cluster.md
         - label: Managing  a VPN
           page: Getting Started/rks-getting-started/vpn/manage-vpn.md
+        - label: Upgrading a cluster
+          page: Getting Started/rks-getting-started/upgrade-cluster/upgrade-cluster.md
     - page: Getting Started/rcs-getting-started/rcs-getting-started.md
     - page: Getting Started/ros-getting-started/ros-getting-started.md
     
