@@ -9,10 +9,15 @@ From the **Navigation** pane, click **Kubernetes** and then click **Create Clust
 
 ## Setting Cluster Parameters
 
-- Set the **Cluster Name**. In this example we set it to `my-cluster`
+- Set the **Cluster Name**. In this example we set it to _my-cluster_
+- Network:
+  - Select an existing network or create a new one
+
+  **Note**: Networks are private isolated VLANs, you can create multiple clusters on the same network
+   - If you select to create and new network, choose a **Data center** in which you want your cluster to run. For more information about the available data centers, click the Data Centers section.
 - High Availability configuration - selecting **High Availability** (default), will create three master nodes. you may uncheck this in cases you do not require HA (such as development or QA purposes)
 - Select a **Kubernetes version** from the drop-down list. The latest supported version is selected by default
-- In the **Requested Location** section, choose the data center in which you wnt your cluster to run. For more information about the available data centers, click the globe icon located in the upper right corner
+
 
 ![cluster parameters](cluster-parameters.png)
 
@@ -23,7 +28,7 @@ A **Node Pool** is a group of worker nodes that share a common configuration suc
 
 ![first node pool](empty-node-pool.png)
 
-- Enter a **Node pool name**. On this example we use `pool1`.
+- Enter a **Node pool name**. On this example we use _pool1_.
 - Selecting autoscaling will dynamically adjust the size of a node pool in accordance with demand from the cluster.
   if you enable autoscaling, you will need to specify:
   * **Minimum nodes**: determines the smallest size of the pool
