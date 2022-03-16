@@ -13,7 +13,7 @@ From the **Navigation** pane, click **Kubernetes** and then click **Create Clust
 - Network:
   - Select an existing network or create a new one
 
-  **Note**: Networks are private isolated VLANs, you can create multiple clusters on the same network
+  **Note**: Networks are isolated. Clusters created in different networks cannot connect to each other's private addresses. You can create multiple clusters on the same network
    - If you select to create and new network, choose a **Data center** in which you want your cluster to run. For more information about the available data centers, click the Data Centers section.
 - High Availability configuration - selecting **High Availability** (default), will create three master nodes. you may uncheck this in cases you do not require HA (such as development or QA purposes)
 - Select a **Kubernetes version** from the drop-down list. The latest supported version is selected by default
