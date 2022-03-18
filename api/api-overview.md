@@ -93,3 +93,4 @@ You may see the OpenAPI specifications here:
 - [RCS](rcs/rcs/unstable/rcs-unstable.yaml)
 - [RKS](rks/rks/unstable/rks-unstable.yaml)
 - [External Credentials](keyring/keyring/unstable/keyring-unstable.yaml)
+- [Object Storage](keyring/ros/unstable/ros-unstable.yaml)
