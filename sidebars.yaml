@@ -42,6 +42,14 @@ api:
         pages:
             - label: keyring-unstable
               page: api/keyring/unstable/keyring-unstable.page.yaml/*
+  - group: Object Storage
+      expanded: false
+      pages:
+        - group: Unstable
+          expanded: false
+          pages:
+            - label: ros-unstable
+              page: api/ros/unstable/ros-unstable.page.yaml/*
 getting-started:
     - page: getting-started/index.md
     - page: getting-started/iam/iam-getting-started.md
