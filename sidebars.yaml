@@ -3,8 +3,6 @@ api:
   - group: Ridge Kubernetes Service (RKS)
     expanded: false
     pages:
-      - label: Overview
-        page: api/rks/rks-overview.md
       - group: Unstable
         expanded: false
         pages:
@@ -13,8 +11,6 @@ api:
   - group: Ridge Container Service (RCS)
     expanded: false
     pages:
-      - label: Overview
-        page: api/rcs/rcs-overview.md
       - group: Unstable
         expanded: false
         pages:
