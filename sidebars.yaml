@@ -54,7 +54,7 @@ getting-started:
     - page: getting-started/index.md
     - page: getting-started/iam/iam-getting-started.md
     - page: getting-started/api/getting-started-with-api.md
-    - group: getting-started with RKS
+    - group: Getting Started with RKS
       expanded: true
       pages:
         - label: Overview
