@@ -30,7 +30,7 @@ api:
         pages:
             - label: iam-unstable
               page: api/iam/unstable/iam-unstable.page.yaml/*
-  - group: Data Centers
+  - group: Compute
     expanded: false
     pages:
       - group: Unstable
