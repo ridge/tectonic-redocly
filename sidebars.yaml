@@ -4,32 +4,32 @@ api:
     expanded: false
     pages:
       - label: Overview
-        page: api/rks-overview.md
+        page: api/rks/rks-overview.md
       - group: Unstable
         expanded: false
         pages:
             - label: rks-unstable
-              page: api/rks-unstable.page.yaml/*
+              page: api/rks/rks-unstable.page.yaml/*
   - group: Ridge Container Service (RCS)
     expanded: false
     pages:
       - label: Overview
-        page: api/rcs-overview.md
+        page: api//rcs/rcs-overview.md
       - group: Unstable
         expanded: false
         pages:
             - label: rcs-unstable
-              page: api/rcs-unstable.page.yaml/*
+              page: api/rcs/rcs-unstable.page.yaml/*
   - group: Identity and Access Management (IAM)
     expanded: false
     pages:
       - label: Overview
-        page: api/iam-overview.md
+        page: api/iam/iam-overview.md
       - group: Unstable
         expanded: false
         pages:
             - label: iam-unstable
-              page: api/iam-unstable.page.yaml/*
+              page: api/iam/iam-unstable.page.yaml/*
   - group: Data Centers
     expanded: false
     pages:
@@ -37,7 +37,7 @@ api:
         expanded: false
         pages:
             - label: compute-unstable
-              page: api/compute-unstable.page.yaml/*
+              page: api/compute/compute-unstable.page.yaml/*
   - group: External Credentials
     expanded: false
     pages:
@@ -45,7 +45,7 @@ api:
         expanded: false
         pages:
             - label: keyring-unstable
-              page: api/keyring-unstable.page.yaml/*
+              page: api/keyring/keyring-unstable.page.yaml/*
 getting-started:
     - page: Getting Started/index.md
     - page: Getting Started/iam-getting-started/iam-getting-started.md

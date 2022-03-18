@@ -1,6 +1,5 @@
 ﻿# Ridge Kubernetes Service API Overview
 The [RKS](https://www.ridge.co/kubernetes) API is used to create, manage, and monitor Kubernetes clusters. The API includes functions for:
--  **Node Presets**  - This is a list (read-only) of suggested configurations of the worker nodes of the cluster. Alternatively, you can explicitly specify the minimal CPU, memory and storage requirements.
 -  **Clusters**  - When you create a cluster you will specify at least one pool of worker nodes, and optional location and conformity constraints.
 -  **Node Pools**- When you create a worker node pool you specify the CPU, memory and storage requirements or a node preset. In addition, you specify the desired number of nodes and you may optionally specify Kubernetes labels and taints. You may modify the desired number of nodes.
 -  **Nodes**  - The API provides a view of the nodes that were created and allows you to delete a node that is no longer desirable.
@@ -10,15 +9,6 @@ The [RKS](https://www.ridge.co/kubernetes) API is used to create, manage, and mo
 
 ## Kubernetes Versions
 Ridge allows you to select the kubernetes version of your cluster. List the kubernetes versions to see which versions are currently supported.
-
-##  Node Presets
-Node Presets provide suggested VM specifications for the node. If you specify quantity values explicitly when creating a node pool, these override those from the preset. List the node presets to see the suggested node configurations. The list will be similar to this:
-- X-Small (xsmall): CPU Cores: 1, RAM (GiB): 1, Storage (GiB): 10|
-- Small (small): CPU Cores: 2 , RAM (GiB): 2, Storage (GiB): 10
-- Medium (medium): CPU Cores: 2, RAM (GiB): 4, Storage (GiB): 10
-- Large (large): CPU Cores: 4, RAM (GiB): 8, Storage (GiB): 10
-- X-Large (xlarge): CPU Cores: 8, RAM (GiB): 16, Storage (GiB): 10
-- XX-Large: (xxlarge): CPU Cores: 16, RAM (GiB): 32, Storage (GiB): 10
 
 ## Clusters
 The cluster endpoints are used to manage the entire lifecycle of your kubernetes cluster.
