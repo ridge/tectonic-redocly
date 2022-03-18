@@ -81,8 +81,6 @@ paths:
           description: Not Found
           schema:
             type: string
-      tags:
-      - internal
     post:
       operationId: createNetwork
       summary: Create a Network
@@ -114,8 +112,6 @@ paths:
           description: Not Found
           schema:
             type: string
-      tags:
-      - internal
   /orgs/{org}/projects/{project}/networks/{network}:
     parameters:
     - name: org
@@ -158,8 +154,6 @@ paths:
           description: Not Found
           schema:
             type: string
-      tags:
-      - internal
     patch:
       operationId: updateNetwork
       summary: Update a Network
@@ -191,8 +185,6 @@ paths:
           description: Not Found
           schema:
             type: string
-      tags:
-      - internal
     delete:
       operationId: deleteNetwork
       summary: Delete a Network
@@ -216,8 +208,6 @@ paths:
           description: Not Found
           schema:
             type: string
-      tags:
-      - internal
   /partners/{partner}/data-centers:
     parameters:
     - name: partner
@@ -435,8 +425,6 @@ paths:
           description: Forbidden
           schema:
             type: string
-      tags:
-      - internal
 definitions:
   area:
     type: object
