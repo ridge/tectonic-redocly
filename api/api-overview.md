@@ -88,9 +88,9 @@ The **display_name** may include up to 512 Unicode characters, including up to 6
 
 You may see the OpenAPI2.0 specifications here:
 ### Unstable Version
-- [Data Centers](api/compute/unstable/compute-unstable.yaml)
-- [IAM](api/iam/unstable/iam-unstable.yaml)
-- [RCS](api/rcs/unstable/rcs-unstable.yaml)
-- [RKS](api/rks/unstable/rks-unstable.yaml)
-- [External Credentials](api/keyring/unstable/keyring-unstable.yaml)
-- [Object Storage](api/ros/unstable/ros-unstable.yaml)
+- [Data Centers](compute/unstable/compute-unstable.yaml)
+- [IAM](iam/unstable/iam-unstable.yaml)
+- [RCS](rcs/unstable/rcs-unstable.yaml)
+- [RKS](rks/unstable/rks-unstable.yaml)
+- [External Credentials](keyring/unstable/keyring-unstable.yaml)
+- [Object Storage](ros/unstable/ros-unstable.yaml)
