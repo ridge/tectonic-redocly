@@ -9,7 +9,7 @@ api:
         expanded: false
         pages:
             - label: rks-unstable
-              page: api/rks/rks-unstable.page.yaml/*
+              page: api/rks/unstable/rks-unstable.page.yaml/*
   - group: Ridge Container Service (RCS)
     expanded: false
     pages:
