@@ -1,4 +1,4 @@
-# getting-started with the Ridge API
+# Getting Started with the Ridge API
 
 Welcome to the Ridge developer API guide.  This guide will explain the core concepts necessary for using Ridge resources
 
