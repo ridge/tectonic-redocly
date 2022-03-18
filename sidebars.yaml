@@ -44,10 +44,10 @@ api:
               page: api/keyring/unstable/keyring-unstable.page.yaml/*
   - group: Object Storage
     expanded: false
-      pages:
-        - group: Unstable
-          expanded: false
-          pages:
+    pages:
+      - group: Unstable
+        expanded: false
+        pages:
             - label: ros-unstable
               page: api/ros/unstable/ros-unstable.page.yaml/*
 getting-started:
