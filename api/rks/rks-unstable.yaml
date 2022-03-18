@@ -319,7 +319,7 @@ paths:
         required: true
         schema:
           $ref: '#/definitions/node_pool_create'
-      - name: X-Ridge-RequestID
+      - name: X-Ridge-Request-ID
         in: header
         description: Client-generated request ID for idempotency.
         type: string
@@ -1069,7 +1069,7 @@ definitions:
       node_pools:
         items:
         - spec:
-            auto_scaling: true
+            autoscaling: true
             catalog_item_id: ggif1zusxtp6
             catalog_item_path: /partners/medone/data-centers/sjc01/vm-catalog/@ggif1zusxtp6
             cpu_cores: 1
@@ -1103,7 +1103,7 @@ definitions:
         api_server_whitelist:
         - 40.0.0.0/8
         - 41.0.0.0/8
-        auto_scaling_scale_down_delay: 600
+        autoscaling_scale_down_delay: 600
         display_name: Test Cluster
         highly_available: false
         locations:
@@ -1122,8 +1122,6 @@ definitions:
         data_center_id: ggif1z
         data_center_path: /partners/medone/data-centers/sjc01
         id: fkwsnunegang7ttrocjyax7ghe
-        nat_gateway_ips:
-        - 107.6.88.154
         org_id: di86ihycue5875pb7d5ybfhn9r
         path: /orgs/test-org/projects/test-project/clusters/test-cluster
         phase: running
@@ -1148,31 +1146,17 @@ definitions:
         description: The display name of the cluster.
         type: string
         maxLength: 512
-      qualities:
-        $ref: '#/definitions/quality_set'
       version:
         description: The requested Kubernetes cluster version.
         type: string
-      locations:
-        description: One or more requested locations for the cluster.
-        type: array
-        items:
-          description: One or more locations. A location can refer to a country, a
-            subdivision of a country, or a city.  A country is encoded using the Country
-            codes (ISO-3166-1). A country subdivision as encoded as a <country code>-<subdivision
-            code> (subdivision codes are defined in ISO-3166-2). A city is encoded
-            as <country code>-<subdivision code>-<city name>, For example US-MA-Boston.
-            In cases where there is no subdivision in the country it will be left
-            blank. For example IL--TelAviv.
-          type: string
-          example: US-MA-Boston
-      data_center_id:
-        description: Requested data center ID for the cluster.
+      network_id:
+        description: The ID of a network for the cluster. Either this field or network_path
+          is required.
         type: string
-      data_center_path:
-        description: Requested data center resource path for the cluster.
+      network_path:
+        description: The network path for the cluster. Either this field or network_id
+          is required.
         type: string
-        example: /partner/foo/data-center/bar
       highly_available:
         description: Indicates whether to request the highly-available cluster.
         type: boolean
@@ -1188,7 +1172,7 @@ definitions:
           type: string
       aws_role:
         $ref: '#/definitions/aws_role'
-      auto_scaling_scale_down_delay:
+      autoscaling_scale_down_delay:
         description: For how long, in seconds, a node pool is not scaled down after
           being scaled up
         type: integer
@@ -1214,7 +1198,7 @@ definitions:
         ram: 4294967296
       name: test-cluster
       node_pools:
-      - auto_scaling: true
+      - autoscaling: true
         display_name: Pool 1
         initial_kubernetes_labels:
           pool: pool1
@@ -1259,8 +1243,10 @@ definitions:
     required:
     - name
     - highly_available
-    - auto_scaling_scale_down_delay
+    - autoscaling_scale_down_delay
     - version
+    - network_id
+    - network_path
     properties:
       name:
         description: A human readable name for the cluster. The name is unique within
@@ -1273,9 +1259,7 @@ definitions:
         description: The display name of the cluster.
         type: string
         maxLength: 512
-      qualities:
-        $ref: '#/definitions/quality_set'
-      auto_scaling_scale_down_delay:
+      autoscaling_scale_down_delay:
         description: For how long, in seconds, a node pool is not scaled down after
           being scaled up
         type: integer
@@ -1296,6 +1280,12 @@ definitions:
             blank. For example IL--TelAviv.
           type: string
           example: US-MA-Boston
+      network_id:
+        description: The ID of a network for the cluster.
+        type: string
+      network_path:
+        description: The network path for the cluster.
+        type: string
       data_center_id:
         description: Requested data center ID for the cluster.
         type: string
@@ -1366,6 +1356,11 @@ definitions:
         type: string
         enum: [creating, configuring, running, upgrading, terminating, terminated,
           failed]
+      upgrade_progress:
+        description: The upgrade progress percentage. Only present if `phase` is `upgrading`.
+        type: integer
+        minimum: 0
+        maximum: 100
       cluster_endpoint:
         description: The address through which the Kubernetes cluster's API can be
           reached.
@@ -1374,23 +1369,13 @@ definitions:
         description: The current Kubernetes cluster version. Might differ from the
           requested version during an upgrade to the cluster.
         type: string
-      nat_gateway_ips:
-        description: The list of IPs that are used for outgoing connections.
-        type: array
-        items:
-          description: A single IP that is used for outgoing connections.
-          type: string
-          format: ipv4
-      network:
-        description: The node network in CIDR format (AAA.BBB.CCC.DDD/NN).
-        type: string
       issues:
         $ref: '#/definitions/cluster_issues'
     example:
       node_pools:
         items:
         - spec:
-            auto_scaling: true
+            autoscaling: true
             display_name: Pool 1
             initial_kubernetes_labels:
               pool: pool1
@@ -1461,7 +1446,7 @@ definitions:
       aws_role:
         $ref: '#/definitions/aws_role'
         x-nullable: true
-      auto_scaling_scale_down_delay:
+      autoscaling_scale_down_delay:
         description: For how long, in seconds, a node pool is not scaled down after
           being scaled up
         type: integer
@@ -1470,7 +1455,7 @@ definitions:
       api_server_whitelist:
       - 40.0.0.0/8
       - 41.0.0.0/8
-      auto_scaling_scale_down_delay: 600
+      autoscaling_scale_down_delay: 600
       display_name: Test Cluster
       master_quantities:
         cpu_cores: 2
@@ -1745,7 +1730,7 @@ definitions:
         $ref: '#/definitions/node_pool_status'
     example:
       spec:
-        auto_scaling: true
+        autoscaling: true
         display_name: Pool 1
         initial_kubernetes_labels:
           pool: pool1
@@ -1786,7 +1771,7 @@ definitions:
         description: A display name for the node pool.
         type: string
         maxLength: 512
-      auto_scaling:
+      autoscaling:
         description: If true, nodes are created and deleted within the bounds of min_node
           and max_nodes automatically according to the actual load on them. If false,
           nodes are created to maintain at least min_nodes, but never deleted automatically.
@@ -1795,8 +1780,8 @@ definitions:
       min_nodes: {description: Minimum number of nodes in the node pool., type: integer,
         minimum: 0}
       max_nodes:
-        description: Maximum number of nodes in the node pool. If auto_scaling is
-          false, this setting does not apply.
+        description: Maximum number of nodes in the node pool. If autoscaling is false,
+          this setting does not apply.
         type: integer
         minimum: 0
       initial_node_count:
@@ -1830,7 +1815,7 @@ definitions:
           and catalog_item_path are specified, they must match.
         type: string
     example:
-      auto_scaling: true
+      autoscaling: true
       display_name: Pool 1
       initial_kubernetes_labels:
         pool: pool1
@@ -1863,7 +1848,7 @@ definitions:
     type: object
     required:
     - name
-    - auto_scaling
+    - autoscaling
     - min_nodes
     - max_nodes
     properties:
@@ -1879,7 +1864,7 @@ definitions:
         description: The display name of the node pool.
         type: string
         maxLength: 512
-      auto_scaling:
+      autoscaling:
         description: If true, nodes are created and deleted within the bounds of min_node
           and max_nodes automatically according to the actual load on them. If false,
           nodes are created to maintain at least min_nodes, but never deleted automatically.
@@ -1888,8 +1873,8 @@ definitions:
       min_nodes: {description: Minimum number of nodes in the node pool., type: integer,
         minimum: 0}
       max_nodes:
-        description: Maximum number of nodes in the node pool. If auto_scaling is
-          false, this setting does not apply.
+        description: Maximum number of nodes in the node pool. If autoscaling is false,
+          this setting does not apply.
         type: integer
         minimum: 0
       quantities:
@@ -1966,7 +1951,7 @@ definitions:
         description: The display name of the node pool.
         type: string
         maxLength: 512
-      auto_scaling:
+      autoscaling:
         description: If true, nodes are created and deleted within the bounds of min_node
           and max_nodes automatically according to the actual load on them. If false,
           nodes are created to maintain at least min_nodes, but never deleted automatically.
@@ -1975,13 +1960,29 @@ definitions:
       min_nodes: {description: Minimum number of nodes in the node pool., type: integer,
         minimum: 0}
       max_nodes:
-        description: Maximum number of nodes in the node pool. If auto_scaling is
-          false, this setting does not apply.
+        description: Maximum number of nodes in the node pool. If autoscaling is false,
+          this setting does not apply.
         type: integer
         minimum: 0
+      initial_kubernetes_labels:
+        description: The initial Kubernetes labels (key-value pairs) that will be
+          applied to new nodes. Changes will not be applied to existing nodes.
+        type: object
+        additionalProperties:
+          type: string
+      initial_taints:
+        description: The initial Kubernetes taints that will be applied to new nodes.
+          Changes will not be applied to existing nodes.
+        type: array
+        items:
+          description: A node taint of form "Key=Value:Effect". Effect should be one
+            of k8s known taint effects.
+          type: string
     example:
-      auto_scaling: true
+      autoscaling: true
       display_name: Pool 1
+      initial_taints:
+      - workload_size=large:NoSchedule
       max_nodes: 5
       min_nodes: 1
   node_pools:
@@ -2048,8 +2049,8 @@ definitions:
         description: True if the target node is up, false if it is down.
         type: boolean
       checked_at:
-        description: The time when RKS last observed an up/down state different from
-          before. Omitted if no check has been performed yet.
+        description: Last time load balancer target has changed state. Omitted if
+          unknown.
         type: string
         format: date-time
   token:
@@ -2417,7 +2418,7 @@ definitions:
         description: The list of networks for which the VPN should forward data from
           cluster, in CIDR format (AAA.BBB.CCC.DDD/NN). These networks mustn't overlap
           with the pod network (172.28.0.0/16), the service network (10.96.0.0/12),
-          the node network (attached to the cluster), or one of the local network
+          the node network (attached to the cluster), or one of the local networks
           of another VPN of the cluster.
         type: array
         items:
@@ -2482,7 +2483,7 @@ definitions:
     properties:
       overlaps_node_network:
         description: Indicates the VPN cannot be created because one of the local
-          network overlaps with it.
+          networks overlaps with it.
         type: boolean
   vpn_spec:
     type: object
@@ -2516,7 +2517,7 @@ definitions:
     - org_id
     - project_id
     - cluster_id
-    - state
+    - phase
     - remote_networks
     - endpoint
     properties:
@@ -2543,8 +2544,8 @@ definitions:
       cluster_id:
         description: The unique identifier of the cluster.
         type: string
-      state:
-        description: The state of VPN server end.
+      phase:
+        description: The life cycle phase of the VPN server end.
         type: string
         enum: [starting, updating, running, terminating, terminated]
       local_networks:
@@ -2575,7 +2576,7 @@ definitions:
         description: The list of networks for which the VPN should forward data from
           cluster, in CIDR format (AAA.BBB.CCC.DDD/NN). These networks mustn't overlap
           with the pod network (172.28.0.0/16), the service network (10.96.0.0/12),
-          the node network (attached to the cluster), or one of the local network
+          the node network (attached to the cluster), or one of the local networks
           of another VPN of the cluster.
         type: array
         items:
