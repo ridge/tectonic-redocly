@@ -88,8 +88,8 @@ The **display_name** may include up to 512 Unicode characters, including up to 6
 
 You may see the OpenAPI specifications here:
 ### Unstable Version
-- [Data Centers](compute/compute/compute-unstable.yaml)
-- [IAM](iam/iam/iam-unstable.yaml)
-- [RCS](rcs/rcs/rcs-unstable.yaml)
-- [RKS](rks/rks/rks-unstable.yaml)
-- [External Credentials](keyring/keyring/keyring-unstable.yaml)
+- [Data Centers](compute/compute/unstable/compute-unstable.yaml)
+- [IAM](iam/iam/unstable/iam-unstable.yaml)
+- [RCS](rcs/rcs/unstable/rcs-unstable.yaml)
+- [RKS](rks/rks/unstable/rks-unstable.yaml)
+- [External Credentials](keyring/keyring/unstable/keyring-unstable.yaml)

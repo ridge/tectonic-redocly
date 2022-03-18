@@ -44,6 +44,180 @@ paths:
           description: Not Found
           schema:
             type: string
+  /orgs/{org}/projects/{project}/networks:
+    parameters:
+    - name: org
+      in: path
+      description: The organization identifier.
+      required: true
+      type: string
+    - name: project
+      in: path
+      description: The project identifier.
+      required: true
+      type: string
+    get:
+      operationId: listNetworks
+      summary: List Networks
+      description: Returns a list of all networks in the specified project.
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/networks'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - internal
+    post:
+      operationId: createNetwork
+      summary: Create a Network
+      description: Creates a new network in the specified project.
+      parameters:
+      - name: body
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/network_create'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/network'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - internal
+  /orgs/{org}/projects/{project}/networks/{network}:
+    parameters:
+    - name: org
+      in: path
+      description: The organization identifier.
+      required: true
+      type: string
+    - name: project
+      in: path
+      description: The project identifier.
+      required: true
+      type: string
+    - name: network
+      in: path
+      description: A unique identifier of a network.
+      required: true
+      type: string
+    get:
+      operationId: describeNetwork
+      summary: Describe a Network
+      description: Returns information about a specific network.
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/network'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - internal
+    patch:
+      operationId: updateNetwork
+      summary: Update a Network
+      description: Update the network properties.
+      parameters:
+      - name: body
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/network_update'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/network'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - internal
+    delete:
+      operationId: deleteNetwork
+      summary: Delete a Network
+      description: Deletes the selected network. Only empty networks can be deleted.
+      responses:
+        204:
+          description: Success
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - internal
   /partners/{partner}/data-centers:
     parameters:
     - name: partner
@@ -285,6 +459,8 @@ definitions:
     - partner_path
     - location
     - available
+    - enabled
+    - access_level
     - qualities
     - prices
     properties:
@@ -314,6 +490,17 @@ definitions:
       available:
         description: Indicates if this data center is currently available for use
         type: boolean
+      enabled:
+        description: Indicates is this data center is currently enabled
+        type: boolean
+      access_level:
+        description: |
+          Access level that is required to use the data center.
+          public - data center is available to all of ridge users.
+          clients - data center is only available to all clients of the partner owning the DC.
+          private - data center is only available to clients that are explicitly authorized (regardless of their partner).
+        type: string
+        enum: [public, clients, private]
       qualities:
         $ref: '#/definitions/quality_set'
       persistent_storage:
@@ -370,6 +557,178 @@ definitions:
         description: The continent in which the data center is located
         type: string
         enum: [africa, asia, europe, north-america, south-america, antarctica, oceania]
+  network:
+    type: object
+    required:
+    - spec
+    - status
+    properties:
+      spec:
+        $ref: '#/definitions/network_spec'
+      status:
+        $ref: '#/definitions/network_status'
+    example:
+      spec:
+        data_center_id: n6wicf
+        data_center_path: /partners/medone/data-centers/ptv
+        display_name: Network One
+        name: network1
+      status:
+        created_at: "2021-03-08T16:29:06.265Z"
+        id: jizh77chbfcnyu7p79omf5rx5a
+        nat_ips:
+        - 1.2.3.4
+        org_id: di86ihycue5875pb7d5ybfhn9r
+        path: /orgs/test-org/projects/sandbox/networks/id68hiycue5875pb7d5ybfhn9r
+        phase: running
+        private_ip_range: 192.168.65.0/24
+        project_id: g3ker86kt6mir8rbczwkyjotpe
+        project_path: /orgs/test-org/projects/test-project
+        updated_at: "2021-03-08T16:29:06.265Z"
+  network_create:
+    type: object
+    required:
+    - name
+    properties:
+      name:
+        description: A user-readable name of the network.
+        type: string
+        minLength: 1
+        maxLength: 63
+        pattern: ^[a-z]([-a-z0-9]*[a-z0-9])?$
+      display_name:
+        description: The display name of the network.
+        type: string
+        maxLength: 512
+      highly_available_gateway:
+        description: |
+          Whether the network gateway should be highly available. Some data centers can provide cheaper low-availability gateways that do not survive hardware failures. Use low-availability gateways only for non-production workloads. Data centers that do not provide low-availibility gateways ignore this setting and use high-availability gateways.
+        type: boolean
+        default: true
+      data_center_id: {description: The ID of a data center to create the network
+          in. Either this field or data_center_path is required., type: string}
+      data_center_path:
+        description: The data center path to create the network in. Either this field
+          or data_center_id is required.
+        type: string
+        example: /partner/foo/data-center/bar
+  network_issues:
+    description: Network issues
+    type: object
+    properties:
+      shortage:
+        description: Indicates the network is not fully provisioned due to a shortage
+          at the data center.
+        type: boolean
+      out_of_quota:
+        description: Indicates the network is not fully provisioned due to quota limitation.
+        type: boolean
+  network_spec:
+    type: object
+    required:
+    - name
+    - highly_available_gateway
+    - data_center_id
+    - data_center_path
+    properties:
+      name:
+        description: A user-readable name of the network.
+        type: string
+        minLength: 1
+        maxLength: 63
+        pattern: ^[a-z]([-a-z0-9]*[a-z0-9])?$
+      display_name:
+        description: The display name of the network.
+        type: string
+        maxLength: 512
+      highly_available_gateway:
+        description: Network gateway is highly available.
+        type: boolean
+      data_center_id:
+        description: The ID of a data center to run the containers.
+        type: string
+      data_center_path:
+        description: The data center path to run the containers.
+        type: string
+        example: /partner/foo/data-center/bar
+  network_status:
+    type: object
+    required:
+    - id
+    - path
+    - org_id
+    - project_id
+    - project_path
+    - created_at
+    - updated_at
+    - phase
+    properties:
+      id:
+        description: The unique ID of the network.
+        type: string
+      path:
+        description: The path to the resource that includes all the parents
+        type: string
+        example: /orgs/my-org/projects/my-project/networks/my-network
+      org_id:
+        description: The unique identifier of the organization.
+        type: string
+      project_id:
+        description: The unique identifier of the project.
+        type: string
+      project_path:
+        description: The path to the project resource.
+        type: string
+      created_at:
+        description: The time at which this network was created.
+        type: string
+        format: date-time
+      updated_at:
+        description: The time at which this network was last updated.
+        type: string
+        format: date-time
+      phase:
+        description: The life cycle phase of the network.
+        type: string
+        enum: [creating, running, terminating, terminated, failed]
+      nat_ips:
+        description: |
+          The list of IPs that are used for outgoing NATed connections from instances in this network. Instances with public IPs may use either NATed or public IPs for outgoing gonnections, depending on the data center.
+        type: array
+        items:
+          type: string
+          format: ipv4
+      private_ip_range:
+        description: The private IPv4 range of the network, in CIDR format.
+        type: string
+      issues:
+        $ref: '#/definitions/network_issues'
+  network_update:
+    type: object
+    properties:
+      name:
+        description: A human-readable name of the network.
+        type: string
+        minLength: 1
+        maxLength: 63
+        pattern: ^[a-z]([-a-z0-9]*[a-z0-9])?$
+      display_name:
+        description: The display name of the network.
+        type: string
+        maxLength: 512
+    example:
+      display_name: Network Two
+      name: network2
+  networks:
+    description: A list of networks.
+    type: object
+    required:
+    - items
+    properties:
+      items:
+        type: array
+        items:
+          $ref: '#/definitions/network'
   qualities:
     description: The list of all qualities defined in the system, organized in thematic
       sections
@@ -391,9 +750,9 @@ definitions:
         type: string
         maxLength: 512
       scope:
-        description: Specifies whether the quality applies to data centers or VMs.
+        description: Specifies the scope the quality applies to.
         type: string
-        enum: [data-center, vm]
+        enum: [data-center, instance]
       values:
         description: If specified, the quality has values, with either bigger or smaller
           numbers considered preferable
@@ -447,9 +806,9 @@ definitions:
         type: string
         maxLength: 512
       scope:
-        description: Specifies whether the quantity applies to orders, VMs or volumes.
+        description: Specifies the scope the quantity applies to.
         type: string
-        enum: [order, vm, volume]
+        enum: [order, instance, volume]
       unit:
         description: The optional measurement unit of the quantity values
         type: string

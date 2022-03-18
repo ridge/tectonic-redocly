@@ -6,10 +6,10 @@ headerIcon: ./images/ridge.svg
 enableToc: true
 oasDefinitions:
   rks-unstable: ./api/rks/unstable/rks-unstable.yaml
-  rcs-unstable: ./api/rcs/rcs-unstable.yaml
-  iam-unstable: ./api/iam/iam-unstable.yaml
-  compute-unstable: ./api/compute/compute-unstable.yaml
-  keyring-unstable: ./api/keyring/keyring-unstable.yaml
+  rcs-unstable: ./api/rcs/unstable/rcs-unstable.yaml
+  iam-unstable: ./api/iam/unstable/iam-unstable.yaml
+  compute-unstable: ./api/compute/unstable/compute-unstable.yaml
+  keyring-unstable: ./api/keyring/unstable/keyring-unstable.yaml
 stylesheets:
   - https://fonts.googleapis.com/css?family=Roboto+Mono:300,400,600,700
   - https://fonts.googleapis.com/css?family=Nunito+Sans:300,400,600,700&display=swap

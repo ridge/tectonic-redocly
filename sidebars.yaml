@@ -19,7 +19,7 @@ api:
         expanded: false
         pages:
             - label: rcs-unstable
-              page: api/rcs/rcs-unstable.page.yaml/*
+              page: api/rcs/unstable/rcs-unstable.page.yaml/*
   - group: Identity and Access Management (IAM)
     expanded: false
     pages:
@@ -29,7 +29,7 @@ api:
         expanded: false
         pages:
             - label: iam-unstable
-              page: api/iam/iam-unstable.page.yaml/*
+              page: api/iam/unstable/iam-unstable.page.yaml/*
   - group: Data Centers
     expanded: false
     pages:
@@ -37,7 +37,7 @@ api:
         expanded: false
         pages:
             - label: compute-unstable
-              page: api/compute/compute-unstable.page.yaml/*
+              page: api/compute/unstable/compute-unstable.page.yaml/*
   - group: External Credentials
     expanded: false
     pages:
@@ -45,7 +45,7 @@ api:
         expanded: false
         pages:
             - label: keyring-unstable
-              page: api/keyring/keyring-unstable.page.yaml/*
+              page: api/keyring/unstable/keyring-unstable.page.yaml/*
 getting-started:
     - page: Getting Started/index.md
     - page: Getting Started/iam-getting-started/iam-getting-started.md

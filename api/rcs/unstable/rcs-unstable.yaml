@@ -332,7 +332,7 @@ paths:
           schema:
             type: string
       tags:
-      - Other
+      - internal
 definitions:
   aws_role:
     description: The AWS IAM role ans the AWS credentials that will be used to grant
@@ -373,7 +373,6 @@ definitions:
         elasticsearch_endpoint: http://elasticsearch.example.com:9200
         env:
         - FOO=bar
-        locations: null
         name: batch1
         number: 3
       status:
@@ -439,43 +438,48 @@ definitions:
         example: http://elasticsearch.example.com:9200
       aws_role:
         $ref: '#/definitions/aws_role'
-      locations:
-        description: One or more locations. A location can refer to a country, a subdivision
-          of a country, or a city. A country is encoded using the Country codes (ISO-3166-1).
-          A country subdivision as encoded as a <country code>-<subdivision code>
-          (subdivision codes are defined in ISO-3166-2). A city is encoded as <country
-          code>-<subdivision code>-<city name>. For example, US-MA-Boston. In cases
-          where there is no subdivision in the country it will be left blank. For
-          example IL--TelAviv.
-        type: array
-        items:
-          type: string
-      data_center_id:
-        description: The ID of a data center to run the containers.
+      network_id:
+        description: The ID of a network for the batch. Either this field or network_path
+          is required.
         type: string
-      data_center_path:
-        description: The data center path to run the containers.
+      network_path:
+        description: The network path for the batch. Either this field or network_id
+          is required.
         type: string
-        example: /partner/foo/data-center/bar
       catalog_item_id:
-        description: The VM catalog item ID. May only be specified if data center
-          is specified.
+        description: The catalog item ID for containers. Either this field or catalog_item_path
+          is required.
         type: string
       catalog_item_path:
-        description: The VM catalog item path. May only be specified if data center
-          is specified.
+        description: The catalog item path for containers. Either this field or catalog_item_id
+          is required.
         type: string
         example: /partners/big-partner/data-center/boston/vm-catalog/@7g167ryep3fr8ejr4bxemxju4h
-      qualities:
-        $ref: '#/definitions/quality_set'
       quantities:
         $ref: '#/definitions/quantity_set'
+  batch_issues:
+    description: Batch issues
+    type: object
+    properties:
+      shortage:
+        description: Indicates the batch is not fully provisioned due to a shortage
+          at the data center.
+        type: boolean
+      out_of_quota:
+        description: Indicates the batch is not fully provisioned due to quota limitation.
+        type: boolean
   batch_spec:
     type: object
     required:
     - name
     - container_image
     - number
+    - data_center_id
+    - data_center_path
+    - catalog_item_id
+    - catalog_item_path
+    - network_id
+    - network_path
     properties:
       name:
         description: A user-readable name of the batch.
@@ -487,9 +491,6 @@ definitions:
         description: The display name of the batch.
         type: string
         maxLength: 512
-      deleted:
-        description: Indicates if this batch was deleted.
-        type: boolean
       number:
         description: The requested number of containers.
         type: integer
@@ -526,17 +527,6 @@ definitions:
         example: http://elasticsearch.example.com:9200
       aws_role:
         $ref: '#/definitions/aws_role'
-      locations:
-        description: One or more locations. A location can refer to a country, a subdivision
-          of a country, or a city. A country is encoded using the Country codes (ISO-3166-1).
-          A country subdivision as encoded as a <country code>-<subdivision code>
-          (subdivision codes are defined in ISO-3166-2). A city is encoded as <country
-          code>-<subdivision code>-<city name>. For example, US-MA-Boston. In cases
-          where there is no subdivision in the country it will be left blank. For
-          example IL--TelAviv.
-        type: array
-        items:
-          type: string
       data_center_id:
         description: The ID of a data center to run the containers.
         type: string
@@ -551,8 +541,12 @@ definitions:
         description: The VM catalog item path.
         type: string
         example: /partners/big-partner/data-center/boston/vm-catalog/@7g167ryep3fr8ejr4bxemxju4h
-      qualities:
-        $ref: '#/definitions/quality_set'
+      network_id:
+        description: The ID of the network for the batch.
+        type: string
+      network_path:
+        description: The path to the network for the batch.
+        type: string
       quantities:
         $ref: '#/definitions/quantity_set'
   batch_status:
@@ -591,31 +585,12 @@ definitions:
       phase:
         description: The life cycle phase of the batch.
         type: string
-        enum: [creating, fulfilling, fulfilled, failed]
+        enum: [creating, fulfilling, fulfilled, failed, terminating, terminated]
       number:
         description: The actual number of running or completed containers.
         type: integer
-      data_center_id:
-        description: The ID of a data center to run the containers.
-        type: string
-      data_center_path:
-        description: The data center path to run the containers.
-        type: string
-        example: /partner/foo/data-center/bar
-      nat_gateway_ips:
-        description: The list of IPs that are used for outgoing connections.
-        type: array
-        items:
-          description: A single IP that is used for outgoing connections.
-          type: string
-          format: ipv4
-      shortage:
-        description: Indicates the batch is not fully provisioned due to a shortage
-          at the data center.
-        type: boolean
-      out_of_quota:
-        description: Indicates the batch is not fully provisioned due to quota limitation.
-        type: boolean
+      issues:
+        $ref: '#/definitions/batch_issues'
   batch_update:
     type: object
     properties:
@@ -705,14 +680,8 @@ definitions:
       error:
         description: Error which occurred during container's life cycle.
         type: string
-      shortage:
-        description: Indicates the container is not fully provisioned due to a shortage
-          at the data center.
-        type: boolean
-      degraded:
-        description: The container is running in a degraded mode. There might be a
-          delay between issuing a command for controlling this container and a response.
-        type: boolean
+      issues:
+        $ref: '#/definitions/container_issues'
     example:
       batch_id: jizh77chbfcnyu7p79omf5rx5a
       data_center_id: n6wicf
@@ -723,6 +692,18 @@ definitions:
       phase: running
       project_id: g3ker86kt6mir8rbczwkyjotpe
       start_time: "2021-03-08T16:35:22.899Z"
+  container_issues:
+    description: Batch issues
+    type: object
+    properties:
+      shortage:
+        description: Indicates the container is not fully provisioned due to a shortage
+          at the data center.
+        type: boolean
+      degraded:
+        description: The container is running in a degraded mode. There might be a
+          delay between issuing a command for controlling this container and a response.
+        type: boolean
   containers:
     type: object
     required:
@@ -768,13 +749,6 @@ definitions:
     items:
       type: string
       example: FOO=bar
-  quality_set:
-    description: A set of required qualities. The object maps quality identifiers
-      to values. For qualities defined with no values, the value must be 1. See https://api.ridge.co/compute/unstable/qualities
-      for possible properties.
-    type: object
-    additionalProperties:
-      type: integer
   quantity_set:
     description: A set of quantities. The object maps quantity identifiers to values.
       See https://api.ridge.co/compute/unstable/quantities for possible properties.

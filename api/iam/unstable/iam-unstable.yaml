@@ -4706,10 +4706,15 @@ definitions:
         description: The path of the client organization.
         type: string
       private_data_centers:
-        description: The list of paths to private data centers the client can access.
+        description: The list of private data centers the client can access.
         type: array
         items:
           $ref: '#/definitions/data_center_ref'
+      private_storage_sites:
+        description: The list of private storage sites the client can access.
+        type: array
+        items:
+          $ref: '#/definitions/storage_site_ref'
   client_create:
     type: object
     required:
@@ -4727,10 +4732,15 @@ definitions:
         type: string
         maxLength: 512
       private_data_centers:
-        description: The list of paths to private data centers the client can access.
+        description: The list of private data centers the client can access.
         type: array
         items:
           $ref: '#/definitions/data_center_ref_input'
+      private_storage_sites:
+        description: The list of private storage sites the client can access.
+        type: array
+        items:
+          $ref: '#/definitions/storage_site_ref_input'
       trial:
         description: The flag describing the trial status of this organization
         type: boolean
@@ -4738,10 +4748,15 @@ definitions:
     type: object
     properties:
       private_data_centers:
-        description: The list of paths to private data centers the client can access.
+        description: The list of private data centers the client can access.
         type: array
         items:
           $ref: '#/definitions/data_center_ref_input'
+      private_storage_sites:
+        description: The list of private storage sites the client can access.
+        type: array
+        items:
+          $ref: '#/definitions/storage_site_ref_input'
       trial:
         description: The flag describing the trial status of this organization
         type: boolean
@@ -5668,6 +5683,29 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/storage_key'
+  storage_site_ref:
+    type: object
+    required:
+    - storage_site_id
+    - storage_site_path
+    properties:
+      storage_site_id:
+        description: The unique identifier of the storage site.
+        type: string
+      storage_site_path:
+        description: The path to the storage site resource.
+        type: string
+  storage_site_ref_input:
+    type: object
+    properties:
+      storage_site_id:
+        description: The unique identifier of the storage site. Either storage_site_id
+          or storage_site_path must be present. If both are specified, they must agree.
+        type: string
+      storage_site_path:
+        description: The path to the storage site resource. Either storage_site_id
+          or storage_site_path must be present. If both are specified, they must agree.
+        type: string
   subject_policy_create:
     type: object
     required:
