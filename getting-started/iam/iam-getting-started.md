@@ -1,4 +1,4 @@
-# Getting Started with Identity and Access Management
+# getting-started with Identity and Access Management
 
 ## Overview
 This is a guide that will walk you through some basic use cases of identity and access management (IAM) in Ridge Cloud. See [IAM overview](../../docs/iam-overview/iam-overview.md).

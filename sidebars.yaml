@@ -43,24 +43,24 @@ api:
             - label: keyring-unstable
               page: api/keyring/unstable/keyring-unstable.page.yaml/*
 getting-started:
-    - page: Getting Started/index.md
-    - page: Getting Started/iam-getting-started/iam-getting-started.md
-    - page: Getting Started/api-getting-started/getting-started-with-api.md
-    - group: Getting Started with RKS
+    - page: getting-started/index.md
+    - page: getting-started/iam/iam-getting-started.md
+    - page: getting-started/api/getting-started-with-api.md
+    - group: getting-started with RKS
       expanded: true
       pages:
         - label: Overview
-          page: Getting Started/rks-getting-started/rks-gs.md
+          page: getting-started/rks/rks-gs.md
         - label: Creating a Cluster
-          page: Getting Started/rks-getting-started/create-cluster/create-cluster.md
+          page: getting-started/rks/create-cluster/create-cluster.md
         - label: Managing  a Cluster
-          page: Getting Started/rks-getting-started/manage-cluster/manage-cluster.md
+          page: getting-started/rks/manage-cluster/manage-cluster.md
         - label: Managing  a VPN
-          page: Getting Started/rks-getting-started/vpn/manage-vpn.md
+          page: getting-started/rks/vpn/manage-vpn.md
         - label: Upgrading a cluster
-          page: Getting Started/rks-getting-started/upgrade-cluster/upgrade-cluster.md
-    - page: Getting Started/rcs-getting-started/rcs-getting-started.md
-    - page: Getting Started/ros-getting-started/ros-getting-started.md
+          page: getting-started/rks/upgrade-cluster/upgrade-cluster.md
+    - page: getting-started/rcs/rcs-getting-started.md
+    - page: getting-started/ros/ros-getting-started.md
 
 docs:
   - page: docs/index.md

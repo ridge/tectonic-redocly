@@ -20,8 +20,8 @@ stylesheets:
 #scripts:
 #  - ./static/intercom.js
 nav:
-  - label: Getting Started
-    page: Getting Started/index.md
+  - label: getting-started
+    page: getting-started/index.md
   - label: Docs
     page: docs/index.md
   - label: API Reference

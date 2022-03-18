@@ -1,4 +1,4 @@
-# Getting Started with Ridge Kubernetes Service
+# getting-started with Ridge Kubernetes Service
 
 Ridge Kubernetes Service (RKS) offers a fully certified managed Kubernetes service that enables customers to deploy and manage clusters across the Ridge network of partners.
 

@@ -3,7 +3,7 @@
 ## Introduction
 
 Welcome to the Ridge developer API guide. This guide will explain the core concepts necessary for using Ridge resources and describe the APIs that make up our service. Ridge is developer focused and as such all services are built API firs.
-If you are new to Ridge and want a step by step guide that walks through the process of creating and running your first workload, please refer to the Developer Getting Started Guide here.
+If you are new to Ridge and want a step by step guide that walks through the process of creating and running your first workload, please refer to the Developer getting-started Guide here.
 
 ## Core Concepts
 
