@@ -5,11 +5,6 @@ api:
     pages:
       - label: Overview
         page: api/rks-overview.md
-      - group:  V1 Alpha
-        expanded: false
-        pages:
-            - label: rks
-              page: api/rks.page.yaml/*
       - group: Unstable
         expanded: false
         pages:
@@ -20,57 +15,37 @@ api:
     pages:
       - label: Overview
         page: api/rcs-overview.md
-      - group:  V1 Alpha
-        expanded: false
-        pages:
-            - label: rcs
-              page: api/rcs.page.yaml/*
       - group: Unstable
         expanded: false
         pages:
             - label: rcs-unstable
-              page: api/rcs-unstable.page.yaml/*       
+              page: api/rcs-unstable.page.yaml/*
   - group: Identity and Access Management (IAM)
     expanded: false
     pages:
       - label: Overview
         page: api/iam-overview.md
-      - group:  V1 Alpha
-        expanded: false
-        pages:
-            - label: iam
-              page: api/iam.page.yaml/*
       - group: Unstable
         expanded: false
         pages:
             - label: iam-unstable
-              page: api/iam-unstable.page.yaml/*      
+              page: api/iam-unstable.page.yaml/*
   - group: Data Centers
     expanded: false
     pages:
-      - group:  V1 Alpha
-        expanded: false
-        pages:
-            - label: compute
-              page: api/compute.page.yaml/*
       - group: Unstable
         expanded: false
         pages:
             - label: compute-unstable
-              page: api/compute-unstable.page.yaml/*      
+              page: api/compute-unstable.page.yaml/*
   - group: External Credentials
     expanded: false
     pages:
-      - group:  V1 Alpha
-        expanded: false
-        pages:
-            - label: keyring
-              page: api/keyring.page.yaml/*
       - group: Unstable
         expanded: false
         pages:
             - label: keyring-unstable
-              page: api/keyring-unstable.page.yaml/*      
+              page: api/keyring-unstable.page.yaml/*
 getting-started:
     - page: Getting Started/index.md
     - page: Getting Started/iam-getting-started/iam-getting-started.md
@@ -90,7 +65,7 @@ getting-started:
           page: Getting Started/rks-getting-started/upgrade-cluster/upgrade-cluster.md
     - page: Getting Started/rcs-getting-started/rcs-getting-started.md
     - page: Getting Started/ros-getting-started/ros-getting-started.md
-    
+
 docs:
   - page: docs/index.md
   - page: docs/iam-overview/iam-overview.md
