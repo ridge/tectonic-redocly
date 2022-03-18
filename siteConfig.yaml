@@ -5,7 +5,7 @@ meta:
 headerIcon: ./images/ridge.svg
 enableToc: true
 oasDefinitions:
-  rks-unstable: ./api/unstable/rks-unstable.yaml
+  rks-unstable: ./api/rks/unstable/rks-unstable.yaml
   rcs-unstable: ./api/rcs/rcs-unstable.yaml
   iam-unstable: ./api/iam/iam-unstable.yaml
   compute-unstable: ./api/compute/compute-unstable.yaml
