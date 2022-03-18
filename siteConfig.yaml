@@ -10,7 +10,7 @@ oasDefinitions:
   iam-unstable: ./api/iam/unstable/iam-unstable.yaml
   compute-unstable: ./api/compute/unstable/compute-unstable.yaml
   keyring-unstable: ./api/keyring/unstable/keyring-unstable.yaml
-  object-storage-unstable: ./api/ros/unstable/ros-unstable.yaml
+  ros-unstable: ./api/ros/unstable/ros-unstable.yaml
 stylesheets:
   - https://fonts.googleapis.com/css?family=Roboto+Mono:300,400,600,700
   - https://fonts.googleapis.com/css?family=Nunito+Sans:300,400,600,700&display=swap
@@ -21,7 +21,7 @@ stylesheets:
 #scripts:
 #  - ./static/intercom.js
 nav:
-  - label: getting-started
+  - label: Getting Started
     page: getting-started/index.md
   - label: Docs
     page: docs/index.md
