@@ -36,7 +36,7 @@ This page will show you a list of all the buckets that exist in this project.
 **Note:**
 You must have an access key to an ROS site in order to view the buckets of that site in the console.
 
-Press the **Add Bucket** button.
+Press the **Create Bucket** button.
 Select the site in which you wish to create the bucket and provide a name for the bucket.
 In this example we chose the Si Racha, Thailand site and named it `example-bucket`.
 
@@ -52,7 +52,7 @@ After you press the **Add Bucket** button, you will see all the details of the b
 Adding Object to a bucket can be done using any S3 compatible tools.
 
 Once you add objects to this bucket, you will be able to see them at the bottom of the bucket's page.
-You may delete an object by pressing the trash icon on the far right.
+You may delete an object by clicking the trash icon on the far right.
 
 
 ![image_7](ros-getting-started-7.png)
