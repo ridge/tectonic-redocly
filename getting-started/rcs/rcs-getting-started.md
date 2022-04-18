@@ -5,7 +5,7 @@ Clicking on **Containers &#8702;  Batches** in the left navigation pane opens th
 To create a batch:
 - From the left side menu, click **Containers** and then click **Create Batch**.
 
-![image_1](rcs-getting-started_1.png)
+![image_1](rcs-getting-started-1.png)
 - Configure the following properties:
   - **Batch Name** (display name can be changed after creation)
   - **Network** - select an existing network or create a new one
@@ -20,11 +20,11 @@ To create a batch:
       **Note**: You can configure private registry credentials using the credentials vault
   - **Elasticsearch Endpoint** - Ridge will collect logs from all containers in the Batch and ship them to this endpoint
 
-![image_2](rcs-getting-started_2.png)
+![image_2](rcs-getting-started-2.png)
   - **Number of containers** - the number of containers to run. each container will run on a dedicated machine.
   - **Configuration** - the machine configuration that will run the container
 
-![image_3](rcs-getting-started_3.png)
+![image_3](rcs-getting-started-3.png)
 ### Setting Optional Parameters
 When you create a batch, you have the option of defining:
   * **Docker Credentials** - in case you are using a private registry, select the key as entered in _Credentails Vault_
@@ -43,34 +43,32 @@ This allows you to deploy applications that use AWS SDK without the need to hand
   * **Arguments**
   * **Environment Variables** (as key-value pairs)
 
-![image_4](rcs-getting-started_4.png)
+![image_4](rcs-getting-started-4.png)
 
 Click **Create Batch**.
 
 While Ridge is spinning up the batch, the status will appear as *Creating*, the container details will indicate *Queued* and a gray indicator will appear next to the Batch in the Batch list.
 
-![image_5](rcs-getting-started_5.png)
+![image_5](rcs-getting-started-5.png)
 
 A container will be created and will run. in case a container exits, an exit code will be displayed.
 
-![image_6](rcs-getting-started_6.png)
+![image_6](rcs-getting-started-6.png)
 # Viewing Batches
 After you create a batch, Ridge displays all the information of the newly created batch.
 A list of batches and their key details, appears on the **Containers** page.
 
-![image_7](rcs-getting-started_7.png)
+![image_7](rcs-getting-started-7.png)
 
 # Deleting a Container in a Batch
 To delete a container:
 1. Select a Batch.
 2. Click the Delete button at the right end of the container you want to delete.
 
-![image_8](rcs-getting-started_8.png)
+![image_8](rcs-getting-started-8.png)
 
 # Deleting a Batch
 To delete a batch:
 1. Select a batch.
 2. From the top right, select **Delete**.
-![image_9](rcs-getting-started_9.png)
-
-
+![image_9](rcs-getting-started-9.png)
