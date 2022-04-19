@@ -7,7 +7,7 @@ Creating a Kubernetes cluster includes three main steps:
 From the **Navigation** pane, click **Kubernetes** and then click **Create Cluster**.
 ![create cluster](first-cluster.png)
 
-## Setting Cluster Parameters
+## Cluster Configuration
 
 - Set the **Cluster Name**. In this example we set it to _my-cluster_
 - Network:
@@ -34,22 +34,28 @@ A **Node Pool** is a group of worker nodes that share a common configuration suc
   * **Minimum nodes**: determines the smallest size of the pool
   * **Maximum nodes**: determines the largest size of the pool
   * **Initial Count**: determines the size of the pool at its creation
-    ![autoscaling option](autoscaling-option.png)
+
+![autoscaling option](autoscaling-option.png)
 
 - In this example we disable **Autoscaling** and set the **Number of nodes** in the node pool to 1
-  ![no autoscaling](no-autoscaling.png)
+
+![no autoscaling](no-autoscaling.png)
+
 - Select a **Configuration** for the nodes in the pool. Data center may have different configuration options:
     * Catalog of preset configurations, similar to instance types
-      ![catalog](catalog.png)
-    * Customizable instances - allows flexible configuration of CPU cores, RAM and storage.
 
-      **Note:** If the data center cannot provide the exact configuration requested, the actual configuration may be different, however, it will not be less than the minimum specified here.
-      ![custom catalog](custom-catalog.png)
- **Note:** If you have exceeded your quota, a warning message is displayed.
+![catalog](catalog.png)
 
+**Note:** Customizable instances - some data centers allow flexible configuration of CPU cores, RAM and storage.
+
+![custom catalog](custom-catalog.png)
+
+**Note:** If you have exceeded your quota, a warning message is displayed.
 
 Click **Create Cluster**
+
 ![create cluster button](create-cluster-button.png)
+
 After you create the Cluster, Ridge begins creating and provisioning. It creates master node(s), worker nodes, provisions the machines, network and security rules.  The cluster it creates  is fully isolated from the world. Once the cluster is in the `running` state, You can use the Kubernetes API to interact with and deploy applications on top of it.
 
 
@@ -59,7 +65,9 @@ Creating an access token grants a member of the Organization credentials to Kube
 
 **To create an access token:**
 1. Go to the **Cluster** page and select the **Access Control** tab.
+
 ![access control](access-control.png)
+
 2. Click **Add Token**.
 3. Select a member of the organization from the dropdown list.
 4. Enter a **Token name**.
@@ -67,23 +75,30 @@ Creating an access token grants a member of the Organization credentials to Kube
    The group name should always match a group that appears in Kubernetes role bindings that are defined in your cluster.
    In this example, this is the first user of the cluster, therefore we assign the `system:masters` group.
 6. Click **Create**.
-    ![create token](create-token.png)
+
+![create token](create-token.png)
 
 A standard Kubernetes configuration file is generated, now you can securely use any Kubernetes tools to interact with the cluster.
 Download the Kubernetes config file and save it under your `.kube` folder or export `KUBECONFIG=<name of your config file>`, so you can point your kubectl to the cluster you just created.
+
 ![new token](new-token.png)
 
-## Advanced Configuration Options
-In addition to the basic configuration, Ridge offers additional useful options.
-## Cluster API Whitelist
+## Additional Settings
+
+![additional settings](cluster-additional-settings.png)
+### Master nodes configuration
+Choose a master nodes' configuration in case you want to override the default master node configuration.
+
+### CNI plugin
+Ridge supports Weave (default) and Calico
+
+### API server whitelist
 Your cluster is created, by default, With a Kubernetes API server that can be accessed from any IP address. If you wish to limit this access or block it altogether, click **Additional Settings**.
 - select **Block all** to prevent access to the API
 - select **Allow only** and enter one or more addresses in CIDR format
   You can edit this list at any time.
 
-![additional settings](cluster-additional-settings.png)
-
-## AWS Credentials for Containers
+### AWS Credentials for Containers
 Applications deployed on any Ridge cluster, can continue to use any AWS service, with no extra configuration.
 This allows you to deploy applications that use AWS SDK without the need to handle complicated permission configuration - Ridge dynamically takes care of that.
 
@@ -95,7 +110,7 @@ Select the **Credentials Vault** -> **AWS** to manage AWS credentials. Ridge can
    - Enter the ARN of the role that you wish the containers to assume in the **Role ARN**
    - Select the AWS credentials to use for obtaining the temporary credentials from the dropdown list in the **key** parameter.
 
-## Taints and Labels for Node Pools
+### Taints and Labels for Node Pools
 To add kubernetes taints and labels to a node pool, click **Taints and Labels** in the node pool's section.
 Labels are simply pairs of {key,value}. Select **Add Label** and set the **Key** abd **Value**.
 A taint is a tuple of {key,value,effect}. To add a taint select **Add Taint**. Set the  **Key** abd **Value** and select the **Effect** from the dropdown menu.
