@@ -1,5 +1,5 @@
 api:
-  - page: api/api-overview.md
+  - page: api/index.md
   - group: Ridge Kubernetes Service (RKS)
     expanded: false
     pages:

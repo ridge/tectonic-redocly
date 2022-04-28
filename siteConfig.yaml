@@ -24,7 +24,7 @@ nav:
   - label: Docs & Guides
     page: docs/index.md
   - label: API Reference
-    page: api/api-overview.md
+    page: api/index.md
   - separatorLine: true
   # The '@' label prefix is a custom prefix which renders dimmed links
   - label: '@Support'
