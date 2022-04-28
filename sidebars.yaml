@@ -72,8 +72,8 @@ getting-started:
 
 docs:
   - page: docs/index.md
-  - page: docs/iam-overview/iam-overview.md
-  - page: docs/rks-overview/rks-overview.md
-  - page: docs/rcs-overview/rcs-overview.md
-  - page: docs/ros-overview/ros-overview.md
+  - page: docs/iam/iam-overview.md
+  - page: docs/rks/rks-overview.md
+  - page: docs/rcs/rcs-overview.md
+  - page: docs/ros/ros-overview.md
   - page: docs/quotas/quotas.md
