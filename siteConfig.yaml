@@ -1,7 +1,7 @@
 meta:
   title: Ridge
-  description: The best API documentation generator ever.
-  siteUrl: https://ridge.redoc.ly
+  description: Ridge Developer Portal - Ridge Cloud API documentation, getting started, docs & guides
+  siteUrl: https://dev.ridge.co
 headerIcon: ./images/ridge.svg
 enableToc: true
 oasDefinitions:
@@ -13,7 +13,7 @@ oasDefinitions:
   ros-unstable: ./api/ros/unstable/ros-unstable.yaml
 stylesheets:
   - https://fonts.googleapis.com/css?family=Roboto+Mono:300,400,600,700
-  - https://fonts.googleapis.com/css?family=Nunito+Sans:300,400,600,700&display=swap
+  - https://fonts.googleapis.com/css?family=Nunito+Sans:300,400,600,700,900&display=swap
 #ga:
   # you can use any options here from https://www.gatsbyjs.org/packages/gatsby-plugin-google-analytics/
   # note that GA doesn't work in DEV
@@ -21,16 +21,20 @@ stylesheets:
 #scripts:
 #  - ./static/intercom.js
 nav:
-  - label: Getting Started
-    page: getting-started/index.md
-  - label: Docs
+  - label: Docs & Guides
     page: docs/index.md
   - label: API Reference
     page: api/api-overview.md
+  - separatorLine: true
+  # The '@' label prefix is a custom prefix which renders dimmed links
+  - label: '@Support'
+    href: 'https://www.ridge.co/contact-us'
+  - label: '@Getting Started'
+    page: getting-started/index.md
   - search: true
 
 footer:
-  copyrightText: Copyright © Ridge 2021. All right reserved.
+  copyrightText: Copyright © Ridge 2022. All right reserved.
   columns:
     - group: Legal
       items:
