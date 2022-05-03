@@ -47,10 +47,10 @@ The connection was successfully established if you see under the peer section of
     persistent keepalive: every 25 seconds
     ```
 
-# Configure the VPN
+## Configure the VPN
 You can always change a running VPN name or local network properties by editing the VPN, click the pencil on your VPN
 
 ![vpn-update](vpn-update.png)
 
-# Deleting the VPN
+## Deleting the VPN
 On the “Update VPN” page, select Properties → Delete and confirm the deletion.
