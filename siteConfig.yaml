@@ -15,11 +15,8 @@ stylesheets:
   - https://fonts.googleapis.com/css?family=Roboto+Mono:300,400,600,700
   - https://fonts.googleapis.com/css?family=Nunito+Sans:300,400,600,700,900&display=swap
 analytics:
-  ga:
-    # This option places the tracking script into the ”<head>” of your website
-    # If set to false (default), the script is placed into the "<body>"
-    head: true
-    trackingId: UA-129511484-1
+  gtm:
+    id: GTM-KQPWVCX
 nav:
   - label: Docs & Guides
     page: docs/index.md
