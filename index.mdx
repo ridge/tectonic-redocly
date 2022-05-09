@@ -2,48 +2,10 @@
 title: Ridge Developer Portal
 ---
 
-import {
-  Button,
-  Box,
-  FlexSection,
-  Flex,
-  H1,
-  H2,
-  LandingLayout,
-  NavBar,
-  ThinTile,
-} from "@redocly/ui";
-
-import { IndexHero } from "./IndexHero";
-import icon1 from "./images/icon1.png";
-import launchFastIcon from "./images/launch-fast.svg";
-import icon3 from "./images/icon3.png";
+import { LandingLayout, NavBar } from "@redocly/ui";
 
 export default LandingLayout;
 
 <NavBar location={props.location} standalone={true} />
-<IndexHero>
-  <H2>Ridge</H2>
-  <H1>
-    Resources
-    <br />
-    and documentation
-  </H1>
-</IndexHero>
-<Box my={25}>
-  <FlexSection justifyContent="space-around" flexWrap="wrap">
-    <ThinTile
-      to="getting-started/index.md"
-      icon={launchFastIcon}
-      header="Getting Started"
-    >
-      Guides on how to use Ridge services
-    </ThinTile>
-    <ThinTile to="docs/index.md" icon={icon3} header="Docs">
-      Overview of Ridge services
-    </ThinTile>
-    <ThinTile to="api/index.md" icon={icon1} header="API Reference">
-      OpenAPI documentation
-    </ThinTile>
-  </FlexSection>
-</Box>
+
+Go to [Ridge Developer Portal](https://www.ridge.co/developer-portal/)

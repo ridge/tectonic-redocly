@@ -43,7 +43,7 @@ export const theme = {
     width: "260px",
   },
   footer: {
-    fontSize: "13px",
+    fontSize: "14px",
     titleFontSize: "14px",
   },
 

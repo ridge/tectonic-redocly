@@ -2,7 +2,9 @@ meta:
   title: Ridge
   description: Ridge Developer Portal - Ridge Cloud API documentation, getting started, docs & guides
   siteUrl: https://dev.ridge.co
-headerIcon: ./images/ridge.svg
+logo:
+  image: './images/ridge.svg'
+  href: 'https://www.ridge.co/'
 enableToc: true
 oasDefinitions:
   rks-unstable: ./api/rks/unstable/rks-unstable.yaml
@@ -14,40 +16,83 @@ oasDefinitions:
 stylesheets:
   - https://fonts.googleapis.com/css?family=Roboto+Mono:300,400,600,700
   - https://fonts.googleapis.com/css?family=Nunito+Sans:300,400,600,700,900&display=swap
+  - https://use.fontawesome.com/releases/v6.1.1/css/all.css
 analytics:
   gtm:
     id: GTM-KQPWVCX
 nav:
   - label: Docs & Guides
-    page: docs/index.md
+    page: 'docs/index.md'
   - label: API Reference
-    page: api/index.md
+    page: 'api/index.mdx'
   - separatorLine: true
   # The '@' label prefix is a custom prefix which renders dimmed links
   - label: '@Support'
-    href: 'https://www.ridge.co/contact-us'
-  - label: '@Getting Started'
-    page: getting-started/index.md
+    href: 'https://www.ridge.co/contact-us/'
+  - label: '@Get Started'
+    href: 'https://www.ridge.co/free-trial/'
   - search: true
 
 footer:
-  copyrightText: Copyright © Ridge 2022. All right reserved.
+  copyrightText: All right reserved. © 2022 Ridge.co
   columns:
+    - group: Products
+      items:
+        - label: Cloud Platform
+          href: 'https://www.ridge.co/platform/'
+        - label: Solutions
+          href: 'https://www.ridge.co/solutions/'
+        - label: Managed Kubernetes
+          href: 'https://www.ridge.co/platform/rks/'
+        - label: Container Service
+          href: 'https://www.ridge.co/platform/rcs/'
+        - label: Object Storage Service
+          href: 'https://www.ridge.co/platform/ros/'
+    - group: Developers
+      items:
+        - label: Docs
+          href: 'https://dev.ridge.co/docs/'
+        - label: Guides
+          href: 'https://dev.ridge.co/getting-started/'
+        - label: API
+          page: 'api/index.mdx'
+        - label: Support
+          href: 'https://www.ridge.co/support/'
+        - label: Compliance
+          href: 'https://www.ridge.co/compliance/'
+        - label: How-To's
+          href: 'https://www.ridge.co/developer/how-to/'
+    - group: Resources
+      items:
+        - label: Case Studies
+          href: 'https://www.ridge.co/case-studies/'
+        - label: White Papers
+          href: 'https://www.ridge.co/white-papers/'
+        - label: Videos
+          href: 'https://www.ridge.co/videos/'
+        - label: Blog
+          href: 'https://www.ridge.co/blog/'
+        - label: Q&A
+          href: 'https://www.ridge.co/questions-and-answers/'
+    - group: Engage
+      items:
+        - label: Contact Us
+          href: 'https://www.ridge.co/contact-us/'
+        - label: Book a Demo
+          href: 'https://www.ridge.co/demo/'
+        - label: Get Started
+          href: 'https://www.ridge.co/free-trial/'
+    - group: Company
+      items:
+        - label: About Ridge
+          href: 'https://www.ridge.co/about/'
+        - label: Careers
+          href: 'https://www.ridge.co/careers/'
     - group: Legal
       items:
         - label: Privacy Policy
-          href: 'https://www.ridge.co/legal/privacy-policy'
+          href: 'https://www.ridge.co/privacy-policy/'
         - label: Cookie Policy
-          href: 'https://www.ridge.co/legal/cookies'
+          href: 'https://www.ridge.co/cookies/'
         - label: EULA
-          href: 'https://www.ridge.co/legal/eula'
-    - group: Support
-      items:
-        - label: Talk to Our Expert
-          href: 'https://www.ridge.co/demo/'
-    - group: Ridge.co
-      items:
-        - label: Homepage
-          href: 'https://www.ridge.co'
-        - label: Blog
-          href: 'https://www.ridge.co/blog'
+          href: 'https://www.ridge.co/eula/'
