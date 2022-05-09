@@ -1,2 +1,3 @@
 # Documents
-Learn about the services offered by the [Ridge Cloud](https://www.ridge.co).
+
+Learn about the services offered by the Ridge Cloud.

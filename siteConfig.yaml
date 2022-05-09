@@ -21,8 +21,10 @@ analytics:
   gtm:
     id: GTM-KQPWVCX
 nav:
-  - label: Docs & Guides
+  - label: Docs
     page: 'docs/index.md'
+  - label: Guides
+    page: 'getting-started/index.md'
   - label: API Reference
     page: 'api/index.mdx'
   - separatorLine: true
