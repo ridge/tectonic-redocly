@@ -1,7 +1,15 @@
-meta:
-  title: Ridge
-  description: Ridge Developer Portal - Ridge Cloud API documentation, getting started, docs & guides
-  siteUrl: https://dev.ridge.co
+seo:
+  title: Ridge Cloud Developer Portal
+  description: Learn more about the Ridge Cloud API documentation, getting started, docs & guides.
+  siteUrl: https://dev.ridge.co/
+  image: https://dev.ridge.co/static/412794ac5b3f8f9b7f3e8dbd865a6ea2/5a190/resource-hierarchy.png
+  keywords: 'ridge, cloud, cloud computing, documentation, api, portal'
+  lang: en-US
+  jsonLd:
+    '@context': 'https://schema.org'
+    '@type': 'Organization'
+    url: 'https://www.ridge.co'
+    name: Ridge Cloud
 logo:
   image: './images/ridge.svg'
   href: 'https://www.ridge.co/'
