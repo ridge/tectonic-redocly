@@ -50,8 +50,6 @@ footer:
       items:
         - label: Cloud Platform
           href: 'https://www.ridge.co/platform/'
-        - label: Solutions
-          href: 'https://www.ridge.co/solutions/'
         - label: Managed Kubernetes
           href: 'https://www.ridge.co/platform/rks/'
         - label: Container Service
