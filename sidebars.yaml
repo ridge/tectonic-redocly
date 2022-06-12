@@ -30,7 +30,7 @@ api:
           expanded: false
           pages:
             - label: iam-experimental
-              page: api/iam/experimental/iam.page.yaml/*
+              page: api/iam/experimental/iam-experimental.page.yaml/*
   - group: Compute
     expanded: false
     pages:
