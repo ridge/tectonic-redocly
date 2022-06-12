@@ -26,6 +26,11 @@ api:
         pages:
             - label: iam-unstable
               page: api/iam/unstable/iam-unstable.page.yaml/*
+      - group: Experimental
+          expanded: false
+          pages:
+            - label: iam-experimental
+              page: api/iam/experimental/iam.page.yaml/*
   - group: Compute
     expanded: false
     pages:
