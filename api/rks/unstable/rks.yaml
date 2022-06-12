@@ -33,6 +33,26 @@ paths:
             type: string
       tags:
       - Kubernetes Versions
+  /marketplace-apps:
+    get:
+      operationId: listMarketplaceApps
+      summary: List the available apps deployable on Kubernetes clusters.
+      description: Returns a list of apps deployable on Kubernetes clusters.
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/marketplace_apps'
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+      tags:
+      - Marketplace apps
   /orgs/{org}/projects/{project}/clusters:
     parameters:
     - name: org
@@ -210,6 +230,191 @@ paths:
             type: string
       tags:
       - Clusters
+  /orgs/{org}/projects/{project}/clusters/{cluster}/installed-apps:
+    parameters:
+    - name: org
+      in: path
+      description: The organization identifier.
+      required: true
+      type: string
+    - name: project
+      in: path
+      description: The project identifier.
+      required: true
+      type: string
+    - name: cluster
+      in: path
+      description: The identifier of a cluster.
+      required: true
+      type: string
+    get:
+      operationId: listInstalledApps
+      summary: List the apps installed on a a Kubernetes cluster.
+      description: Returns a list of all the apps installed on a Kubernetes cluster.
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/installed_apps'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - Marketplace apps
+    post:
+      operationId: installApp
+      summary: Install an app on a Kubernetes cluster.
+      description: Lets you install an app on a Kubernetes cluster.
+      parameters:
+      - name: body
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/installed_app_create'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/installed_app'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - Marketplace apps
+  /orgs/{org}/projects/{project}/clusters/{cluster}/installed-apps/{installed_app}:
+    parameters:
+    - name: org
+      in: path
+      description: The organization identifier.
+      required: true
+      type: string
+    - name: project
+      in: path
+      description: The project identifier.
+      required: true
+      type: string
+    - name: cluster
+      in: path
+      description: The identifier of a cluster.
+      required: true
+      type: string
+    - name: installed_app
+      in: path
+      description: The identifier of the app installed on the cluster.
+      required: true
+      type: string
+    get:
+      operationId: describeInstalledApp
+      summary: Get information about an app installed on a Kubernetes cluster.
+      description: Returns all information about the specified app installed on a
+        Kubernetes cluster.
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/installed_app'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - Marketplace apps
+    patch:
+      operationId: updateInstalledApp
+      summary: Update parameters on an installed app
+      description: Lets you update an installed app's properties.
+      parameters:
+      - name: body
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/installed_app_update'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/installed_app'
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - Marketplace apps
+    delete:
+      operationId: uninstallApp
+      summary: Uninstall an app from a Kubernetes cluster.
+      description: Uninstalls the specified app from a Kubernetes cluster.
+      responses:
+        204:
+          description: Success
+        400:
+          description: Bad Request
+          schema:
+            type: string
+        401:
+          description: Unauthorized
+          schema:
+            type: string
+        403:
+          description: Forbidden
+          schema:
+            type: string
+        404:
+          description: Not Found
+          schema:
+            type: string
+      tags:
+      - Marketplace apps
   /orgs/{org}/projects/{project}/clusters/{cluster}/load-balancers:
     parameters:
     - name: org
@@ -1106,21 +1311,17 @@ definitions:
         autoscaling_scale_down_delay: 600
         display_name: Test Cluster
         highly_available: false
-        locations:
-        - IL
-        master_quantities:
-          cpu_cores: 2
-          instance_storage: 10737418240
-          ram: 4294967296
+        master_nodes:
+          catalog_item_id: ggif1zusxtp6
+          quantities:
+            cpu_cores: 2
+            instance_storage: 10737418240
+            ram: 4294967296
         name: test-cluster
-        qualities:
-          iso_27001: 1
         version: v1.17.6
       status:
         cluster_endpoint: https://master.mk587p1hihjghcp4ar4yu1igty.public.sat.rdgto.com:6443
         created_at: "2021-03-25T16:27:26.081203669Z"
-        data_center_id: ggif1z
-        data_center_path: /partners/medone/data-centers/sjc01
         id: fkwsnunegang7ttrocjyax7ghe
         org_id: di86ihycue5875pb7d5ybfhn9r
         path: /orgs/test-org/projects/test-project/clusters/test-cluster
@@ -1161,8 +1362,7 @@ definitions:
         description: Indicates whether to request the highly-available cluster.
         type: boolean
         default: true
-      master_quantities: {$ref: '#/definitions/quantity_set', description: The minimum
-          hardware configuration of the master nodes.}
+      master_nodes: {$ref: '#/definitions/master_nodes_input'}
       api_server_whitelist:
         description: The list of whitelisted networks for Kubernetes API server in
           CIDR format (AAA.BBB.CCC.DDD/NN) or single IP (AAA.BBB.CCC.DDD).
@@ -1184,18 +1384,31 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/node_pool_create'
+      pod_address_range:
+        description: Address range for pods in the cluster, IPv4 in CIDR format (AAA.BBB.CCC.DDD/NN),
+          default is "172.28.0.0/16"
+        type: string
+      service_address_range:
+        description: Address range for services in the cluster, IPv4 in CIDR format
+          (AAA.BBB.CCC.DDD/NN), default is "10.96.0.0/12"
+        type: string
+      cni_plugin:
+        description: The container network interface plugin
+        type: string
+        default: weave_net
+        enum: [weave_net, calico]
     example:
       api_server_whitelist:
       - 40.0.0.0/8
       - 41.0.0.0/8
       display_name: Test Cluster
       highly_available: false
-      locations:
-      - IL
-      master_quantities:
-        cpu_cores: 2
-        instance_storage: 10737418240
-        ram: 4294967296
+      master_nodes:
+        catalog_item_id: ggif1zusxtp6
+        quantities:
+          cpu_cores: 2
+          instance_storage: 10737418240
+          ram: 4294967296
       name: test-cluster
       node_pools:
       - autoscaling: true
@@ -1211,8 +1424,6 @@ definitions:
           cpu_cores: 1
           instance_storage: 4294967296
           ram: 2147483648
-      qualities:
-        iso_27001: 1
       version: v1.17.6
   cluster_issues:
     description: Cluster issues
@@ -1247,6 +1458,10 @@ definitions:
     - version
     - network_id
     - network_path
+    - master_nodes
+    - pod_address_range
+    - service_address_range
+    - cni_plugin
     properties:
       name:
         description: A human readable name for the cluster. The name is unique within
@@ -1267,38 +1482,25 @@ definitions:
       version:
         description: The requested Kubernetes cluster version.
         type: string
-      locations:
-        description: Requested locations for the cluster.
-        type: array
-        items:
-          description: One or more locations. A location can refer to a country, a
-            subdivision of a country, or a city.  A country is encoded using the Country
-            codes (ISO-3166-1). A country subdivision as encoded as a <country code>-<subdivision
-            code> (subdivision codes are defined in ISO-3166-2). A city is encoded
-            as <country code>-<subdivision code>-<city name>, For example US-MA-Boston.
-            In cases where there is no subdivision in the country it will be left
-            blank. For example IL--TelAviv.
-          type: string
-          example: US-MA-Boston
       network_id:
         description: The ID of a network for the cluster.
         type: string
       network_path:
         description: The network path for the cluster.
         type: string
-      data_center_id:
-        description: Requested data center ID for the cluster.
-        type: string
-      data_center_path:
-        description: Requested data center resource path for the cluster.
-        type: string
-        example: /partner/foo/data-center/bar
       highly_available:
         description: Indicates whether the cluster has high availability.
         type: boolean
-      master_quantities:
-        $ref: '#/definitions/quantity_set'
-        description: The minimum hardware configuration of the master nodes.
+      master_nodes:
+        $ref: '#/definitions/master_nodes_output'
+      pod_address_range:
+        description: Address range for pods in the cluster, IPv4 in CIDR format (AAA.BBB.CCC.DDD/NN),
+          default is "172.28.0.0/16"
+        type: string
+      service_address_range:
+        description: Address range for services in the cluster, IPv4 in CIDR format
+          (AAA.BBB.CCC.DDD/NN), default is "10.96.0.0/12"
+        type: string
       api_server_whitelist:
         description: The list of whitelisted networks for Kubernetes API server in
           CIDR format (AAA.BBB.CCC.DDD/NN) or single IP (AAA.BBB.CCC.DDD).
@@ -1308,6 +1510,10 @@ definitions:
           type: string
       aws_role:
         $ref: '#/definitions/aws_role'
+      cni_plugin:
+        description: The container network interface plugin
+        type: string
+        enum: [weave_net, calico]
   cluster_status:
     type: object
     required:
@@ -1344,13 +1550,6 @@ definitions:
         description: The time at which this cluster was last updated.
         type: string
         format: date-time
-      data_center_id:
-        description: Data center ID selected for the cluster.
-        type: string
-      data_center_path:
-        description: Data center resource path selected for the cluster.
-        type: string
-        example: /partner/foo/data-center/bar
       phase:
         description: The current life cycle phase of the cluster.
         type: string
@@ -1405,14 +1604,10 @@ definitions:
         display_name: Test Cluster
         highly_available: false
         name: test-cluster
-        qualities:
-          iso_27001: 1
         version: v1.17.6
       status:
         cluster_endpoint: https://master.doatqj59rqh6xdkf1s1yy37rdh.public.sat.rdgto.com:6443
         created_at: "2020-12-16T13:08:48.563Z"
-        data_center_id: qk6pua
-        data_center_path: /partners/medone/data-centers/tira
         id: rozyaxyphmbiw5tbgq4sonooje
         org_id: di86ihycue5875pb7d5ybfhn9r
         path: /orgs/test-org/projects/test-project/clusters/test-cluster
@@ -1440,9 +1635,9 @@ definitions:
         items:
           description: A whitelisted network in CIDR format.
           type: string
-      master_quantities:
-        $ref: '#/definitions/quantity_set'
-        description: The minimum hardware configuration of the master nodes.
+      master_nodes:
+        $ref: '#/definitions/master_nodes_input'
+        x-nullable: true
       aws_role:
         $ref: '#/definitions/aws_role'
         x-nullable: true
@@ -1457,10 +1652,12 @@ definitions:
       - 41.0.0.0/8
       autoscaling_scale_down_delay: 600
       display_name: Test Cluster
-      master_quantities:
-        cpu_cores: 2
-        instance_storage: 10737418240
-        ram: 4294967296
+      master_nodes:
+        catalog_item_id: ggif1zusxtp6
+        quantities:
+          cpu_cores: 2
+          instance_storage: 10737418240
+          ram: 4294967296
       name: test-cluster
       version: v1.17.6
   clusters:
@@ -1473,6 +1670,164 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/cluster'
+  installed_app:
+    type: object
+    required:
+    - spec
+    - status
+    properties:
+      spec:
+        $ref: '#/definitions/installed_app_spec'
+      status:
+        $ref: '#/definitions/installed_app_status'
+    example:
+      spec:
+        k8s_name_prefix: app1
+        k8s_namespace: namespace1
+        marketplace_app_id: 5cb2e1f2ada811ecb9090242ac
+        name: app1
+      status:
+        cluster_id: hhbmufz5u41yokquakwbq3cbxr
+        created_at: "2020-12-27T13:16:10.707Z"
+        id: cc4559c9de8b446ca05c65466a
+        org_id: di86ihycue5875pb7d5ybfhn9r
+        path: /orgs/test-org/projects/test-project/clusters/test-cluster/installed-apps/app1
+        phase: installed
+        project_id: g3ker86kt6mir8rbczwkyjotpe
+  installed_app_create:
+    type: object
+    required:
+    - name
+    - k8s_name_prefix
+    properties:
+      name:
+        description: The name of the Marketplace app installation.
+        type: string
+        minLength: 1
+        maxLength: 63
+        pattern: ^[a-z]([-a-z0-9]*[a-z0-9])?$
+      display_name:
+        description: The display name of the app installed on the Kubernetes cluster.
+        type: string
+        maxLength: 512
+      k8s_name_prefix:
+        description: The name prefix of the resources installed on the Kubernetes
+          cluster.
+        type: string
+        minLength: 1
+        maxLength: 53
+        pattern: ^[a-z]([-a-z0-9]*[a-z0-9])?$
+      k8s_namespace:
+        description: The Kubernetes namespace where the app is installed. The namespace
+          will be created if it doesn't exist.
+        type: string
+        default: default
+        minLength: 1
+        maxLength: 63
+        pattern: ^[a-z]([-a-z0-9]*[a-z0-9])?$
+      marketplace_app_id:
+        description: The unique identifier of the Marketplace app. One of marketplace_app_id
+          and marketplace_app_path must be specified. If both specified, they must
+          match.
+        type: string
+      marketplace_app_path:
+        description: The path to the Marketplace app. One of marketplace_app_id and
+          marketplace_app_path must be specified. If both specified, they must match.
+        type: string
+  installed_app_spec:
+    type: object
+    required:
+    - name
+    - k8s_name_prefix
+    - k8s_namespace
+    - marketplace_app_id
+    - marketplace_app_path
+    properties:
+      name:
+        description: The name of the Marketplace app installation.
+        type: string
+      display_name:
+        description: The display name of the app installed on the Kubernetes cluster.
+        type: string
+      k8s_name_prefix:
+        description: The name prefix of the resources installed on the Kubernetes
+          cluster.
+        type: string
+      k8s_namespace:
+        description: The Kubernetes namespace where the app is installed.
+        type: string
+      marketplace_app_id:
+        description: The unique identifier of the Marketplace app.
+        type: string
+      marketplace_app_path:
+        description: The path to the Marketplace app.
+        type: string
+  installed_app_status:
+    type: object
+    required:
+    - id
+    - path
+    - created_at
+    - updated_at
+    - org_id
+    - project_id
+    - cluster_id
+    - phase
+    - instructions
+    properties:
+      id:
+        description: A system-defined unique ID of the installed app.
+        type: string
+      path:
+        description: The path to the resource that includes all the parents.
+        type: string
+      created_at:
+        description: The time at which this app was installed on the Kubernetes cluster.
+        type: string
+        format: date-time
+      updated_at:
+        description: The time at which this app was last updated.
+        type: string
+        format: date-time
+      org_id:
+        description: The unique identifier of the organization.
+        type: string
+      project_id:
+        description: The unique identifier of the project.
+        type: string
+      cluster_id:
+        description: The unique identifier of the cluster.
+        type: string
+      phase:
+        description: The life cycle phase of the app.
+        type: string
+        enum: [starting, running, terminating, terminated]
+      instructions:
+        description: The instructions on how to use the app once installed.
+        type: string
+  installed_app_update:
+    type: object
+    properties:
+      name:
+        description: The name of the Marketplace app installation.
+        type: string
+        minLength: 1
+        maxLength: 63
+        pattern: ^[a-z]([-a-z0-9]*[a-z0-9])?$
+      display_name:
+        description: The display name of the app installed on the Kubernetes cluster.
+        type: string
+        maxLength: 512
+  installed_apps:
+    description: A list of apps installed on a Kubernetes cluster.
+    type: object
+    required:
+    - items
+    properties:
+      items:
+        type: array
+        items:
+          $ref: '#/definitions/installed_app'
   load_balancer:
     type: object
     required:
@@ -1517,7 +1872,7 @@ definitions:
         description: The load balancer life cycle phase.
         type: string
         enum: [starting, running, updating, terminating, terminated]
-      ip_address:
+      public_ip:
         description: The public IP address that is assigned to this load balancer.
         type: string
         format: ipv4
@@ -1536,7 +1891,6 @@ definitions:
       cluster_id: fkwsnunegang7ttrocjyax7ghe
       created_at: "2021-12-05T12:35:47.282743807Z"
       id: a76gnw5tyrnrt43dkmt15id14r
-      ip_address: 107.6.88.149
       kubernetes_namespace: default
       kubernetes_service: my-wordpress
       org_id: di86ihycue5875pb7d5ybfhn9r
@@ -1560,6 +1914,7 @@ definitions:
           up: true
         target_port: 30831
       project_id: g3ker86kt6mir8rbczwkyjotpe
+      public_ip: 107.6.88.149
       whitelist:
       - 0.0.0.0/0
   load_balancer_issues:
@@ -1613,6 +1968,89 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/load_balancer'
+  marketplace_app:
+    type: object
+    required:
+    - id
+    - name
+    - path
+    - display_name
+    - version
+    - license
+    - license_url
+    - description
+    - website
+    properties:
+      id:
+        description: The unique identifier of the Marketplace app.
+        type: string
+      name:
+        description: The name of the app.
+        type: string
+      path:
+        description: The Marketplace app path.
+        type: string
+      display_name:
+        description: The display name of the Marketplace app.
+        type: string
+        maxLength: 512
+      version:
+        description: The version of the app.
+        type: string
+      license:
+        description: The license of the app.
+        type: string
+      license_url:
+        description: The URL of the license of the app.
+        type: string
+      description:
+        description: The description of the app.
+        type: string
+      website:
+        description: The website of the app.
+        type: string
+  marketplace_apps:
+    description: A list of available apps deployable on a Kubernetes clusters.
+    type: object
+    required:
+    - items
+    properties:
+      items:
+        type: array
+        items:
+          $ref: '#/definitions/marketplace_app'
+  master_nodes_input:
+    description: Default choice for master instance.
+    type: object
+    properties:
+      quantities:
+        $ref: '#/definitions/quantity_set'
+        description: The minimum hardware configuration of the master nodes.
+      catalog_item_id:
+        description: Instance catalog item ID to be used for master nodes. Should
+          be present this or catalog_item_path.
+        type: string
+      catalog_item_path:
+        description: Instance catalog item path to be used for master nodes. Should
+          be present this or catalog_item_id.
+        type: string
+  master_nodes_output:
+    description: Default choice for master instance.
+    type: object
+    required:
+    - quantities
+    - catalog_item_id
+    - catalog_item_path
+    properties:
+      quantities:
+        $ref: '#/definitions/quantity_set'
+        description: The minimum hardware configuration of the master nodes.
+      catalog_item_id:
+        description: Instance catalog item ID to be used for master nodes.
+        type: string
+      catalog_item_path:
+        description: Instance catalog item path to be used for master nodes.
+        type: string
   node:
     description: Information about a worker node.
     type: object
@@ -1643,8 +2081,13 @@ definitions:
         description: The life cycle phase of the node.
         type: string
         enum: [starting, running, terminating, terminated]
-      ip_address:
-        description: The IPv4 address of the worker node.
+      private_ip:
+        description: The private IPv4 address of the worker node.
+        type: string
+        format: ipv4
+      public_ip:
+        description: The public IPv4 address of the worker node. This field is present
+          only if the node pool it belongs to has public_ip enabled.
         type: string
         format: ipv4
       catalog_item_id:
@@ -1668,10 +2111,10 @@ definitions:
       catalog_item_path: /partners/medone/data-centers/tira/vm-catalog/@rfzcfc
       created_at: "2020-12-16T13:08:50.375Z"
       id: sgkt646mxg6nrsudt9h3cejf8y
-      ip_address: 10.88.179.88
       node_pool_id: ibp566nxx5zx6sy59wpjz3xmya
       path: /orgs/test-org/projects/test-project/clusters/test-cluster/node-pools/pool1/nodes/@sgkt646mxg6nrsudt9h3cejf8y
       phase: running
+      private_ip: 10.88.179.88
       quantities:
         bandwidth: 100000000
         cpu_cores: 1
@@ -1788,10 +2231,12 @@ definitions:
         description: The initial number of worker nodes in the node pool.
         type: integer
         minimum: 0
-      quantities:
-        $ref: '#/definitions/quantity_set'
-      qualities:
-        $ref: '#/definitions/quality_set'
+      public_ips:
+        description: If true, all the workers nodes in the node pool will be assigned
+          a public IP.
+        type: boolean
+        default: false
+      quantities: {$ref: '#/definitions/quantity_set'}
       initial_kubernetes_labels:
         description: The initial Kubernetes labels (key-value pairs) that will be
           applied to the created nodes.
@@ -1877,10 +2322,12 @@ definitions:
           this setting does not apply.
         type: integer
         minimum: 0
+      public_ips:
+        description: If true, all the workers nodes in the node pool are assigned
+          a public IP.
+        type: boolean
       quantities:
         $ref: '#/definitions/quantity_set'
-      qualities:
-        $ref: '#/definitions/quality_set'
       initial_kubernetes_labels:
         description: The initial Kubernetes labels (key-value pairs) that will be
           applied to the created nodes.
@@ -2017,13 +2464,6 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/node'
-  quality_set:
-    description: A set of required qualities. The object maps quality identifiers
-      to values. For qualities defined with no values, the value must be 1. See the
-      qualities endpoint in the Data Center API for a list of qualities.
-    type: object
-    additionalProperties:
-      type: integer
   quantity_set:
     description: A set of quantities. The object maps quantity identifiers to values.
       See the quantities endpoint in the Data Center API for a list of quantities.
@@ -2417,9 +2857,8 @@ definitions:
       local_networks:
         description: The list of networks for which the VPN should forward data from
           cluster, in CIDR format (AAA.BBB.CCC.DDD/NN). These networks mustn't overlap
-          with the pod network (172.28.0.0/16), the service network (10.96.0.0/12),
-          the node network (attached to the cluster), or one of the local networks
-          of another VPN of the cluster.
+          with the pod network, the service network, the node network (attached to
+          the cluster), or one of the local networks of another VPN of the cluster.
         type: array
         items:
           type: string
@@ -2662,3 +3101,5 @@ tags:
   description: The load balancers that serve Kubernetes services
 - name: Volumes
   description: The persistent volumes of a Kubernetes cluster
+- name: Marketplace apps
+  description: The apps that can be installed on Kubernetes clusters.

@@ -425,6 +425,8 @@ paths:
           description: Forbidden
           schema:
             type: string
+      tags:
+      - internal
 definitions:
   area:
     type: object
@@ -451,6 +453,8 @@ definitions:
     - access_level
     - qualities
     - prices
+    - default_kubernetes_master
+    - supported_console_protocols
     properties:
       id:
         description: The unique identifier of the data center
@@ -498,6 +502,16 @@ definitions:
       prices:
         $ref: '#/definitions/data_center_price_set'
         description: The prices in USD per hour for the data center resources.
+      default_kubernetes_master:
+        $ref: '#/definitions/kubernetes_master_node'
+        description: Default configuration of Kubernetes master nodes in this data
+          center.
+      supported_console_protocols:
+        description: Supported console protocols
+        type: array
+        items:
+          type: string
+          enum: [vnc, serial]
   data_center_price_set:
     description: A set of data center resource prices. The object maps resource identifiers
       to price.
@@ -520,6 +534,30 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/data_center'
+  kubernetes_master_node:
+    description: Default configuration of Kubernetes master nodes in this data center.
+    type: object
+    required:
+    - catalog_item_id
+    - catalog_item_path
+    - quantities
+    properties:
+      catalog_item_id:
+        description: The catalog item unique identifier for Kubernetes master nodes.
+        type: string
+      catalog_item_path:
+        description: The catalog item path for Kubernetes master nodes.
+        type: string
+      quantities:
+        $ref: '#/definitions/quantity_set'
+    example:
+      catalog_item_id: rfzcfc
+      catalog_item_path: /partners/medone/data-centers/tira/vm-catalog/@rfzcfc
+      quantities:
+        bandwidth: 100000000
+        cpu_cores: 1
+        instance_storage: 21474836480
+        ram: 1073741824
   location:
     type: object
     required:
@@ -588,22 +626,28 @@ definitions:
         description: The display name of the network.
         type: string
         maxLength: 512
-      highly_available_gateway:
-        description: |
-          Whether the network gateway should be highly available. Some data centers can provide cheaper low-availability gateways that do not survive hardware failures. Use low-availability gateways only for non-production workloads. Data centers that do not provide low-availibility gateways ignore this setting and use high-availability gateways.
-        type: boolean
-        default: true
-      data_center_id: {description: The ID of a data center to create the network
-          in. Either this field or data_center_path is required., type: string}
+      data_center_id:
+        description: The ID of a data center to create the network in. Either this
+          field or data_center_path is required.
+        type: string
       data_center_path:
         description: The data center path to create the network in. Either this field
           or data_center_id is required.
         type: string
-        example: /partner/foo/data-center/bar
+      disallowed_address_ranges:
+        description: A list of address ranges in CIDR notation that the newly created
+          network is not allowed to overlap
+        type: array
+        items:
+          type: string
   network_issues:
     description: Network issues
     type: object
     properties:
+      degraded:
+        description: The network is running in a degraded mode. There might be a delay
+          between issuing a command for controlling this network and receiving a response.
+        type: boolean
       shortage:
         description: Indicates the network is not fully provisioned due to a shortage
           at the data center.
@@ -615,7 +659,6 @@ definitions:
     type: object
     required:
     - name
-    - highly_available_gateway
     - data_center_id
     - data_center_path
     properties:
@@ -629,9 +672,6 @@ definitions:
         description: The display name of the network.
         type: string
         maxLength: 512
-      highly_available_gateway:
-        description: Network gateway is highly available.
-        type: boolean
       data_center_id:
         description: The ID of a data center to run the containers.
         type: string
@@ -639,6 +679,12 @@ definitions:
         description: The data center path to run the containers.
         type: string
         example: /partner/foo/data-center/bar
+      disallowed_address_ranges:
+        description: A list of address ranges in CIDR notation that the network is
+          not allowed to overlap
+        type: array
+        items:
+          type: string
   network_status:
     type: object
     required:
@@ -834,6 +880,13 @@ definitions:
     additionalProperties:
       $ref: '#/definitions/quantity_range'
       type: object
+  quantity_set:
+    description: A set of quantities. The object maps quantity identifiers to values.
+      See https://api.ridge.co/compute/unstable/quantities for possible properties.
+    type: object
+    additionalProperties:
+      type: integer
+      format: int64
   vm_catalog:
     type: array
     items:

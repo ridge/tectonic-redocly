@@ -368,7 +368,6 @@ definitions:
         catalog_item_id: s1r37s
         catalog_item_path: /partners/medone/data-centers/ptv/vm-catalog/@s1r37s
         container_image: docker.io/library/bash:latest
-        data_center_id: n6wicf
         display_name: Batch 1
         elasticsearch_endpoint: http://elasticsearch.example.com:9200
         env:
@@ -377,8 +376,6 @@ definitions:
         number: 3
       status:
         created_at: "2021-03-08T16:29:06.265Z"
-        data_center_id: n6wicf
-        data_center_path: /partners/medone/data-centers/ptv
         id: jizh77chbfcnyu7p79omf5rx5a
         number: 3
         org_id: di86ihycue5875pb7d5ybfhn9r
@@ -474,8 +471,6 @@ definitions:
     - name
     - container_image
     - number
-    - data_center_id
-    - data_center_path
     - catalog_item_id
     - catalog_item_path
     - network_id
@@ -527,13 +522,6 @@ definitions:
         example: http://elasticsearch.example.com:9200
       aws_role:
         $ref: '#/definitions/aws_role'
-      data_center_id:
-        description: The ID of a data center to run the containers.
-        type: string
-      data_center_path:
-        description: The data center path to run the containers.
-        type: string
-        example: /partner/foo/data-center/bar
       catalog_item_id:
         description: The VM catalog item ID.
         type: string
@@ -628,8 +616,6 @@ definitions:
     - path
     - org_id
     - project_id
-    - data_center_id
-    - data_center_path
     - phase
     properties:
       id:
@@ -648,14 +634,6 @@ definitions:
       project_id:
         description: The unique identifier of the project.
         type: string
-      data_center_id:
-        description: The data center in which the container is provisioned.
-        type: string
-      data_center_path:
-        description: The path to the data center in which this container is provisioned,
-          that includes all the parents.
-        type: string
-        example: /partner/foo/data-center/bar
       quantities:
         $ref: '#/definitions/quantity_set'
       started_at:
@@ -684,8 +662,6 @@ definitions:
         $ref: '#/definitions/container_issues'
     example:
       batch_id: jizh77chbfcnyu7p79omf5rx5a
-      data_center_id: n6wicf
-      data_center_path: /partners/medone/data-centers/ptv
       id: bg3c131wpdrjbi5ugmosis4aqy
       org_id: di86ihycue5875pb7d5ybfhn9r
       path: /orgs/test-org/projects/sandbox/batches/batch1/containers/@bg3c131wpdrjbi5ugmosis4aqy
@@ -716,8 +692,6 @@ definitions:
     example:
       items:
       - batch_id: jizh77chbfcnyu7p79omf5rx5a
-        data_center_id: n6wicf
-        data_center_path: /partners/medone/data-centers/ptv
         id: bg3c131wpdrjbi5ugmosis4aqy
         org_id: di86ihycue5875pb7d5ybfhn9r
         path: /orgs/test-org/projects/sandbox/batches/batch1/containers/@bg3c131wpdrjbi5ugmosis4aqy
@@ -725,8 +699,6 @@ definitions:
         project_id: g3ker86kt6mir8rbczwkyjotpe
         start_time: "2021-03-08T16:35:22.899Z"
       - batch_id: jizh77chbfcnyu7p79omf5rx5a
-        data_center_id: n6wicf
-        data_center_path: /partners/medone/data-centers/ptv
         id: ftapca1guorg77dooqzkoh14te
         org_id: di86ihycue5875pb7d5ybfhn9r
         path: /orgs/test-org/projects/sandbox/batches/batch1/containers/@ftapca1guorg77dooqzkoh14te
@@ -734,8 +706,6 @@ definitions:
         project_id: g3ker86kt6mir8rbczwkyjotpe
         start_time: "2021-03-08T16:35:21.868Z"
       - batch_id: jizh77chbfcnyu7p79omf5rx5a
-        data_center_id: n6wicf
-        data_center_path: /partners/medone/data-centers/ptv
         id: rooaohnuc8hk7zeafkb8az8mww
         org_id: di86ihycue5875pb7d5ybfhn9r
         path: /orgs/test-org/projects/sandbox/batches/batch1/containers/@rooaohnuc8hk7zeafkb8az8mww
