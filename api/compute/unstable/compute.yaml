@@ -412,8 +412,9 @@ paths:
   /status:
     get:
       operationId: status
-      summary: Check if API is ready to serve requests. It is if 204 HTTP response
-        code is returned.
+      summary: Check API server status
+      description: If the API server is ready to serve requests, the response HTTP
+          code 204 is returned.
       responses:
         204:
           description: Success

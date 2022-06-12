@@ -49,6 +49,8 @@ paths:
           description: Not Found
           schema:
             type: string
+      tags:
+        - Storage Sites
   /orgs/{org}/projects/{project}/storage-sites/{site}:
     parameters:
     - name: org
@@ -91,296 +93,8 @@ paths:
           description: Not Found
           schema:
             type: string
-  /orgs/{org}/projects/{project}/storage-sites/{site}/buckets:
-    parameters:
-    - name: org
-      in: path
-      description: The organization identifier.
-      required: true
-      type: string
-    - name: project
-      in: path
-      description: The project identifier.
-      required: true
-      type: string
-    - name: site
-      in: path
-      description: The storage site identifier.
-      required: true
-      type: string
-    get:
-      operationId: listBuckets
-      summary: List all buckets in a storage site
-      description: List all buckets in a storage site for the project
-      responses:
-        200:
-          description: Success
-          schema:
-            $ref: '#/definitions/buckets'
-        400:
-          description: Bad Request
-          schema:
-            type: string
-        401:
-          description: Unauthorized
-          schema:
-            type: string
-        403:
-          description: Forbidden
-          schema:
-            type: string
-        404:
-          description: Not Found
-          schema:
-            type: string
       tags:
-      - internal
-    post:
-      operationId: createBucket
-      summary: Create a bucket
-      description: Create a bucket in a storage site
-      parameters:
-      - name: body
-        in: body
-        required: true
-        schema:
-          $ref: '#/definitions/bucket_create'
-      responses:
-        200:
-          description: Success
-          schema:
-            $ref: '#/definitions/bucket'
-        400:
-          description: Bad Request
-          schema:
-            type: string
-        401:
-          description: Unauthorized
-          schema:
-            type: string
-        403:
-          description: Forbidden
-          schema:
-            type: string
-        404:
-          description: Not Found
-          schema:
-            type: string
-      tags:
-      - internal
-  /orgs/{org}/projects/{project}/storage-sites/{site}/buckets/{bucket}:
-    parameters:
-    - name: org
-      in: path
-      description: The organization identifier.
-      required: true
-      type: string
-    - name: project
-      in: path
-      description: The project identifier.
-      required: true
-      type: string
-    - name: site
-      in: path
-      description: The storage site identifier.
-      required: true
-      type: string
-    - name: bucket
-      in: path
-      description: The name of the bucket
-      required: true
-      type: string
-    get:
-      operationId: describeBucket
-      summary: Describe a bucket
-      description: Describe a bucket under a project in a storage site
-      responses:
-        200:
-          description: Success
-          schema:
-            $ref: '#/definitions/bucket'
-        400:
-          description: Bad Request
-          schema:
-            type: string
-        401:
-          description: Unauthorized
-          schema:
-            type: string
-        403:
-          description: Forbidden
-          schema:
-            type: string
-        404:
-          description: Not Found
-          schema:
-            type: string
-      tags:
-      - internal
-    delete:
-      operationId: deleteBucket
-      summary: Delete a bucket
-      description: Delete a bucket in a storage site
-      responses:
-        204:
-          description: Success
-        400:
-          description: Bad Request
-          schema:
-            type: string
-        401:
-          description: Unauthorized
-          schema:
-            type: string
-        403:
-          description: Forbidden
-          schema:
-            type: string
-        404:
-          description: Not Found
-          schema:
-            type: string
-      tags:
-      - internal
-  /orgs/{org}/projects/{project}/storage-sites/{site}/buckets/{bucket}/objects:
-    parameters:
-    - name: org
-      in: path
-      description: The organization identifier.
-      required: true
-      type: string
-    - name: project
-      in: path
-      description: The project identifier.
-      required: true
-      type: string
-    - name: site
-      in: path
-      description: The storage site identifier.
-      required: true
-      type: string
-    - name: bucket
-      in: path
-      description: The name of the bucket
-      required: true
-      type: string
-    get:
-      operationId: listObjects
-      summary: List objects in a bucket
-      description: List objects in a bucket
-      parameters:
-      - name: prefix
-        in: query
-        description: The prefix limits the results to only those keys that begin with
-          the specified prefix.
-        type: string
-      - name: delimiter
-        in: query
-        description: The delimiter causes a list operation to roll up all the keys
-          that share a common prefix into a single summary list result.
-        type: string
-      responses:
-        200:
-          description: Success
-          schema:
-            $ref: '#/definitions/objects'
-        400:
-          description: Bad Request
-          schema:
-            type: string
-        401:
-          description: Unauthorized
-          schema:
-            type: string
-        403:
-          description: Forbidden
-          schema:
-            type: string
-        404:
-          description: Not Found
-          schema:
-            type: string
-      tags:
-      - internal
-  /orgs/{org}/projects/{project}/storage-sites/{site}/buckets/{bucket}/objects/{object}:
-    parameters:
-    - name: org
-      in: path
-      description: The organization identifier.
-      required: true
-      type: string
-    - name: project
-      in: path
-      description: The project identifier.
-      required: true
-      type: string
-    - name: site
-      in: path
-      description: The storage site identifier.
-      required: true
-      type: string
-    - name: bucket
-      in: path
-      description: The name of the bucket
-      required: true
-      type: string
-    - name: object
-      in: path
-      description: The object identifier
-      required: true
-      type: string
-    get:
-      operationId: describeObject
-      summary: Describe object
-      description: Describe object
-      responses:
-        200:
-          description: Success
-          schema:
-            $ref: '#/definitions/object'
-        400:
-          description: Bad Request
-          schema:
-            type: string
-        401:
-          description: Unauthorized
-          schema:
-            type: string
-        403:
-          description: Forbidden
-          schema:
-            type: string
-        404:
-          description: Not Found
-          schema:
-            type: string
-      tags:
-      - internal
-    delete:
-      operationId: deleteObject
-      summary: Delete object
-      description: Delete object
-      responses:
-        204:
-          description: Success
-        400:
-          description: Bad Request
-          schema:
-            type: string
-        401:
-          description: Unauthorized
-          schema:
-            type: string
-        403:
-          description: Forbidden
-          schema:
-            type: string
-        404:
-          description: Not Found
-          schema:
-            type: string
-      tags:
-      - internal
+        - Storage Sites
   /partners/{partner}/storage-sites:
     parameters:
     - name: partner
@@ -414,6 +128,8 @@ paths:
           description: Not Found
           schema:
             type: string
+      tags:
+        - Storage Sites
   /status:
     get:
       operationId: status
@@ -431,8 +147,6 @@ paths:
           description: Forbidden
           schema:
             type: string
-      tags:
-      - internal
 definitions:
   area:
     type: object
@@ -714,8 +428,6 @@ definitions:
         items:
           $ref: '#/definitions/storage_site'
 tags:
-- name: Keys
-  description: Operations on access keys for object storage
 - name: Storage Sites
   description: Operations on storage sites
 x-explorer-enabled: false

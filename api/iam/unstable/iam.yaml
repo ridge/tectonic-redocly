@@ -259,12 +259,12 @@ paths:
           schema:
             type: string
       tags:
-      - Object Storage
+      - Object Storage Keys
     post:
       operationId: createOwnStorageKey
       summary: Create a storage key for the authenticated user
       description: Create a new storage Key for the authenticated user, for a specific
-        project, under an object storage location.
+        project, under an Object Storage Keys location.
       parameters:
       - name: body
         in: body
@@ -289,7 +289,7 @@ paths:
           schema:
             type: string
       tags:
-      - Object Storage
+      - Object Storage Keys
   /me/storage-keys/{key}:
     parameters:
     - name: key
@@ -324,7 +324,7 @@ paths:
           schema:
             type: string
       tags:
-      - Object Storage
+      - Object Storage Keys
     patch:
       operationId: updateOwnStorageKey
       summary: Update an authenticated user's storage key
@@ -358,7 +358,7 @@ paths:
           schema:
             type: string
       tags:
-      - Object Storage
+      - Object Storage Keys
     delete:
       operationId: deleteOwnStorageKey
       summary: Delete a storage key of the authenticated user
@@ -383,7 +383,7 @@ paths:
           schema:
             type: string
       tags:
-      - Object storage
+      - Object Storage Keys
   /orgs/{org}:
     parameters:
     - name: org
@@ -1478,12 +1478,12 @@ paths:
           schema:
             type: string
       tags:
-      - Object Storage
+      - Object Storage Keys
     post:
       operationId: createMemberStorageKey
       summary: Create a storage key for a member
       description: Create a new storage Key for a member, for a specific project,
-        under an object storage location. This only applies to members of type `app`.
+        under an Object Storage location. This only applies to members of type `app`.
       parameters:
       - name: body
         in: body
@@ -1512,7 +1512,7 @@ paths:
           schema:
             type: string
       tags:
-      - Object Storage
+      - Object Storage Keys
   /orgs/{org}/members/{member}/storage-keys/{key}:
     parameters:
     - name: org
@@ -1556,7 +1556,7 @@ paths:
           schema:
             type: string
       tags:
-      - Object Storage
+      - Object Storage Keys
     patch:
       operationId: updateMemberStorageKey
       summary: Update a storage key
@@ -1590,7 +1590,7 @@ paths:
           schema:
             type: string
       tags:
-      - Object Storage
+      - Object Storage Keys
     delete:
       operationId: deleteMemberStorageKey
       summary: Delete a storage key of a member
@@ -1616,7 +1616,7 @@ paths:
           schema:
             type: string
       tags:
-      - Object Storage
+      - Object Storage Keys
   /orgs/{org}/policies:
     parameters:
     - name: org
