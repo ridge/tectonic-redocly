@@ -15,13 +15,13 @@ logo:
   href: 'https://www.ridge.co/'
 enableToc: true
 oasDefinitions:
-  rks-unstable: ./api/rks/unstable/rks-unstable.yaml
-  rcs-unstable: ./api/rcs/unstable/rcs-unstable.yaml
-  iam-unstable: ./api/iam/unstable/iam-unstable.yaml
+  rks-unstable: ./api/rks/unstable/rks.yaml
+  rcs-unstable: ./api/rcs/unstable/rcs.yaml
+  iam-unstable: ./api/iam/unstable/iam.yaml
   iam-experimental: ./api/iam/experimental/iam.yaml
-  compute-unstable: ./api/compute/unstable/compute-unstable.yaml
-  keyring-unstable: ./api/keyring/unstable/keyring-unstable.yaml
-  ros-unstable: ./api/ros/unstable/ros-unstable.yaml
+  compute-unstable: ./api/compute/unstable/compute.yaml
+  keyring-unstable: ./api/keyring/unstable/keyring.yaml
+  ros-unstable: ./api/ros/unstable/ros.yaml
 stylesheets:
   - https://fonts.googleapis.com/css?family=Roboto+Mono:300,400,600,700
   - https://fonts.googleapis.com/css?family=Nunito+Sans:300,400,600,700,900&display=swap

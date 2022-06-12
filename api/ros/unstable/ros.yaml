@@ -134,7 +134,7 @@ paths:
           schema:
             type: string
       tags:
-      - Buckets
+      - internal
     post:
       operationId: createBucket
       summary: Create a bucket
@@ -167,7 +167,7 @@ paths:
           schema:
             type: string
       tags:
-      - Buckets
+      - internal
   /orgs/{org}/projects/{project}/storage-sites/{site}/buckets/{bucket}:
     parameters:
     - name: org
@@ -216,7 +216,7 @@ paths:
           schema:
             type: string
       tags:
-      - Buckets
+      - internal
     delete:
       operationId: deleteBucket
       summary: Delete a bucket
@@ -241,7 +241,7 @@ paths:
           schema:
             type: string
       tags:
-      - Buckets
+      - internal
   /orgs/{org}/projects/{project}/storage-sites/{site}/buckets/{bucket}/objects:
     parameters:
     - name: org
@@ -301,7 +301,7 @@ paths:
           schema:
             type: string
       tags:
-      - Objects
+      - internal
   /orgs/{org}/projects/{project}/storage-sites/{site}/buckets/{bucket}/objects/{object}:
     parameters:
     - name: org
@@ -355,7 +355,7 @@ paths:
           schema:
             type: string
       tags:
-      - Objects
+      - internal
     delete:
       operationId: deleteObject
       summary: Delete object
@@ -380,7 +380,7 @@ paths:
           schema:
             type: string
       tags:
-      - Objects
+      - internal
   /partners/{partner}/storage-sites:
     parameters:
     - name: partner
@@ -659,6 +659,7 @@ definitions:
     - partner_id
     - partner_path
     - enabled
+    - access_level
     properties:
       id:
         description: The unique identifier of the storage site
@@ -694,6 +695,14 @@ definitions:
       enabled:
         description: Indicates if the storage site is enabled
         type: boolean
+      access_level:
+        description: |
+          Access level that is required to use the storage site.
+          public - storage site is available to all of ridge users.
+          clients - storage site is only available to all clients of the owner.
+          private - storage site is only available to clients that are explicitly authorized.
+        type: string
+        enum: [public, clients, private]
   storage_sites:
     description: List of storage sites
     type: object
@@ -707,10 +716,6 @@ definitions:
 tags:
 - name: Keys
   description: Operations on access keys for object storage
-- name: Buckets
-  description: Operations on buckets
-- name: Objects
-  description: Operations on objects
 - name: Storage Sites
   description: Operations on storage sites
 x-explorer-enabled: false
