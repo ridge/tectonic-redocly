@@ -1237,8 +1237,6 @@ paths:
           description: Forbidden
           schema:
             type: string
-      tags:
-      - internal
 definitions:
   aws_role:
     description: The IAM role that will grant the cluster permissions (using temporary

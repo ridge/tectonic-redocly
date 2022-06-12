@@ -425,8 +425,6 @@ paths:
           description: Forbidden
           schema:
             type: string
-      tags:
-      - internal
 definitions:
   area:
     type: object

@@ -379,8 +379,6 @@ paths:
           description: Forbidden
           schema:
             type: string
-      tags:
-      - internal
 definitions:
   aws_key:
     type: object

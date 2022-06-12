@@ -331,8 +331,6 @@ paths:
           description: Forbidden
           schema:
             type: string
-      tags:
-      - internal
 definitions:
   aws_role:
     description: The AWS IAM role ans the AWS credentials that will be used to grant
