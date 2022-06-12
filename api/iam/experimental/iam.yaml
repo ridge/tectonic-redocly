@@ -1,0 +1,2218 @@
+openapi: 3.1.0
+info:
+  title: IAM API
+  description: An API for identity and access management
+  version: experimental
+servers:
+- url: '{origin}/iam/experimental'
+  variables:
+    origin:
+      default: https://api.ridge.co
+      description: The scheme, domain name and optional port to access the API server
+paths:
+  /admin/groups:
+    get:
+      operationId: admin_list_groups
+      summary: List groups of the admin realm
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/groups'
+        401:
+          $ref: '#/components/responses/error_401'
+        403:
+          $ref: '#/components/responses/error_403'
+      tags: [internal]
+  /admin/members:
+    get:
+      operationId: admin_list_members
+      summary: List members of the admin realm
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/members'
+        401:
+          $ref: '#/components/responses/error_401'
+        403:
+          $ref: '#/components/responses/error_403'
+      tags: [internal]
+  /admin/policies:
+    get:
+      operationId: admin_list_policies
+      summary: List policies of the admin realm
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/policies'
+        401:
+          $ref: '#/components/responses/error_401'
+        403:
+          $ref: '#/components/responses/error_403'
+      tags: [internal]
+  /api-keys:
+    post:
+      operationId: api_key_create
+      summary: Create an API key
+      parameters:
+      - name: X-Ridge-Request-ID
+        in: header
+        description: Client-generated request ID for idempotency
+        schema:
+          type: string
+          maxLength: 64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/api_key_create'
+        required: true
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/api_key_created'
+        400:
+          $ref: '#/components/responses/error_400'
+        401:
+          $ref: '#/components/responses/error_401'
+        403:
+          $ref: '#/components/responses/error_403'
+      tags: [API Keys]
+  /api-keys/{api_key}:
+    parameters:
+    - name: api_key
+      in: path
+      description: Unique identifier of the API key
+      required: true
+      schema:
+        type: string
+        pattern: ^[a-z][a-z0-9]*(-[a-z0-9]+)*$
+    get:
+      operationId: api_key_describe
+      summary: Describe an API key
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/api_key'
+        400:
+          $ref: '#/components/responses/error_400'
+        401:
+          $ref: '#/components/responses/error_401'
+        403:
+          $ref: '#/components/responses/error_403'
+        404:
+          $ref: '#/components/responses/error_404'
+      tags: [API Keys]
+    patch:
+      operationId: api_key_update
+      summary: Update the properties of an API key
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/api_key_update'
+        required: true
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/api_key'
+        400:
+          $ref: '#/components/responses/error_400'
+        401:
+          $ref: '#/components/responses/error_401'
+        403:
+          $ref: '#/components/responses/error_403'
+        404:
+          $ref: '#/components/responses/error_404'
+      tags: [API Keys]
+    delete:
+      operationId: api_key_delete
+      summary: Delete an API key
+      responses:
+        204:
+          description: Success
+        400:
+          $ref: '#/components/responses/error_400'
+        401:
+          $ref: '#/components/responses/error_401'
+        403:
+          $ref: '#/components/responses/error_403'
+        404:
+          $ref: '#/components/responses/error_404'
+      tags: [API Keys]
+  /clients:
+    post:
+      operationId: client_create
+      summary: Create a client
+      parameters:
+      - name: X-Ridge-Request-ID
+        in: header
+        description: Client-generated request ID for idempotency
+        schema:
+          type: string
+          maxLength: 64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/client_create'
+        required: true
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/client'
+        400:
+          $ref: '#/components/responses/error_400'
+        401:
+          $ref: '#/components/responses/error_401'
+        403:
+          $ref: '#/components/responses/error_403'
+      tags: [Clients]
+  /clients/{client}:
+    parameters:
+    - name: client
+      in: path
+      description: Unique identifier of the client
+      required: true
+      schema:
+        type: string
+        pattern: ^[a-z][a-z0-9]*(-[a-z0-9]+)*$
+    get:
+      operationId: client_describe
+      summary: Describe a client
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/client'
+        400:
+          $ref: '#/components/responses/error_400'
+        401:
+          $ref: '#/components/responses/error_401'
+        403:
+          $ref: '#/components/responses/error_403'
+        404:
+          $ref: '#/components/responses/error_404'
+      tags: [Clients]
+    patch:
+      operationId: client_update
+      summary: Update the properties of a client
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/client_update'
+        required: true
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/client'
+        400:
+          $ref: '#/components/responses/error_400'
+        401:
+          $ref: '#/components/responses/error_401'
+        403:
+          $ref: '#/components/responses/error_403'
+        404:
+          $ref: '#/components/responses/error_404'
+      tags: [Clients]
+  /group-memberships:
+    post:
+      operationId: group_membership_create
+      summary: Create a group membership
+      parameters:
+      - name: X-Ridge-Request-ID
+        in: header
+        description: Client-generated request ID for idempotency
+        schema:
+          type: string
+          maxLength: 64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/group_membership_create'
+        required: true
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/group_membership'
+        400:
+          $ref: '#/components/responses/error_400'
+        401:
+          $ref: '#/components/responses/error_401'
+        403:
+          $ref: '#/components/responses/error_403'
+      tags: [Group Memberships]
+  /group-memberships/{group_membership}:
+    parameters:
+    - name: group_membership
+      in: path
+      description: Unique identifier of the group membership
+      required: true
+      schema:
+        type: string
+        pattern: ^[a-z][a-z0-9]*(-[a-z0-9]+)*$
+    get:
+      operationId: group_membership_describe
+      summary: Describe a group membership
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/group_membership'
+        400:
+          $ref: '#/components/responses/error_400'
+        401:
+          $ref: '#/components/responses/error_401'
+        403:
+          $ref: '#/components/responses/error_403'
+        404:
+          $ref: '#/components/responses/error_404'
+      tags: [Group Memberships]
+    delete:
+      operationId: group_membership_delete
+      summary: Delete a group membership
+      responses:
+        204:
+          description: Success
+        400:
+          $ref: '#/components/responses/error_400'
+        401:
+          $ref: '#/components/responses/error_401'
+        403:
+          $ref: '#/components/responses/error_403'
+        404:
+          $ref: '#/components/responses/error_404'
+      tags: [Group Memberships]
+  /groups:
+    post:
+      operationId: group_create
+      summary: Create a group
+      parameters:
+      - name: X-Ridge-Request-ID
+        in: header
+        description: Client-generated request ID for idempotency
+        schema:
+          type: string
+          maxLength: 64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/group_create'
+        required: true
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/group'
+        400:
+          $ref: '#/components/responses/error_400'
+        401:
+          $ref: '#/components/responses/error_401'
+        403:
+          $ref: '#/components/responses/error_403'
+      tags: [Groups]
+  /groups/{group}:
+    parameters:
+    - name: group
+      in: path
+      description: Unique identifier of the group
+      required: true
+      schema:
+        type: string
+        pattern: ^[a-z][a-z0-9]*(-[a-z0-9]+)*$
+    get:
+      operationId: group_describe
+      summary: Describe a group
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/group'
+        400:
+          $ref: '#/components/responses/error_400'
+        401:
+          $ref: '#/components/responses/error_401'
+        403:
+          $ref: '#/components/responses/error_403'
+        404:
+          $ref: '#/components/responses/error_404'
+      tags: [Groups]
+    patch:
+      operationId: group_update
+      summary: Update the properties of a group
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/group_update'
+        required: true
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/group'
+        400:
+          $ref: '#/components/responses/error_400'
+        401:
+          $ref: '#/components/responses/error_401'
+        403:
+          $ref: '#/components/responses/error_403'
+        404:
+          $ref: '#/components/responses/error_404'
+      tags: [Groups]
+    delete:
+      operationId: group_delete
+      summary: Delete a group
+      responses:
+        204:
+          description: Success
+        400:
+          $ref: '#/components/responses/error_400'
+        401:
+          $ref: '#/components/responses/error_401'
+        403:
+          $ref: '#/components/responses/error_403'
+        404:
+          $ref: '#/components/responses/error_404'
+      tags: [Groups]
+  /groups/{group}/members:
+    parameters:
+    - name: group
+      in: path
+      description: Unique identifier of the group
+      required: true
+      schema:
+        type: string
+        pattern: ^[a-z][a-z0-9]*(-[a-z0-9]+)*$
+    get:
+      operationId: group_list_members
+      summary: List members of a group
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/group_memberships'
+        400:
+          $ref: '#/components/responses/error_400'
+        401:
+          $ref: '#/components/responses/error_401'
+        403:
+          $ref: '#/components/responses/error_403'
+        404:
+          $ref: '#/components/responses/error_404'
+      tags: [Groups]
+  /groups/{group}/privileges:
+    parameters:
+    - name: group
+      in: path
+      description: Unique identifier of the group
+      required: true
+      schema:
+        type: string
+        pattern: ^[a-z][a-z0-9]*(-[a-z0-9]+)*$
+    get:
+      operationId: group_list_privileges
+      summary: List privileges of a group
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/policies'
+        400:
+          $ref: '#/components/responses/error_400'
+        401:
+          $ref: '#/components/responses/error_401'
+        403:
+          $ref: '#/components/responses/error_403'
+        404:
+          $ref: '#/components/responses/error_404'
+      tags: [Groups]
+  /me/memberships:
+    get:
+      operationId: me_list_memberships
+      summary: List own realm memberships
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/members'
+        401:
+          $ref: '#/components/responses/error_401'
+        403:
+          $ref: '#/components/responses/error_403'
+      tags: [internal]
+    post:
+      operationId: me_join
+      summary: Join a realm by invitation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/join'
+        required: true
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/member'
+        400:
+          $ref: '#/components/responses/error_400'
+        401:
+          $ref: '#/components/responses/error_401'
+        403:
+          $ref: '#/components/responses/error_403'
+      tags: [internal]
+  /me/personal:
+    get:
+      operationId: me_describe
+      summary: Get own personal info
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/personal_info'
+        401:
+          $ref: '#/components/responses/error_401'
+        403:
+          $ref: '#/components/responses/error_403'
+      tags: [internal]
+  /members:
+    post:
+      operationId: member_create
+      summary: Create a member
+      parameters:
+      - name: X-Ridge-Request-ID
+        in: header
+        description: Client-generated request ID for idempotency
+        schema:
+          type: string
+          maxLength: 64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/member_create'
+        required: true
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/member'
+        400:
+          $ref: '#/components/responses/error_400'
+        401:
+          $ref: '#/components/responses/error_401'
+        403:
+          $ref: '#/components/responses/error_403'
+      tags: [Members]
+  /members/{member}:
+    parameters:
+    - name: member
+      in: path
+      description: Unique identifier of the member
+      required: true
+      schema:
+        type: string
+        pattern: ^[a-z][a-z0-9]*(-[a-z0-9]+)*$
+    get:
+      operationId: member_describe
+      summary: Describe a member
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/member'
+        400:
+          $ref: '#/components/responses/error_400'
+        401:
+          $ref: '#/components/responses/error_401'
+        403:
+          $ref: '#/components/responses/error_403'
+        404:
+          $ref: '#/components/responses/error_404'
+      tags: [Members]
+    patch:
+      operationId: member_update
+      summary: Update the properties of a member
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/member_update'
+        required: true
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/member'
+        400:
+          $ref: '#/components/responses/error_400'
+        401:
+          $ref: '#/components/responses/error_401'
+        403:
+          $ref: '#/components/responses/error_403'
+        404:
+          $ref: '#/components/responses/error_404'
+      tags: [Members]
+    delete:
+      operationId: member_delete
+      summary: Delete a member
+      responses:
+        204:
+          description: Success
+        400:
+          $ref: '#/components/responses/error_400'
+        401:
+          $ref: '#/components/responses/error_401'
+        403:
+          $ref: '#/components/responses/error_403'
+        404:
+          $ref: '#/components/responses/error_404'
+      tags: [Members]
+  /members/{member}/api-keys:
+    parameters:
+    - name: member
+      in: path
+      description: Unique identifier of the member
+      required: true
+      schema:
+        type: string
+        pattern: ^[a-z][a-z0-9]*(-[a-z0-9]+)*$
+    get:
+      operationId: member_list_api_keys
+      summary: List API keys of a member
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/api_keys'
+        400:
+          $ref: '#/components/responses/error_400'
+        401:
+          $ref: '#/components/responses/error_401'
+        403:
+          $ref: '#/components/responses/error_403'
+        404:
+          $ref: '#/components/responses/error_404'
+      tags: [API Keys]
+  /members/{member}/group-memberships:
+    parameters:
+    - name: member
+      in: path
+      description: Unique identifier of the member
+      required: true
+      schema:
+        type: string
+        pattern: ^[a-z][a-z0-9]*(-[a-z0-9]+)*$
+    get:
+      operationId: member_list_group_memberships
+      summary: List group memberships of a member
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/group_memberships'
+        400:
+          $ref: '#/components/responses/error_400'
+        401:
+          $ref: '#/components/responses/error_401'
+        403:
+          $ref: '#/components/responses/error_403'
+        404:
+          $ref: '#/components/responses/error_404'
+      tags: [Group Memberships]
+  /members/{member}/invitation/send:
+    parameters:
+    - name: member
+      in: path
+      description: Unique identifier of the member
+      required: true
+      schema:
+        type: string
+        pattern: ^[a-z][a-z0-9]*(-[a-z0-9]+)*$
+    post:
+      operationId: member_invitation_send
+      summary: Send an invitation
+      description: Send an invitation email to a provisional user
+      responses:
+        204:
+          description: Success
+        400:
+          $ref: '#/components/responses/error_400'
+        401:
+          $ref: '#/components/responses/error_401'
+        403:
+          $ref: '#/components/responses/error_403'
+        404:
+          $ref: '#/components/responses/error_404'
+      tags: [Members]
+  /members/{member}/invitation/token:
+    parameters:
+    - name: member
+      in: path
+      description: Unique identifier of the member
+      required: true
+      schema:
+        type: string
+        pattern: ^[a-z][a-z0-9]*(-[a-z0-9]+)*$
+    get:
+      operationId: member_invitation_token
+      summary: Issue an invitation token
+      description: Generate an invitation token for a provisional user
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: string
+        400: {$ref: '#/components/responses/error_400'}
+        401:
+          $ref: '#/components/responses/error_401'
+        403:
+          $ref: '#/components/responses/error_403'
+        404:
+          $ref: '#/components/responses/error_404'
+      tags: [Members]
+  /members/{member}/privileges:
+    parameters:
+    - name: member
+      in: path
+      description: Unique identifier of the member
+      required: true
+      schema:
+        type: string
+        pattern: ^[a-z][a-z0-9]*(-[a-z0-9]+)*$
+    get:
+      operationId: member_list_privileges
+      summary: List privileges of a member
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/policies'
+        400:
+          $ref: '#/components/responses/error_400'
+        401:
+          $ref: '#/components/responses/error_401'
+        403:
+          $ref: '#/components/responses/error_403'
+        404:
+          $ref: '#/components/responses/error_404'
+      tags: [Members]
+  /members/{member}/storage-keys:
+    parameters:
+    - name: member
+      in: path
+      description: Unique identifier of the member
+      required: true
+      schema:
+        type: string
+        pattern: ^[a-z][a-z0-9]*(-[a-z0-9]+)*$
+    get:
+      operationId: member_list_storage_keys
+      summary: List storage keys of a member
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/storage_keys'
+        400:
+          $ref: '#/components/responses/error_400'
+        401:
+          $ref: '#/components/responses/error_401'
+        403:
+          $ref: '#/components/responses/error_403'
+        404:
+          $ref: '#/components/responses/error_404'
+      tags: [Storage Keys]
+  /orgs:
+    get:
+      operationId: list_orgs
+      summary: List organizations
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/orgs'
+        401:
+          $ref: '#/components/responses/error_401'
+        403:
+          $ref: '#/components/responses/error_403'
+      tags: [internal]
+  /orgs/{org}:
+    parameters:
+    - name: org
+      in: path
+      description: Unique identifier of the org
+      required: true
+      schema:
+        type: string
+        pattern: ^[a-z][a-z0-9]*(-[a-z0-9]+)*$
+    get:
+      operationId: org_describe
+      summary: Describe an org
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/org'
+        400:
+          $ref: '#/components/responses/error_400'
+        401:
+          $ref: '#/components/responses/error_401'
+        403:
+          $ref: '#/components/responses/error_403'
+        404:
+          $ref: '#/components/responses/error_404'
+      tags: [Orgs]
+    patch:
+      operationId: org_update
+      summary: Update the properties of an org
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/org_update'
+        required: true
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/org'
+        400:
+          $ref: '#/components/responses/error_400'
+        401:
+          $ref: '#/components/responses/error_401'
+        403:
+          $ref: '#/components/responses/error_403'
+        404:
+          $ref: '#/components/responses/error_404'
+      tags: [Orgs]
+    delete:
+      operationId: org_delete
+      summary: Delete an org
+      responses:
+        204:
+          description: Success
+        400:
+          $ref: '#/components/responses/error_400'
+        401:
+          $ref: '#/components/responses/error_401'
+        403:
+          $ref: '#/components/responses/error_403'
+        404:
+          $ref: '#/components/responses/error_404'
+      tags: [Orgs]
+  /orgs/{org}/groups:
+    parameters:
+    - name: org
+      in: path
+      description: Unique identifier of the org
+      required: true
+      schema:
+        type: string
+        pattern: ^[a-z][a-z0-9]*(-[a-z0-9]+)*$
+    get:
+      operationId: org_list_groups
+      summary: List groups of an org
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/groups'
+        400:
+          $ref: '#/components/responses/error_400'
+        401:
+          $ref: '#/components/responses/error_401'
+        403:
+          $ref: '#/components/responses/error_403'
+        404:
+          $ref: '#/components/responses/error_404'
+      tags: [Groups]
+  /orgs/{org}/members:
+    parameters:
+    - name: org
+      in: path
+      description: Unique identifier of the org
+      required: true
+      schema:
+        type: string
+        pattern: ^[a-z][a-z0-9]*(-[a-z0-9]+)*$
+    get:
+      operationId: org_list_members
+      summary: List members of an org
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/members'
+        400:
+          $ref: '#/components/responses/error_400'
+        401:
+          $ref: '#/components/responses/error_401'
+        403:
+          $ref: '#/components/responses/error_403'
+        404:
+          $ref: '#/components/responses/error_404'
+      tags: [Members]
+  /orgs/{org}/policies:
+    parameters:
+    - name: org
+      in: path
+      description: Unique identifier of the org
+      required: true
+      schema:
+        type: string
+        pattern: ^[a-z][a-z0-9]*(-[a-z0-9]+)*$
+    get:
+      operationId: org_list_policies
+      summary: List policies of an org
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/policies'
+        400:
+          $ref: '#/components/responses/error_400'
+        401:
+          $ref: '#/components/responses/error_401'
+        403:
+          $ref: '#/components/responses/error_403'
+        404:
+          $ref: '#/components/responses/error_404'
+      tags: [Policies]
+  /orgs/{org}/projects:
+    parameters:
+    - name: org
+      in: path
+      description: Unique identifier of the org
+      required: true
+      schema:
+        type: string
+        pattern: ^[a-z][a-z0-9]*(-[a-z0-9]+)*$
+    get:
+      operationId: org_list_projects
+      summary: List projects of an org
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/projects'
+        400:
+          $ref: '#/components/responses/error_400'
+        401:
+          $ref: '#/components/responses/error_401'
+        403:
+          $ref: '#/components/responses/error_403'
+        404:
+          $ref: '#/components/responses/error_404'
+      tags: [Projects]
+  /orgs/{org}/quota:
+    parameters:
+    - name: org
+      in: path
+      description: Unique identifier of the org
+      required: true
+      schema:
+        type: string
+        pattern: ^[a-z][a-z0-9]*(-[a-z0-9]+)*$
+    get:
+      operationId: org_describe_quota
+      summary: Get the quota of an organization
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/quota'
+        400:
+          $ref: '#/components/responses/error_400'
+        401:
+          $ref: '#/components/responses/error_401'
+        403:
+          $ref: '#/components/responses/error_403'
+        404:
+          $ref: '#/components/responses/error_404'
+      tags: [Orgs]
+  /partners:
+    get:
+      operationId: list_partners
+      summary: List partners
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/partners'
+        401:
+          $ref: '#/components/responses/error_401'
+        403:
+          $ref: '#/components/responses/error_403'
+      tags: [internal]
+  /partners/{partner}:
+    parameters:
+    - name: partner
+      in: path
+      description: Unique identifier of the partner
+      required: true
+      schema:
+        type: string
+        pattern: ^[a-z][a-z0-9]*(-[a-z0-9]+)*$
+    get:
+      operationId: partner_describe
+      summary: Describe a partner
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/partner'
+        400:
+          $ref: '#/components/responses/error_400'
+        401:
+          $ref: '#/components/responses/error_401'
+        403:
+          $ref: '#/components/responses/error_403'
+        404:
+          $ref: '#/components/responses/error_404'
+      tags: [Partners]
+  /partners/{partner}/clients:
+    parameters:
+    - name: partner
+      in: path
+      description: Unique identifier of the partner
+      required: true
+      schema:
+        type: string
+        pattern: ^[a-z][a-z0-9]*(-[a-z0-9]+)*$
+    get:
+      operationId: partner_list_clients
+      summary: List clients of a partner
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/clients'
+        400:
+          $ref: '#/components/responses/error_400'
+        401:
+          $ref: '#/components/responses/error_401'
+        403:
+          $ref: '#/components/responses/error_403'
+        404:
+          $ref: '#/components/responses/error_404'
+      tags: [Clients]
+  /partners/{partner}/groups:
+    parameters:
+    - name: partner
+      in: path
+      description: Unique identifier of the partner
+      required: true
+      schema:
+        type: string
+        pattern: ^[a-z][a-z0-9]*(-[a-z0-9]+)*$
+    get:
+      operationId: partner_list_groups
+      summary: List groups of a partner
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/groups'
+        400:
+          $ref: '#/components/responses/error_400'
+        401:
+          $ref: '#/components/responses/error_401'
+        403:
+          $ref: '#/components/responses/error_403'
+        404:
+          $ref: '#/components/responses/error_404'
+      tags: [Groups]
+  /partners/{partner}/members:
+    parameters:
+    - name: partner
+      in: path
+      description: Unique identifier of the partner
+      required: true
+      schema:
+        type: string
+        pattern: ^[a-z][a-z0-9]*(-[a-z0-9]+)*$
+    get:
+      operationId: partner_list_members
+      summary: List members of a partner
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/members'
+        400:
+          $ref: '#/components/responses/error_400'
+        401:
+          $ref: '#/components/responses/error_401'
+        403:
+          $ref: '#/components/responses/error_403'
+        404:
+          $ref: '#/components/responses/error_404'
+      tags: [Members]
+  /partners/{partner}/policies:
+    parameters:
+    - name: partner
+      in: path
+      description: Unique identifier of the partner
+      required: true
+      schema:
+        type: string
+        pattern: ^[a-z][a-z0-9]*(-[a-z0-9]+)*$
+    get:
+      operationId: partner_list_policies
+      summary: List policies of a partner
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/policies'
+        400:
+          $ref: '#/components/responses/error_400'
+        401:
+          $ref: '#/components/responses/error_401'
+        403:
+          $ref: '#/components/responses/error_403'
+        404:
+          $ref: '#/components/responses/error_404'
+      tags: [Policies]
+  /policies:
+    post:
+      operationId: policy_create
+      summary: Create a policy
+      parameters:
+      - name: X-Ridge-Request-ID
+        in: header
+        description: Client-generated request ID for idempotency
+        schema:
+          type: string
+          maxLength: 64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/policy_create'
+        required: true
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/policy'
+        400:
+          $ref: '#/components/responses/error_400'
+        401:
+          $ref: '#/components/responses/error_401'
+        403:
+          $ref: '#/components/responses/error_403'
+      tags: [Policies]
+  /policies/{policy}:
+    parameters:
+    - name: policy
+      in: path
+      description: Unique identifier of the policy
+      required: true
+      schema:
+        type: string
+        pattern: ^[a-z][a-z0-9]*(-[a-z0-9]+)*$
+    get:
+      operationId: policy_describe
+      summary: Describe a policy
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/policy'
+        400:
+          $ref: '#/components/responses/error_400'
+        401:
+          $ref: '#/components/responses/error_401'
+        403:
+          $ref: '#/components/responses/error_403'
+        404:
+          $ref: '#/components/responses/error_404'
+      tags: [Policies]
+    delete:
+      operationId: policy_delete
+      summary: Delete a policy
+      responses:
+        204:
+          description: Success
+        400:
+          $ref: '#/components/responses/error_400'
+        401:
+          $ref: '#/components/responses/error_401'
+        403:
+          $ref: '#/components/responses/error_403'
+        404:
+          $ref: '#/components/responses/error_404'
+      tags: [Policies]
+  /projects:
+    post:
+      operationId: project_create
+      summary: Create a project
+      parameters:
+      - name: X-Ridge-Request-ID
+        in: header
+        description: Client-generated request ID for idempotency
+        schema:
+          type: string
+          maxLength: 64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/project_create'
+        required: true
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/project'
+        400:
+          $ref: '#/components/responses/error_400'
+        401:
+          $ref: '#/components/responses/error_401'
+        403:
+          $ref: '#/components/responses/error_403'
+      tags: [Projects]
+  /projects/{project}:
+    parameters:
+    - name: project
+      in: path
+      description: Unique identifier of the project
+      required: true
+      schema:
+        type: string
+        pattern: ^[a-z][a-z0-9]*(-[a-z0-9]+)*$
+    get:
+      operationId: project_describe
+      summary: Describe a project
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/project'
+        400:
+          $ref: '#/components/responses/error_400'
+        401:
+          $ref: '#/components/responses/error_401'
+        403:
+          $ref: '#/components/responses/error_403'
+        404:
+          $ref: '#/components/responses/error_404'
+      tags: [Projects]
+    patch:
+      operationId: project_update
+      summary: Update the properties of a project
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/project_update'
+        required: true
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/project'
+        400:
+          $ref: '#/components/responses/error_400'
+        401:
+          $ref: '#/components/responses/error_401'
+        403:
+          $ref: '#/components/responses/error_403'
+        404:
+          $ref: '#/components/responses/error_404'
+      tags: [Projects]
+    delete:
+      operationId: project_delete
+      summary: Delete a project
+      responses:
+        204:
+          description: Success
+        400:
+          $ref: '#/components/responses/error_400'
+        401:
+          $ref: '#/components/responses/error_401'
+        403:
+          $ref: '#/components/responses/error_403'
+        404:
+          $ref: '#/components/responses/error_404'
+      tags: [Projects]
+  /projects/{project}/policies:
+    parameters:
+    - name: project
+      in: path
+      description: Unique identifier of the project
+      required: true
+      schema:
+        type: string
+        pattern: ^[a-z][a-z0-9]*(-[a-z0-9]+)*$
+    get:
+      operationId: project_list_policies
+      summary: List policies of a project
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/policies'
+        400:
+          $ref: '#/components/responses/error_400'
+        401:
+          $ref: '#/components/responses/error_401'
+        403:
+          $ref: '#/components/responses/error_403'
+        404:
+          $ref: '#/components/responses/error_404'
+      tags: [Policies]
+  /roles:
+    get:
+      operationId: list_roles
+      summary: List roles
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/roles'
+        401:
+          $ref: '#/components/responses/error_401'
+        403:
+          $ref: '#/components/responses/error_403'
+      tags: [internal]
+  /status:
+    get:
+      operationId: status
+      summary: Check if the API server is ready
+      description: Returns 204 if ready
+      responses:
+        204:
+          description: Success
+      tags: [API Server Status]
+  /storage-keys:
+    post:
+      operationId: storage_key_create
+      summary: Create a storage key
+      parameters:
+      - name: X-Ridge-Request-ID
+        in: header
+        description: Client-generated request ID for idempotency
+        schema:
+          type: string
+          maxLength: 64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/storage_key_create'
+        required: true
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/storage_key_created'
+        400:
+          $ref: '#/components/responses/error_400'
+        401:
+          $ref: '#/components/responses/error_401'
+        403:
+          $ref: '#/components/responses/error_403'
+      tags: [Storage Keys]
+  /storage-keys/{storage_key}:
+    parameters:
+    - name: storage_key
+      in: path
+      description: Unique identifier of the storage key
+      required: true
+      schema:
+        type: string
+        pattern: ^[a-z][a-z0-9]*(-[a-z0-9]+)*$
+    get:
+      operationId: storage_key_describe
+      summary: Describe a storage key
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/storage_key'
+        400:
+          $ref: '#/components/responses/error_400'
+        401:
+          $ref: '#/components/responses/error_401'
+        403:
+          $ref: '#/components/responses/error_403'
+        404:
+          $ref: '#/components/responses/error_404'
+      tags: [Storage Keys]
+    patch:
+      operationId: storage_key_update
+      summary: Update the properties of a storage key
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/storage_key_update'
+        required: true
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/storage_key'
+        400:
+          $ref: '#/components/responses/error_400'
+        401:
+          $ref: '#/components/responses/error_401'
+        403:
+          $ref: '#/components/responses/error_403'
+        404:
+          $ref: '#/components/responses/error_404'
+      tags: [Storage Keys]
+    delete:
+      operationId: storage_key_delete
+      summary: Delete a storage key
+      responses:
+        204:
+          description: Success
+        400:
+          $ref: '#/components/responses/error_400'
+        401:
+          $ref: '#/components/responses/error_401'
+        403:
+          $ref: '#/components/responses/error_403'
+        404:
+          $ref: '#/components/responses/error_404'
+      tags: [Storage Keys]
+components:
+  schemas:
+    api_key:
+      description: Description of the API key
+      type: object
+      required:
+      - id
+      - member
+      - created_at
+      - updated_at
+      properties:
+        id:
+          description: Unique ID of the API key
+          type: string
+          pattern: ^[a-z][a-z0-9]*(-[a-z0-9]+)*$
+        display_name:
+          description: The display name of the API key
+          type: string
+          maxLength: 512
+        member:
+          description: The owner of the API key
+          type: string
+          pattern: ^[a-z][a-z0-9]*(-[a-z0-9]+)*$
+        created_at:
+          description: Time when the API key was created
+          type: string
+          format: date-time
+        updated_at:
+          description: Time when the API key was last updated
+          type: string
+          format: date-time
+    api_key_create:
+      description: Properties of the API key to create
+      type: object
+      required:
+      - member
+      properties:
+        display_name:
+          description: The display name of the API key
+          type: string
+          maxLength: 512
+        member:
+          description: The owner of the API key
+          type: string
+          pattern: ^[a-z][a-z0-9]*(-[a-z0-9]+)*$
+    api_key_created:
+      description: Description of the newly created API key
+      allOf:
+      - $ref: '#/components/schemas/api_key'
+      - type: object
+        required:
+        - token
+        properties:
+          token:
+            description: The secret authentication token
+            type: string
+    api_key_update: {description: Properties of the API key to update, type: object,
+      properties: {display_name: {description: The display name of the API key, type: string,
+          maxLength: 512}}}
+    api_keys:
+      description: List of API keys
+      type: object
+      required:
+      - items
+      properties:
+        items:
+          description: The API keys
+          type: array
+          items:
+            $ref: '#/components/schemas/api_key'
+    client:
+      description: Description of the client
+      type: object
+      required:
+      - id
+      - partner
+      - org
+      - trial
+      properties:
+        id:
+          description: Unique ID of the client
+          type: string
+          pattern: ^[a-z][a-z0-9]*(-[a-z0-9]+)*$
+        display_name:
+          description: The display name of the client
+          type: string
+          maxLength: 512
+        partner:
+          description: The client's partner ID
+          type: string
+          pattern: ^[a-z][a-z0-9]*(-[a-z0-9]+)*$
+        org:
+          description: The client organization ID
+          type: string
+          pattern: ^[a-z][a-z0-9]*(-[a-z0-9]+)*$
+        trial:
+          description: True if the client is in trial stage
+          type: boolean
+    client_create: {description: Properties of the client to create, type: object,
+      required: [partner, trial], properties: {display_name: {description: The display
+            name of the client, type: string, maxLength: 512}, partner: {description: The
+            client's partner ID, type: string, pattern: '^[a-z][a-z0-9]*(-[a-z0-9]+)*$'},
+        trial: {description: True if the client is in trial stage, type: boolean}}}
+    client_update: {description: Properties of the client to update, type: object,
+      properties: {display_name: {description: The display name of the client, type: string,
+          maxLength: 512}, trial: {description: True if the client is in trial stage,
+          type: boolean}}}
+    clients: {description: List of clients, type: object, required: [items], properties: {
+        items: {description: The clients, type: array, items: {$ref: '#/components/schemas/client'}}}}
+    group:
+      description: Description of the group
+      type: object
+      required:
+      - id
+      - realm_type
+      - created_at
+      - updated_at
+      properties:
+        id:
+          description: Unique ID of the group
+          type: string
+          pattern: ^[a-z][a-z0-9]*(-[a-z0-9]+)*$
+        display_name:
+          description: The display name of the group
+          type: string
+          maxLength: 512
+        realm:
+          description: The parent realm of the group
+          type: string
+        realm_type: {$ref: '#/components/schemas/realm_type', description: The type
+            of the realm}
+        created_at:
+          description: Time when the group was created
+          type: string
+          format: date-time
+        updated_at:
+          description: Time when the group was last updated
+          type: string
+          format: date-time
+    group_create:
+      description: Properties of the group to create
+      type: object
+      required:
+      - realm_type
+      properties:
+        display_name:
+          description: The display name of the group
+          type: string
+          maxLength: 512
+        realm:
+          description: The parent realm of the group
+          type: string
+        realm_type: {$ref: '#/components/schemas/realm_type', description: The type
+            of the realm}
+    group_membership:
+      description: Description of the group membership
+      type: object
+      required:
+      - id
+      - group
+      - member
+      - created_at
+      properties:
+        id:
+          description: Unique ID of the group membership
+          type: string
+          pattern: ^[a-z][a-z0-9]*(-[a-z0-9]+)*$
+        group:
+          description: The group
+          type: string
+          pattern: ^[a-z][a-z0-9]*(-[a-z0-9]+)*$
+        member:
+          description: The group member
+          type: string
+          pattern: ^[a-z][a-z0-9]*(-[a-z0-9]+)*$
+        created_at:
+          description: Time when the group membership was created
+          type: string
+          format: date-time
+    group_membership_create:
+      description: Properties of the group membership to create
+      type: object
+      required:
+      - group
+      - member
+      properties:
+        group:
+          description: The group
+          type: string
+          pattern: ^[a-z][a-z0-9]*(-[a-z0-9]+)*$
+        member:
+          description: The group member
+          type: string
+          pattern: ^[a-z][a-z0-9]*(-[a-z0-9]+)*$
+    group_memberships:
+      description: List of group memberships
+      type: object
+      required:
+      - items
+      properties:
+        items:
+          description: The group memberships
+          type: array
+          items:
+            $ref: '#/components/schemas/group_membership'
+    group_update:
+      description: Properties of the group to update
+      type: object
+      properties:
+        display_name:
+          description: The display name of the group
+          type: string
+          maxLength: 512
+    groups:
+      description: List of groups
+      type: object
+      required:
+      - items
+      properties:
+        items:
+          description: The groups
+          type: array
+          items:
+            $ref: '#/components/schemas/group'
+    join:
+      description: Parameters for joining a realm
+      type: object
+      required:
+      - token
+      properties:
+        token:
+          description: Invitation token
+          type: string
+    member: {description: Description of the member, type: object, required: [id,
+        type, realm, realm_type, created_at, updated_at], properties: {id: {description: Unique
+            ID of the member, type: string, pattern: '^[a-z][a-z0-9]*(-[a-z0-9]+)*$'},
+        display_name: {description: The display name of the member (apps only), type: string,
+          maxLength: 512}, type: {$ref: '#/components/schemas/member_type', description: The
+            type of the member}, realm: {description: The parent realm of the member,
+          type: string, minLength: 1}, realm_type: {$ref: '#/components/schemas/realm_type',
+          description: The type of the realm}, personal_info: {$ref: '#/components/schemas/personal_info',
+          description: The member's personal info (users only)}, created_at: {description: Time
+            when the member was created, type: string, format: date-time}, updated_at: {
+          description: Time when the member was last updated, type: string, format: date-time},
+        deleted: {description: 'If true, the member has been deleted', type: boolean}}}
+    member_create: {description: Properties of the member to create, type: object,
+      required: [type, realm, realm_type], properties: {display_name: {description: The
+            display name of the member (apps only), type: string, maxLength: 512},
+        type: {$ref: '#/components/schemas/member_type', description: The type of
+            the member}, realm: {description: The parent realm of the member, type: string,
+          minLength: 1}, realm_type: {$ref: '#/components/schemas/realm_type', description: The
+            type of the realm}, personal_info: {$ref: '#/components/schemas/personal_info',
+          description: The member's personal info (users only)}}}
+    member_type:
+      description: The type of a member
+      type: string
+      enum: [user, invitee, app]
+    member_update:
+      description: Properties of the member to update
+      type: object
+      properties:
+        display_name:
+          description: The display name of the member (apps only)
+          type: string
+          maxLength: 512
+    members:
+      description: List of members
+      type: object
+      required:
+      - items
+      properties:
+        items:
+          description: The members
+          type: array
+          items:
+            $ref: '#/components/schemas/member'
+    object_type:
+      description: The type of a policy object
+      type: string
+      enum: [project, org, partner]
+    org:
+      description: Description of the org
+      type: object
+      required:
+      - id
+      - partner
+      - created_at
+      - updated_at
+      properties:
+        id:
+          description: Unique ID of the org
+          type: string
+          pattern: ^[a-z][a-z0-9]*(-[a-z0-9]+)*$
+        display_name:
+          description: The display name of the org
+          type: string
+          maxLength: 512
+        partner:
+          description: The organization's partner ID
+          type: string
+          pattern: ^[a-z][a-z0-9]*(-[a-z0-9]+)*$
+        trial:
+          description: True if the organization is in trial stage
+          type: boolean
+        created_at: {description: Time when the org was created, type: string, format: date-time}
+        updated_at:
+          description: Time when the org was last updated
+          type: string
+          format: date-time
+        deleted:
+          description: If true, the org has been deleted
+          type: boolean
+    org_update: {description: Properties of the org to update, type: object, properties: {
+        display_name: {description: The display name of the org, type: string, maxLength: 512}}}
+    orgs:
+      description: List of orgs
+      type: object
+      required:
+      - items
+      properties:
+        items:
+          description: The orgs
+          type: array
+          items:
+            $ref: '#/components/schemas/org'
+    partner:
+      description: Description of the partner
+      type: object
+      required:
+      - id
+      properties:
+        id:
+          description: Unique ID of the partner
+          type: string
+          pattern: ^[a-z][a-z0-9]*(-[a-z0-9]+)*$
+        display_name:
+          description: The display name of the partner
+          type: string
+          maxLength: 512
+        subsidiary:
+          description: Indicates that organizations that belong to this partner will
+            be billed by Ridge
+          type: boolean
+        website: {description: Partner's corporate website, type: string, pattern: '^https?://'}
+    partners:
+      description: List of partners
+      type: object
+      required:
+      - items
+      properties:
+        items:
+          description: The partners
+          type: array
+          items:
+            $ref: '#/components/schemas/partner'
+    personal_info:
+      description: The personal information of a user
+      type: object
+      properties:
+        full_name:
+          description: The full name of the user
+          type: string
+        email: {description: The contact email address of the user, type: string,
+          pattern: '^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$'}
+        avatar:
+          description: URL to the avatar image
+          type: string
+          format: uri
+    policies:
+      description: List of policies
+      type: object
+      required:
+      - items
+      properties:
+        items:
+          description: The policies
+          type: array
+          items:
+            $ref: '#/components/schemas/policy'
+    policy:
+      description: Description of the policy
+      type: object
+      required:
+      - id
+      - subject
+      - subject_type
+      - role
+      - created_at
+      properties:
+        id:
+          description: Unique ID of the policy
+          type: string
+          pattern: ^[a-z][a-z0-9]*(-[a-z0-9]+)*$
+        subject:
+          description: The subject of the policy
+          type: string
+          minLength: 1
+        subject_type:
+          $ref: '#/components/schemas/subject_type'
+          description: The type of the subject
+        object:
+          description: The object of the policy
+          type: string
+          minLength: 1
+        object_type:
+          $ref: '#/components/schemas/object_type'
+          description: The type of the object
+        role:
+          description: The assigned role
+          type: string
+          pattern: ^[a-z][a-z0-9]*(-[a-z0-9]+)*$
+        created_at:
+          description: Time when the policy was created
+          type: string
+          format: date-time
+    policy_create:
+      description: Properties of the policy to create
+      type: object
+      required:
+      - subject
+      - subject_type
+      - role
+      properties:
+        subject:
+          description: The subject of the policy
+          type: string
+          minLength: 1
+        subject_type:
+          $ref: '#/components/schemas/subject_type'
+          description: The type of the subject
+        object:
+          description: The object of the policy
+          type: string
+          minLength: 1
+        object_type:
+          $ref: '#/components/schemas/object_type'
+          description: The type of the object
+        role:
+          description: The assigned role
+          type: string
+          pattern: ^[a-z][a-z0-9]*(-[a-z0-9]+)*$
+    project:
+      description: Description of the project
+      type: object
+      required:
+      - id
+      - org
+      - created_at
+      - updated_at
+      properties:
+        id:
+          description: Unique ID of the project
+          type: string
+          pattern: ^[a-z][a-z0-9]*(-[a-z0-9]+)*$
+        display_name:
+          description: The display name of the project
+          type: string
+          maxLength: 512
+        org:
+          description: The parent organization
+          type: string
+          pattern: ^[a-z][a-z0-9]*(-[a-z0-9]+)*$
+        created_at:
+          description: Time when the project was created
+          type: string
+          format: date-time
+        updated_at:
+          description: Time when the project was last updated
+          type: string
+          format: date-time
+        deleted:
+          description: If true, the project has been deleted
+          type: boolean
+    project_create: {description: Properties of the project to create, type: object,
+      required: [org], properties: {display_name: {description: The display name of
+            the project, type: string, maxLength: 512}, org: {description: The parent
+            organization, type: string, pattern: '^[a-z][a-z0-9]*(-[a-z0-9]+)*$'}}}
+    project_update:
+      description: Properties of the project to update
+      type: object
+      properties:
+        display_name:
+          description: The display name of the project
+          type: string
+          maxLength: 512
+    projects:
+      description: List of projects
+      type: object
+      required:
+      - items
+      properties:
+        items:
+          description: The projects
+          type: array
+          items:
+            $ref: '#/components/schemas/project'
+    quantity_set:
+      description: Resource quantities
+      type: object
+      properties:
+        cpu_cores:
+          description: CPU cores
+          type: integer
+          format: int64
+        ram:
+          description: RAM, bytes
+          type: integer
+          format: int64
+        instance_storage:
+          description: Instance storage, bytes
+          type: integer
+          format: int64
+        bandwidth:
+          description: Network bandwidth, bps
+          type: integer
+          format: int64
+        persistent_storage:
+          description: Persistent storage, bytes
+          type: integer
+          format: int64
+        instances:
+          description: Instances
+          type: integer
+          format: int64
+        networks:
+          description: Networks
+          type: integer
+          format: int64
+        gateways:
+          description: Gateways
+          type: integer
+          format: int64
+        load_balancers:
+          description: Load balancers
+          type: integer
+          format: int64
+        public_ips:
+          description: Public IPs
+          type: integer
+          format: int64
+        floating_ips:
+          description: Floating IPs
+          type: integer
+          format: int64
+    quota:
+      description: Organization quota info
+      type: object
+      required:
+      - limits
+      - usage
+      properties:
+        limits:
+          $ref: '#/components/schemas/quantity_set'
+          description: Maximum resource usage. Omitted parameters are unlimited.
+        usage:
+          $ref: '#/components/schemas/quantity_set'
+          description: Actual resource usage
+    realm_type:
+      description: The type of a realm.
+      type: string
+      enum: [org, partner, admin]
+    role:
+      description: Description of the role
+      type: object
+      required:
+      - id
+      - realm_type
+      properties:
+        id:
+          description: Unique ID of the role
+          type: string
+          pattern: ^[a-z][a-z0-9]*(-[a-z0-9]+)*$
+        display_name:
+          description: The display name of the role
+          type: string
+          maxLength: 512
+        realm_type:
+          $ref: '#/components/schemas/realm_type'
+          description: The type of realm to which the role applies
+        object_type:
+          $ref: '#/components/schemas/object_type'
+          description: The type of the object to which the role applies
+    roles:
+      description: List of roles
+      type: object
+      required:
+      - items
+      properties:
+        items:
+          description: The roles
+          type: array
+          items:
+            $ref: '#/components/schemas/role'
+    storage_key:
+      description: Description of the storage key
+      type: object
+      required:
+      - id
+      - project
+      - member
+      - storage_site
+      - created_at
+      - updated_at
+      properties:
+        id:
+          description: Unique ID of the storage key
+          type: string
+          pattern: ^[a-z][a-z0-9]*(-[a-z0-9]+)*$
+        display_name:
+          description: The display name of the storage key
+          type: string
+          maxLength: 512
+        project:
+          description: Project ID
+          type: string
+          pattern: ^[a-z][a-z0-9]*(-[a-z0-9]+)*$
+        member:
+          description: Member ID
+          type: string
+          pattern: ^[a-z][a-z0-9]*(-[a-z0-9]+)*$
+        storage_site:
+          description: Storage site ID
+          type: string
+          pattern: ^[a-z][a-z0-9]*(-[a-z0-9]+)*$
+        created_at:
+          description: Time when the storage key was created
+          type: string
+          format: date-time
+        updated_at:
+          description: Time when the storage key was last updated
+          type: string
+          format: date-time
+    storage_key_create:
+      description: Properties of the storage key to create
+      type: object
+      required:
+      - project
+      - member
+      - storage_site
+      properties:
+        display_name:
+          description: The display name of the storage key
+          type: string
+          maxLength: 512
+        project:
+          description: Project ID
+          type: string
+          pattern: ^[a-z][a-z0-9]*(-[a-z0-9]+)*$
+        member:
+          description: Member ID
+          type: string
+          pattern: ^[a-z][a-z0-9]*(-[a-z0-9]+)*$
+        storage_site:
+          description: Storage site ID
+          type: string
+          pattern: ^[a-z][a-z0-9]*(-[a-z0-9]+)*$
+    storage_key_created:
+      description: Description of the newly created storage key
+      allOf:
+      - $ref: '#/components/schemas/storage_key'
+      - type: object
+        required:
+        - secret_key
+        properties:
+          secret_key:
+            description: The S3 SecretKey to authenticate against the object storage
+              location
+            type: string
+    storage_key_update: {description: Properties of the storage key to update, type: object,
+      properties: {display_name: {description: The display name of the storage key,
+          type: string, maxLength: 512}}}
+    storage_keys:
+      description: List of storage keys
+      type: object
+      required:
+      - items
+      properties:
+        items:
+          description: The storage keys
+          type: array
+          items:
+            $ref: '#/components/schemas/storage_key'
+    subject_type:
+      description: The type of a policy subject
+      type: string
+      enum: [member, group]
+  responses:
+    error_400:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            type: string
+    error_401: {description: Unauthorized, content: {application/json: {schema: {
+            type: string}}}}
+    error_403: {description: Forbidden, content: {application/json: {schema: {type: string}}}}
+    error_404: {description: Not Found, content: {application/json: {schema: {type: string}}}}
+tags:
+- name: API Server Status
+  description: Checking API server status
+- name: API Keys
+  description: Operations on API keys
+- name: Clients
+  description: Operations on clients
+- name: Group Memberships
+  description: Operations on group memberships
+- name: Groups
+  description: Operations on groups
+- name: Members
+  description: Operations on members
+- name: Orgs
+  description: Operations on orgs
+- name: Partners
+  description: Operations on partners
+- name: Policies
+  description: Operations on policies
+- name: Projects
+  description: Operations on projects
+- name: Roles
+  description: Operations on roles
+- name: Storage Keys
+  description: Operations on storage keys
