@@ -67,6 +67,8 @@ getting-started:
           page: getting-started/rks/vpn/manage-vpn.md
         - label: Upgrading a cluster
           page: getting-started/rks/upgrade-cluster/upgrade-cluster.md
+        - label: Applications marketplace
+          page: getting-started/rks/marketplace/marketplace.md
     - page: getting-started/rcs/rcs-getting-started.md
     - page: getting-started/ros/ros-getting-started.md
 
