@@ -30,14 +30,17 @@ You can see the persistent volumes created for the cluster on the **Persistent V
 ## Updating the cluster Properties
 
 To edit a cluster, go to the **Cluster** page and open the menu in the top right corner.
+
 ![edit cluster](manage-cluster-3.png)
+
 - To initiate a Kubernetes version upgrade, select **Upgrade Version**.
   Ridge will upgrade all cluster nodes gracefully.
 - To update the API whitelist, select **Edit Whitelist** and make the necessary changes.
-  ![edit api whitelist](manage-cluster-4.png)
-- To change the AWS credentials, select **Edit AWS Creds** and modify the role ad/or select a different key
-  ![edit aws credentials](manage-cluster-5.png)
 
+![edit api whitelist](manage-cluster-4.png)
+- To change the AWS credentials, select **Edit AWS Creds** and modify the role ad/or select a different key
+
+![edit aws credentials](manage-cluster-5.png)
 
 ## Node Pools
 ### Updating a Node Pool
@@ -53,15 +56,17 @@ You can perform the following updates to a node pool:
 3. Select the Node Pool you wish to edit.
    The **Edit Node Pool** dialog opens.
 4. Make the modifications you desire
-8. Click **Update Node Pool**.
-   ![update node pool](manage-cluster-6.png)
+5. Click **Update Node Pool**.
+
+![update node pool](manage-cluster-6.png)
 
 ### Deleting a Node
 1. To delete a node, go to the **Cluster** page and select the **Node Pools** tab.
 2. Select the node pool in which the node resides.
 3. Click the trash can on the right-hand side.
    If necessary, Ridge will instruct Kubernetes to evict the node and delete it after it is evicted.
-   ![terminate node](manage-cluster-7.png)
+
+![terminate node](manage-cluster-7.png)
 
 ### Deleting a Node Pool
 1. To delete a node pool, go to the **Cluster** page and select the **Node Pools** tab.
