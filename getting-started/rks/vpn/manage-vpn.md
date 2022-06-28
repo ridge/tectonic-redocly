@@ -9,7 +9,7 @@ This document describes how to create and manage a VPN connection.
 ## Creating a VPN
 On a _running_ cluster choose the VPN tab and press "Add VPN", this will open the VPN pane.
 
-![vpn](add-vpn.png)
+![vpn](vpn-1.png)
 Configure the following properties:
  - Name - the display name of the VPN
  - _WireGuard_ Public Key - you can bring your own key. if left empty, one will be automatically generated
@@ -18,7 +18,7 @@ Configure the following properties:
 Press `Create` and Ridge will install and configure the VPN endpoint.
 Copy or download the WireGuard configuration. If you manually generated your keys, replace `<<CLIENT PRIVATE KEY>>` by your private key.
 
-![vpn-properties](vpn-properties.png)
+![vpn-properties](vpn-2.png)
 
 ## Configure the _WireGuard_ client
 - You will need to install _WireGuard_, you can find the installation guide here https://www.wireguard.com/install/
@@ -47,10 +47,10 @@ The connection was successfully established if you see under the peer section of
     persistent keepalive: every 25 seconds
     ```
 
-## Configure the VPN
+# Configure the VPN
 You can always change a running VPN name or local network properties by editing the VPN, click the pencil on your VPN
 
-![vpn-update](vpn-update.png)
+![vpn-update](vpn-3.png)
 
-## Deleting the VPN
+# Deleting the VPN
 On the “Update VPN” page, select Properties → Delete and confirm the deletion.
