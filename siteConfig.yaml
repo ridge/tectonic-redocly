@@ -23,6 +23,7 @@ oasDefinitions:
   keyring-unstable: ./api/keyring/unstable/keyring.yaml
   ros-unstable: ./api/ros/unstable/ros.yaml
 stylesheets:
+  - './main.css'
   - https://fonts.googleapis.com/css?family=Roboto+Mono:300,400,600,700
   - https://fonts.googleapis.com/css?family=Nunito+Sans:300,400,600,700,900&display=swap
   - https://use.fontawesome.com/releases/v6.1.1/css/all.css
