@@ -42,7 +42,6 @@ You can also request external load balancers from within the Kubernetes cluster 
 
 Similar to other managed Kubernetes solutions, each Ridge cluster is installed with a Ridge Cloud-controller component that monitors for internal Kubernetes state changes and interacts with the Ridge Cloud to reconcile to the desired state, such that when a user makes a load balancer request, Ridge can handle and provide the load balancer.
 
-![rks-overview-1](rks-overview-1.png)
 ### Basic Load Balancer Flow
 When you create a service of type _LoadBalancer_ on the cluster, Ridge’s Cloud Controller will attempt to fulfill this request by sending the Ridge Cloud a request to create (and also modify and delete) a load balancer. The Ridge Cloud will create and configure a load balancer in the relevant Data Center, and will send the cloud-provider the IP address that was allocated, which in turn sends it to Kubernetes.
 Note, this entire process is done in a seamless, transparent manner. You only need to define the desired state.
@@ -51,8 +50,6 @@ When a cluster is deleted, any associated load balancers are also deleted.
 Load balancers may incur additional fees as they consume a routable IP and compute resources.
 
 You manage load balancing services via the Kubernetes API.
-![rks-overview-2](rks-overview-2.png)
-
 
 ## Persistent Storage
 RKS supports Persistent Volumes (PV) in all Data Centers that offer block storage.
