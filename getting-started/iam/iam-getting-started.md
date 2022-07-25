@@ -23,7 +23,7 @@ You will not be able to perform the actions described in this guide without thes
 
 ## Creating a Project
 
-All services that you consume from the Ridge Cloud are created as part of a project. To view the projects in your organization, select the Projects menu item in the lest navigation bar located under the IAM section.
+All services that you consume from the Ridge Cloud are created as part of a project. To view the projects in your organization, select the Projects menu item in the navigation bar located under the IAM section.
 
 
 ![project list](projects.png)
@@ -110,17 +110,17 @@ We start by selecting the Groups item in the left navigation bar and press the A
 
 ![groups](groups.png)
 
-Name the group sandbox-admins.
+Name the group **sandbox-admins**.
 
 
 ![create group](create-group.png)
 
-From the group list choose to edit the sandbox-admins group. Select the Project-administrator privilege in the Sandbox project.
+From the group list choose to edit the **sandbox-admins group**. Select the Project-editor privilege in the Sandbox project.
 
 
 ![group privilege](add-group-privileges.png)
 
-Now any member that will be added to the group will have project administrator privileges in the Sandbox project.
+Now any member that will be added to the group will have project editor privileges in the Sandbox project.
 
 ### Adding a Member
 Next we will add a member to this group. In the editing pane of the group, you can select the members from the list of organization members. In this example we add a member named Cloud-App
@@ -137,7 +137,7 @@ To delete the group select the vertical ellipsis sign at the top right hand of t
 ![delete group](delete-group.png)
 
 ## Granting Privileges to a Member
-Privileges may ne assigned to individual members (in addition to groups). From the members list press the edit icon of the member. In this example we will add the Project Operator role to the member named Joe in the Sandbox project.
+Privileges may be assigned to individual members (in addition to groups). From the members list press the edit icon of the member. In this example we will add the Project editor role to the member named Joe in the Sandbox project.
 
 ![member privileges](member-privilege.png)
 
