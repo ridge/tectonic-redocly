@@ -4,7 +4,7 @@ Creating a Kubernetes cluster includes three main steps:
 * Configuring Node Pool(s)
 * Accessing the cluster
 
-From the **Navigation** pane, click **Kubernetes** and then click **Create Cluster**.
+From the **Navigation** pane, click **Kubernetes** &rarr; **Clusters** and then click **Create Cluster**.
 ![create cluster](first-cluster.png)
 
 ## Cluster Configuration
@@ -58,6 +58,37 @@ Click **Create Cluster**
 
 After you create the Cluster, Ridge begins creating and provisioning. It creates master node(s), worker nodes, provisions the machines, network and security rules.  The cluster it creates  is fully isolated from the world. Once the cluster is in the `running` state, You can use the Kubernetes API to interact with and deploy applications on top of it.
 
+## Additional Settings
+
+![additional settings](cluster-additional-settings.png)
+### Master nodes configuration
+Choose a master nodes' configuration in case you want to override the default master node configuration.
+
+### CNI plugin
+Ridge supports Weave (default) and Calico
+
+### API server whitelist
+Your cluster is created, by default, With a Kubernetes API server that can be accessed from any IP address. If you wish to limit this access or block it altogether, click **Additional Settings**.
+- select **Block all** to prevent access to the API
+- select **Allow only** and enter one or more addresses in CIDR format
+  You can edit this list at any time.
+
+### AWS Credentials for Containers
+Applications deployed on any Ridge cluster, can continue to use any AWS service, with no extra configuration.
+This allows you to deploy applications that use AWS SDK without the need to handle complicated permission configuration - Ridge dynamically takes care of that.
+
+In order to use this feature, you need to:
+- Create and store a one-time AWS credentials using Ridge credentials vault.
+  Select the **Credentials Vault** -> **AWS** to manage AWS credentials. Ridge can use these to create temporary credentials for your containers. The AWS SDK that you install in your container will automatically locate these credentials. This will allow your containers to seamlessly access AWS services.
+
+- provide AWS credentials to the containers in you cluster click **Additional Settings**. In the **AWS credentials** section set the following:
+  - Enter the ARN of the role that you wish the containers to assume in the **Role ARN**
+  - Select the AWS credentials to use for obtaining the temporary credentials from the dropdown list in the **key** parameter.
+
+### Taints and Labels for Node Pools
+To add kubernetes taints and labels to a node pool, click **Taints and Labels** in the node pool's section.
+Labels are simply pairs of {key,value}. Select **Add Label** and set the **Key** abd **Value**.
+A taint is a tuple of {key,value,effect}. To add a taint select **Add Taint**. Set the  **Key** abd **Value** and select the **Effect** from the dropdown menu.
 
 ## Accessing the cluster
 To access a cluster using standard Kubernetes API tools such as `kubectl`, you need to create an **Access Token**.
@@ -82,37 +113,5 @@ A standard Kubernetes configuration file is generated, now you can securely use 
 Download the Kubernetes config file and save it under your `.kube` folder or export `KUBECONFIG=<name of your config file>`, so you can point your kubectl to the cluster you just created.
 
 ![new token](new-token.png)
-
-## Additional Settings
-
-![additional settings](cluster-additional-settings.png)
-### Master nodes configuration
-Choose a master nodes' configuration in case you want to override the default master node configuration.
-
-### CNI plugin
-Ridge supports Weave (default) and Calico
-
-### API server whitelist
-Your cluster is created, by default, With a Kubernetes API server that can be accessed from any IP address. If you wish to limit this access or block it altogether, click **Additional Settings**.
-- select **Block all** to prevent access to the API
-- select **Allow only** and enter one or more addresses in CIDR format
-  You can edit this list at any time.
-
-### AWS Credentials for Containers
-Applications deployed on any Ridge cluster, can continue to use any AWS service, with no extra configuration.
-This allows you to deploy applications that use AWS SDK without the need to handle complicated permission configuration - Ridge dynamically takes care of that.
-
-In order to use this feature, you need to:
-- Create and store a one-time AWS credentials using Ridge credentials vault.
-Select the **Credentials Vault** -> **AWS** to manage AWS credentials. Ridge can use these to create temporary credentials for your containers. The AWS SDK that you install in your container will automatically locate these credentials. This will allow your containers to seamlessly access AWS services.
-
-- provide AWS credentials to the containers in you cluster click **Additional Settings**. In the **AWS credentials** section set the following:
-   - Enter the ARN of the role that you wish the containers to assume in the **Role ARN**
-   - Select the AWS credentials to use for obtaining the temporary credentials from the dropdown list in the **key** parameter.
-
-### Taints and Labels for Node Pools
-To add kubernetes taints and labels to a node pool, click **Taints and Labels** in the node pool's section.
-Labels are simply pairs of {key,value}. Select **Add Label** and set the **Key** abd **Value**.
-A taint is a tuple of {key,value,effect}. To add a taint select **Add Taint**. Set the  **Key** abd **Value** and select the **Effect** from the dropdown menu.
 
 ![taints and labels](taints-and-labels.png)
