@@ -1,5 +1,6 @@
-# Application Marketplace
-Using Ridge Application Marketplace, you can deploy prepackaged applications from an application catalog on any Kubernetes cluster.
+# Application marketplace
+Using Ridge Application marketplace, you can deploy a prepackaged applications from an application catalog on any Kubernetes cluster.
+
 
 ## Deploying an application
 You can deploy an application in 2 ways:
