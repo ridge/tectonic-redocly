@@ -84,6 +84,8 @@ footer:
           href: 'https://www.ridge.co/blog/'
         - label: Q&A
           href: 'https://www.ridge.co/questions-and-answers/'
+        - label: Webinars & Podcasts
+          href: 'https://www.ridge.co/webinars-and-podcasts/'
     - group: Engage
       items:
         - label: Contact Us
