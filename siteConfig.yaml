@@ -58,6 +58,8 @@ footer:
           href: 'https://www.ridge.co/platform/rcs/'
         - label: Object Storage Service
           href: 'https://www.ridge.co/platform/ros/'
+        - label: Compute
+          href: 'https://www.ridge.co/platform/ris/'
     - group: Developers
       items:
         - label: Docs
