@@ -37,7 +37,7 @@ api:
   - group: External Credentials
     expanded: false
     pages:
-      - group: Unstable
+      - group: Experimental
         expanded: false
         pages:
             - label: keyring-experimental
