@@ -16,7 +16,7 @@ logo:
 enableToc: true
 oasDefinitions:
   rks-unstable: ./api/rks/unstable/rks.yaml
-  rcs-unstable: ./api/rcs/unstable/rcs.yaml
+  rcs-experimental: ./api/rcs/experimental/rcs.yaml
   iam-unstable: ./api/iam/unstable/iam.yaml
   iam-experimental: ./api/iam/experimental/iam.yaml
   compute-unstable: ./api/compute/unstable/compute.yaml

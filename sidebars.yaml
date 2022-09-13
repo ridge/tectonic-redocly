@@ -11,11 +11,11 @@ api:
   - group: Ridge Container Service (RCS)
     expanded: false
     pages:
-      - group: Unstable
+      - group: Experimental
         expanded: false
         pages:
-            - label: rcs-unstable
-              page: api/rcs/unstable/rcs.page.yaml/*
+            - label: rcs-experimental
+              page: api/rcs/experimental/rcs.page.yaml/*
   - group: Identity and Access Management (IAM)
     expanded: false
     pages:

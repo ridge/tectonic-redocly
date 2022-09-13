@@ -1,0 +1,588 @@
+openapi: 3.1.0
+info:
+    title: Ridge Container Service API
+    description: An API for managing containers
+    version: experimental
+servers:
+    - url: '{origin}/rcs/experimental'
+      variables:
+        origin:
+            default: https://api.ridge.co
+            description: The scheme, domain name and optional port to access the API server
+paths:
+    /batches:
+        post:
+            operationId: batch_create
+            summary: Create a batch
+            parameters:
+                - name: X-Ridge-Request-ID
+                  in: header
+                  description: Client-generated request ID for idempotency
+                  schema:
+                    type: string
+                    maxLength: 64
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/batch_create'
+                required: true
+            responses:
+                200:
+                    description: Success
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/batch'
+                400:
+                    $ref: '#/components/responses/error_400'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+            tags: [Batches]
+    /batches/{batch}:
+        parameters:
+            - name: batch
+              in: path
+              description: Unique identifier of the batch
+              required: true
+              schema:
+                type: string
+                pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+        get:
+            operationId: batch_describe
+            summary: Describe a batch
+            responses:
+                200:
+                    description: Success
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/batch'
+                400:
+                    $ref: '#/components/responses/error_400'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+                404:
+                    $ref: '#/components/responses/error_404'
+            tags: [Batches]
+        patch:
+            operationId: batch_update
+            summary: Update the properties of a batch
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/batch_update'
+                required: true
+            responses:
+                200:
+                    description: Success
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/batch'
+                400:
+                    $ref: '#/components/responses/error_400'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+                404:
+                    $ref: '#/components/responses/error_404'
+            tags: [Batches]
+        delete:
+            operationId: batch_delete
+            summary: Delete a batch
+            responses:
+                204:
+                    description: Success
+                400:
+                    $ref: '#/components/responses/error_400'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+                404:
+                    $ref: '#/components/responses/error_404'
+            tags: [Batches]
+    /batches/{batch}/containers:
+        parameters:
+            - name: batch
+              in: path
+              description: Unique identifier of the batch
+              required: true
+              schema:
+                type: string
+                pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+        get:
+            operationId: batch_list_containers
+            summary: List containers of a batch
+            responses:
+                200:
+                    description: Success
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/container_list'
+                400:
+                    $ref: '#/components/responses/error_400'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+                404:
+                    $ref: '#/components/responses/error_404'
+            tags: [Containers]
+    /containers/{container}:
+        parameters:
+            - name: container
+              in: path
+              description: Unique identifier of the container
+              required: true
+              schema:
+                type: string
+                pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+        get:
+            operationId: container_describe
+            summary: Describe a container
+            responses:
+                200:
+                    description: Success
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/container'
+                400:
+                    $ref: '#/components/responses/error_400'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+                404:
+                    $ref: '#/components/responses/error_404'
+            tags: [Containers]
+        delete:
+            operationId: container_delete
+            summary: Delete a container
+            responses:
+                204:
+                    description: Success
+                400:
+                    $ref: '#/components/responses/error_400'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+                404:
+                    $ref: '#/components/responses/error_404'
+            tags: [Containers]
+    /projects/{project}/batches:
+        parameters:
+            - name: project
+              in: path
+              description: Unique identifier of the project
+              required: true
+              schema:
+                type: string
+                pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+        get:
+            operationId: project_list_batches
+            summary: List batches of a project
+            responses:
+                200:
+                    description: Success
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/batch_list'
+                400:
+                    $ref: '#/components/responses/error_400'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+                404:
+                    $ref: '#/components/responses/error_404'
+            tags: [Batches]
+components:
+    schemas:
+        aws_role:
+            description: The IAM role that will grant the cluster permissions (using temporary credentials) to access AWS services
+            type: object
+            required:
+                - role_arn
+                - aws_access_key
+            properties:
+                role_arn:
+                    description: The unique identifier of the role in AWS
+                    type: string
+                    pattern: ^arn:aws:iam::\d{12}:role/.+$
+                aws_access_key:
+                    description: The unique identifier of the AWS key that should be used to create temporary credentials for the cluster
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+        batch:
+            description: Description of the batch
+            type: object
+            required:
+                - id
+                - spec
+                - status
+            properties:
+                id:
+                    description: Unique ID of the batch
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                spec:
+                    $ref: '#/components/schemas/batch_spec'
+                    description: Specification of the batch
+                status:
+                    $ref: '#/components/schemas/batch_status'
+                    description: Status of the batch
+        batch_create:
+            description: Properties of the batch to create
+            type: object
+            required:
+                - number
+                - container_image
+                - network
+            properties:
+                display_name:
+                    description: The display name of the batch
+                    type: string
+                    maxLength: 512
+                number:
+                    description: The requested number of containers.
+                    type: integer
+                    minimum: 0
+                container_image:
+                    description: The path where the container image can be found.
+                    type: string
+                    pattern: ^[-.\w]+(:\d+)?(/[-.\w]+)+(:[-.\w]{1,128})?(@[-+.\w]+:[[:xdigit:]]{32,})?$
+                env:
+                    description: A list of environment variables to be passed to the containers, usually in the form <name>=<value>.
+                    type: array
+                    items:
+                        type: string
+                    default: []
+                entry_point:
+                    description: An entry point is the binary (with path) to run as an executable. It overrides the default one provided by the container image.
+                    type: string
+                args:
+                    description: Arguments that override the default ones provided by the container image. If you define args, but do not define an entry point, the default one is used with these arguments.
+                    type: array
+                    items:
+                        type: string
+                    default: []
+                docker_credentials:
+                    description: The ID of Docker credentials to access the container-image repository.
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                elasticsearch_endpoint:
+                    description: URL of Elasticsearch instance where logs produced by containers are sent.
+                    type: string
+                    format: uri
+                aws_role:
+                    $ref: '#/components/schemas/aws_role'
+                    description: The AWS IAM role ans the AWS credentials that will be used to grant the container permission to access AWS services. The container will receive temporary credentials.
+                catalog_item:
+                    description: The VM catalog item ID.
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                network:
+                    description: The ID of the network for the batch.
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                quantities:
+                    $ref: '#/components/schemas/quantity_set'
+                    description: The quantities of the instances
+                    default: {}
+        batch_issues:
+            type: object
+            properties:
+                shortage:
+                    description: Indicates the batch is not fully provisioned due to a shortage at the data center.
+                    type: boolean
+                out_of_quota:
+                    description: Indicates the batch is not fully provisioned due to quota limitation.
+                    type: boolean
+        batch_list:
+            description: List of batches
+            type: object
+            required:
+                - items
+            properties:
+                items:
+                    description: The batches
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/batch'
+        batch_phase:
+            type: string
+            enum: [creating, fulfilling, fulfilled, failed, terminating, terminated]
+        batch_spec:
+            description: Specification of the batch
+            type: object
+            required:
+                - number
+                - container_image
+                - env
+                - args
+                - network
+                - quantities
+                - created_at
+                - updated_at
+            properties:
+                display_name:
+                    description: The display name of the batch
+                    type: string
+                    maxLength: 512
+                number:
+                    description: The requested number of containers.
+                    type: integer
+                    minimum: 0
+                container_image:
+                    description: The path where the container image can be found.
+                    type: string
+                    pattern: ^[-.\w]+(:\d+)?(/[-.\w]+)+(:[-.\w]{1,128})?(@[-+.\w]+:[[:xdigit:]]{32,})?$
+                env:
+                    description: A list of environment variables to be passed to the containers, usually in the form <name>=<value>.
+                    type: array
+                    items:
+                        type: string
+                entry_point:
+                    description: An entry point is the binary (with path) to run as an executable. It overrides the default one provided by the container image.
+                    type: string
+                args:
+                    description: Arguments that override the default ones provided by the container image. If you define args, but do not define an entry point, the default one is used with these arguments.
+                    type: array
+                    items:
+                        type: string
+                docker_credentials:
+                    description: The ID of Docker credentials to access the container-image repository.
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                elasticsearch_endpoint:
+                    description: URL of Elasticsearch instance where logs produced by containers are sent.
+                    type: string
+                    format: uri
+                aws_role:
+                    $ref: '#/components/schemas/aws_role'
+                    description: The AWS IAM role ans the AWS credentials that will be used to grant the container permission to access AWS services. The container will receive temporary credentials.
+                catalog_item:
+                    description: The VM catalog item ID.
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                network:
+                    description: The ID of the network for the batch.
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                quantities:
+                    $ref: '#/components/schemas/quantity_set'
+                    description: The quantities of the instances
+                created_at:
+                    description: Time when the batch was created
+                    type: string
+                    format: date-time
+                updated_at:
+                    description: Time when the batch was last updated
+                    type: string
+                    format: date-time
+        batch_status:
+            description: Status of the batch
+            type: object
+            required:
+                - project
+                - phase
+                - number
+            properties:
+                project:
+                    description: The unique identifier of the project.
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                phase:
+                    $ref: '#/components/schemas/batch_phase'
+                    description: The life cycle phase of the batch.
+                number:
+                    description: The actual number of running or completed containers.
+                    type: integer
+                    minimum: 0
+                issues:
+                    $ref: '#/components/schemas/batch_issues'
+                    description: Batch issues
+        batch_update:
+            description: Properties of the batch to update
+            type: object
+            properties:
+                display_name:
+                    description: The display name of the batch
+                    type: string
+                    maxLength: 512
+                aws_role:
+                    description: The AWS IAM role ans the AWS credentials that will be used to grant the container permission to access AWS services. The container will receive temporary credentials.
+                    anyOf:
+                        - $ref: '#/components/schemas/aws_role'
+                        - type: "null"
+        container:
+            description: Description of the container
+            type: object
+            required:
+                - id
+                - batch
+                - quantities
+                - phase
+            properties:
+                id:
+                    description: Unique ID of the container
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                batch:
+                    description: The batch to which this container belongs.
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                quantities:
+                    $ref: '#/components/schemas/quantity_set'
+                    description: Instances parameters to run on them
+                started_at:
+                    description: The time when the container was started.
+                    type: string
+                    format: date-time
+                terminated_at:
+                    description: The time when the container was terminated.
+                    type: string
+                    format: date-time
+                phase:
+                    $ref: '#/components/schemas/container_phase'
+                    description: The life cycle phase of the container.
+                phase_reason:
+                    $ref: '#/components/schemas/termination_reason'
+                    description: Information on why the container has reached current life cycle phase.
+                exit_code:
+                    description: Exit code of containerized application.
+                    type: integer
+                error:
+                    description: Error which occurred during container's life cycle.
+                    type: string
+                issues:
+                    $ref: '#/components/schemas/container_issues'
+                    description: Container issues
+        container_issues:
+            type: object
+            properties:
+                shortage:
+                    description: Indicates the container is not fully provisioned due to a shortage at the data center.
+                    type: boolean
+                degraded:
+                    description: The container is running in a degraded mode. There might be a delay between issuing a command for controlling this container and a response.
+                    type: boolean
+        container_list:
+            description: List of containers
+            type: object
+            required:
+                - items
+            properties:
+                items:
+                    description: The containers
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/container'
+        container_phase:
+            type: string
+            enum: [starting, running, terminating, terminated, broken]
+        quantity_set:
+            description: Resource quantities
+            type: object
+            properties:
+                cpu_cores:
+                    description: CPU cores
+                    type: integer
+                    format: int64
+                    minimum: 0
+                ram:
+                    description: RAM, bytes
+                    type: integer
+                    format: int64
+                    minimum: 0
+                instance_storage:
+                    description: Instance storage, bytes
+                    type: integer
+                    format: int64
+                    minimum: 0
+                bandwidth:
+                    description: Network bandwidth, bps
+                    type: integer
+                    format: int64
+                    minimum: 0
+                persistent_storage:
+                    description: Persistent storage, bytes
+                    type: integer
+                    format: int64
+                    minimum: 0
+                instances:
+                    description: Instances
+                    type: integer
+                    format: int64
+                    minimum: 0
+                networks:
+                    description: Networks
+                    type: integer
+                    format: int64
+                    minimum: 0
+                gateways:
+                    description: Gateways
+                    type: integer
+                    format: int64
+                    minimum: 0
+                load_balancers:
+                    description: Load balancers
+                    type: integer
+                    format: int64
+                    minimum: 0
+                public_ips:
+                    description: Public IPs
+                    type: integer
+                    format: int64
+                    minimum: 0
+                floating_ips:
+                    description: Floating IPs
+                    type: integer
+                    format: int64
+                    minimum: 0
+        termination_reason:
+            description: Possible values are startingFailed (container failed to start), exited (containerized app exited itself), vmDeleted (vm of container terminated), undesiredCreated (container was forced to terminate because it is no longer desired), undesired (container has never started and is no longer desired), failed (container failed during running), failedToRetrieveAWSCredentials (system failed to retrieve AWS credentials for container batch for a limited period of time). The absence of that field should be treated as "container hasn't terminated yet".
+            type: string
+            enum: [startingFailed, exited, vmDeleted, undesiredCreated, undesired, failed, failedToRetrieveAWSCredentials]
+    responses:
+        error_400:
+            description: Bad Request
+            content:
+                application/json:
+                    schema:
+                        type: string
+        error_401:
+            description: Unauthorized
+            content:
+                application/json:
+                    schema:
+                        type: string
+        error_403:
+            description: Forbidden
+            content:
+                application/json:
+                    schema:
+                        type: string
+        error_404:
+            description: Not Found
+            content:
+                application/json:
+                    schema:
+                        type: string
+tags:
+    - name: Batches
+      description: Operations on batches
+    - name: Containers
+      description: Operations on containers
