@@ -40,8 +40,8 @@ api:
       - group: Unstable
         expanded: false
         pages:
-            - label: keyring-unstable
-              page: api/keyring/unstable/keyring.page.yaml/*
+            - label: keyring-experimental
+              page: api/keyring/experimental/keyring.page.yaml/*
   - group: Object Storage
     expanded: false
     pages:

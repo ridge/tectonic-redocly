@@ -1,0 +1,495 @@
+openapi: 3.1.0
+info:
+    title: External Credentials API
+    description: An API for managing credentials for external services.
+    version: experimental
+servers:
+    - url: '{origin}/keyring/experimental'
+      variables:
+        origin:
+            default: https://api.ridge.co
+            description: The scheme, domain name and optional port to access the API server
+paths:
+    /aws-keys:
+        post:
+            operationId: aws_key_create
+            summary: Create an AWS key
+            parameters:
+                - name: X-Ridge-Request-ID
+                  in: header
+                  description: Client-generated request ID for idempotency
+                  schema:
+                    type: string
+                    maxLength: 64
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/aws_key_create'
+                required: true
+            responses:
+                200:
+                    description: Success
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/aws_key'
+                400:
+                    $ref: '#/components/responses/error_400'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+            tags: [AWS Keys]
+    /aws-keys/{aws_key}:
+        parameters:
+            - name: aws_key
+              in: path
+              description: Unique identifier of the AWS key
+              required: true
+              schema:
+                type: string
+                pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+        get:
+            operationId: aws_key_describe
+            summary: Describe an AWS key
+            responses:
+                200:
+                    description: Success
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/aws_key'
+                400:
+                    $ref: '#/components/responses/error_400'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+                404:
+                    $ref: '#/components/responses/error_404'
+            tags: [AWS Keys]
+        patch:
+            operationId: aws_key_update
+            summary: Update the properties of an AWS key
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/aws_key_update'
+                required: true
+            responses:
+                200:
+                    description: Success
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/aws_key'
+                400:
+                    $ref: '#/components/responses/error_400'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+                404:
+                    $ref: '#/components/responses/error_404'
+            tags: [AWS Keys]
+        delete:
+            operationId: aws_key_delete
+            summary: Delete an AWS key
+            responses:
+                204:
+                    description: Success
+                400:
+                    $ref: '#/components/responses/error_400'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+                404:
+                    $ref: '#/components/responses/error_404'
+            tags: [AWS Keys]
+    /docker-registry-creds:
+        post:
+            operationId: docker_registry_creds_create
+            summary: Create a set of Docker registry credentials
+            parameters:
+                - name: X-Ridge-Request-ID
+                  in: header
+                  description: Client-generated request ID for idempotency
+                  schema:
+                    type: string
+                    maxLength: 64
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/docker_registry_creds_create'
+                required: true
+            responses:
+                200:
+                    description: Success
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/docker_registry_creds'
+                400:
+                    $ref: '#/components/responses/error_400'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+            tags: [Docker Registry Credentials]
+    /docker-registry-creds/{docker_registry_creds}:
+        parameters:
+            - name: docker_registry_creds
+              in: path
+              description: Unique identifier of the docker registry creds
+              required: true
+              schema:
+                type: string
+                pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+        get:
+            operationId: docker_registry_creds_describe
+            summary: Describe a set of Docker registry credentials
+            responses:
+                200:
+                    description: Success
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/docker_registry_creds'
+                400:
+                    $ref: '#/components/responses/error_400'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+                404:
+                    $ref: '#/components/responses/error_404'
+            tags: [Docker Registry Credentials]
+        patch:
+            operationId: docker_registry_creds_update
+            summary: Update the properties of a set of Docker registry credentials
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/docker_registry_creds_update'
+                required: true
+            responses:
+                200:
+                    description: Success
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/docker_registry_creds'
+                400:
+                    $ref: '#/components/responses/error_400'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+                404:
+                    $ref: '#/components/responses/error_404'
+            tags: [Docker Registry Credentials]
+        delete:
+            operationId: docker_registry_creds_delete
+            summary: Delete a set of Docker registry credentials
+            responses:
+                204:
+                    description: Success
+                400:
+                    $ref: '#/components/responses/error_400'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+                404:
+                    $ref: '#/components/responses/error_404'
+            tags: [Docker Registry Credentials]
+    /projects/{project}/aws-keys:
+        parameters:
+            - name: project
+              in: path
+              description: Unique identifier of the project
+              required: true
+              schema:
+                type: string
+                pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+        get:
+            operationId: project_list_aws_keys
+            summary: List AWS keys of a project
+            responses:
+                200:
+                    description: Success
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/aws_key_list'
+                400:
+                    $ref: '#/components/responses/error_400'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+                404:
+                    $ref: '#/components/responses/error_404'
+            tags: [AWS Keys]
+    /projects/{project}/docker-registry-creds:
+        parameters:
+            - name: project
+              in: path
+              description: Unique identifier of the project
+              required: true
+              schema:
+                type: string
+                pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+        get:
+            operationId: project_list_docker_registry_creds
+            summary: List Docker registry credentials of a project
+            responses:
+                200:
+                    description: Success
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/docker_registry_creds_list'
+                400:
+                    $ref: '#/components/responses/error_400'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+                404:
+                    $ref: '#/components/responses/error_404'
+            tags: [Docker Registry Credentials]
+components:
+    schemas:
+        aws_key:
+            description: Description of the AWS key
+            type: object
+            required:
+                - id
+                - project
+                - region
+                - access_key_id
+                - created_at
+                - updated_at
+            properties:
+                id:
+                    description: Unique ID of the AWS key
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                display_name:
+                    description: The display name of the AWS key
+                    type: string
+                    maxLength: 512
+                project:
+                    description: The project identifier.
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                region:
+                    description: The default AWS region.
+                    type: string
+                    minLength: 1
+                access_key_id:
+                    description: The AWS access key ID part of the credentials.
+                    type: string
+                    minLength: 16
+                    maxLength: 256
+                created_at:
+                    description: Time when the AWS key was created
+                    type: string
+                    format: date-time
+                updated_at:
+                    description: Time when the AWS key was last updated
+                    type: string
+                    format: date-time
+        aws_key_create:
+            description: Properties of the AWS key to create
+            type: object
+            required:
+                - project
+                - region
+                - access_key_id
+                - access_key_secret
+            properties:
+                display_name:
+                    description: The display name of the AWS key
+                    type: string
+                    maxLength: 512
+                project:
+                    description: The project identifier.
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                region:
+                    description: The default AWS region.
+                    type: string
+                    minLength: 1
+                access_key_id:
+                    description: The AWS access key ID part of the credentials.
+                    type: string
+                    minLength: 16
+                    maxLength: 256
+                access_key_secret:
+                    description: The secret part of the AWS access key.
+                    type: string
+                    minLength: 1
+        aws_key_list:
+            description: List of AWS keys
+            type: object
+            required:
+                - items
+            properties:
+                items:
+                    description: The AWS keys
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/aws_key'
+        aws_key_update:
+            description: Properties of the AWS key to update
+            type: object
+            properties:
+                display_name:
+                    description: The display name of the AWS key
+                    type: string
+                    maxLength: 512
+                region:
+                    description: The default AWS region.
+                    type: string
+                    minLength: 1
+                access_key_id:
+                    description: The AWS access key ID part of the credentials.
+                    type: string
+                    minLength: 16
+                    maxLength: 256
+                access_key_secret:
+                    description: The secret part of the AWS access key.
+                    type: string
+                    minLength: 1
+        docker_registry_creds:
+            description: Description of the docker registry creds
+            type: object
+            required:
+                - id
+                - project
+                - registry_url
+                - username
+                - created_at
+                - updated_at
+            properties:
+                id:
+                    description: Unique ID of the docker registry creds
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                display_name:
+                    description: The display name of the docker registry creds
+                    type: string
+                    maxLength: 512
+                project:
+                    description: The project identifier.
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                registry_url:
+                    description: The URL of the registry.
+                    type: string
+                    format: uri
+                username:
+                    description: The username.
+                    type: string
+                    minLength: 1
+                created_at:
+                    description: Time when the docker registry creds was created
+                    type: string
+                    format: date-time
+                updated_at:
+                    description: Time when the docker registry creds was last updated
+                    type: string
+                    format: date-time
+        docker_registry_creds_create:
+            description: Properties of the docker registry creds to create
+            type: object
+            required:
+                - project
+                - registry_url
+                - username
+                - password
+            properties:
+                display_name:
+                    description: The display name of the docker registry creds
+                    type: string
+                    maxLength: 512
+                project:
+                    description: The project identifier.
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                registry_url:
+                    description: The URL of the registry.
+                    type: string
+                    format: uri
+                username:
+                    description: The username.
+                    type: string
+                    minLength: 1
+                password:
+                    description: The password.
+                    type: string
+                    minLength: 1
+        docker_registry_creds_list:
+            description: List of Docker registry credentials
+            type: object
+            required:
+                - items
+            properties:
+                items:
+                    description: The Docker registry credentials
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/docker_registry_creds'
+        docker_registry_creds_update:
+            description: Properties of the docker registry creds to update
+            type: object
+            properties:
+                display_name:
+                    description: The display name of the docker registry creds
+                    type: string
+                    maxLength: 512
+                username:
+                    description: The username.
+                    type: string
+                    minLength: 1
+                password:
+                    description: The password.
+                    type: string
+                    minLength: 1
+    responses:
+        error_400:
+            description: Bad Request
+            content:
+                application/json:
+                    schema:
+                        type: string
+        error_401:
+            description: Unauthorized
+            content:
+                application/json:
+                    schema:
+                        type: string
+        error_403:
+            description: Forbidden
+            content:
+                application/json:
+                    schema:
+                        type: string
+        error_404:
+            description: Not Found
+            content:
+                application/json:
+                    schema:
+                        type: string
+tags:
+    - name: Docker Registry Credentials
+      description: Operations on Docker registry credentials
+    - name: AWS Keys
+      description: Operations on AWS keys
