@@ -15,7 +15,7 @@ logo:
   href: 'https://www.ridge.co/'
 enableToc: true
 oasDefinitions:
-  rks-experimental: ./api/rks/unstable/rks.yaml
+  rks-experimental: ./api/rks/experimental/rks.yaml
   rcs-experimental: ./api/rcs/experimental/rcs.yaml
   iam-unstable: ./api/iam/unstable/iam.yaml
   iam-experimental: ./api/iam/experimental/iam.yaml
