@@ -29,11 +29,19 @@ api:
   - group: Compute
     expanded: false
     pages:
-      - group: Experimental 
+      - group: Experimental
         expanded: false
         pages:
             - label: compute-experimental
               page: api/compute/experimental/compute.page.yaml/*
+  - group: Infrastructure
+      expanded: false
+      pages:
+        - group: Experimental
+          expanded: false
+          pages:
+            - label: compute-experimental
+              page: api/freerange/experimental/freerange.page.yaml/*
   - group: External Credentials
     expanded: false
     pages:

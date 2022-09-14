@@ -1,0 +1,688 @@
+openapi: 3.1.0
+info:
+    title: Ridge IaaS API
+    description: An API for managing computing infrastructure
+    version: experimental
+servers:
+    - url: '{origin}/ria/experimental'
+      variables:
+        origin:
+            default: https://api.ridge.co
+            description: The scheme, domain name and optional port to access the API server
+paths:
+    /instances:
+        post:
+            operationId: instance_create
+            summary: Create an instance
+            parameters:
+                - name: X-Ridge-Request-ID
+                  in: header
+                  description: Client-generated request ID for idempotency
+                  schema:
+                    type: string
+                    maxLength: 64
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/instance_create'
+                required: true
+            responses:
+                200:
+                    description: Success
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/instance'
+                400:
+                    $ref: '#/components/responses/error_400'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+            tags: [Instances]
+    /instances/{instance}:
+        parameters:
+            - name: instance
+              in: path
+              description: Unique identifier of the instance
+              required: true
+              schema:
+                type: string
+                pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+        get:
+            operationId: instance_describe
+            summary: Describe an instance
+            responses:
+                200:
+                    description: Success
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/instance'
+                400:
+                    $ref: '#/components/responses/error_400'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+                404:
+                    $ref: '#/components/responses/error_404'
+            tags: [Instances]
+        patch:
+            operationId: instance_update
+            summary: Update the properties of an instance
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/instance_update'
+                required: true
+            responses:
+                200:
+                    description: Success
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/instance'
+                400:
+                    $ref: '#/components/responses/error_400'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+                404:
+                    $ref: '#/components/responses/error_404'
+            tags: [Instances]
+        delete:
+            operationId: instance_delete
+            summary: Delete an instance
+            responses:
+                204:
+                    description: Success
+                400:
+                    $ref: '#/components/responses/error_400'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+                404:
+                    $ref: '#/components/responses/error_404'
+            tags: [Instances]
+    /instances/{instance}/console:
+        parameters:
+            - name: instance
+              in: path
+              description: Unique identifier of the instance
+              required: true
+              schema:
+                type: string
+                pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+        get:
+            operationId: instance_get_console_url
+            summary: Get remote console URL for the instance
+            parameters:
+                - name: protocol
+                  in: query
+                  required: true
+                  explode: false
+                  schema:
+                    $ref: '#/components/schemas/protocol_type'
+            responses:
+                200:
+                    description: Success
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/console_url'
+                400:
+                    $ref: '#/components/responses/error_400'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+                404:
+                    $ref: '#/components/responses/error_404'
+            tags: [Instances]
+    /instances/{instance}/power-off:
+        parameters:
+            - name: instance
+              in: path
+              description: Unique identifier of the instance
+              required: true
+              schema:
+                type: string
+                pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+        post:
+            operationId: instance_power_off
+            summary: Power off instance
+            responses:
+                204:
+                    description: Success
+                400:
+                    $ref: '#/components/responses/error_400'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+                404:
+                    $ref: '#/components/responses/error_404'
+                503:
+                    $ref: '#/components/responses/error_503'
+            tags: [Instances]
+    /instances/{instance}/power-on:
+        parameters:
+            - name: instance
+              in: path
+              description: Unique identifier of the instance
+              required: true
+              schema:
+                type: string
+                pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+        post:
+            operationId: instance_power_on
+            summary: Power on instance
+            responses:
+                204:
+                    description: Success
+                400:
+                    $ref: '#/components/responses/error_400'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+                404:
+                    $ref: '#/components/responses/error_404'
+                503:
+                    $ref: '#/components/responses/error_503'
+            tags: [Instances]
+    /instances/{instance}/reboot:
+        parameters:
+            - name: instance
+              in: path
+              description: Unique identifier of the instance
+              required: true
+              schema:
+                type: string
+                pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+        post:
+            operationId: instance_reboot
+            summary: Reboot instance
+            responses:
+                204:
+                    description: Success
+                400:
+                    $ref: '#/components/responses/error_400'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+                404:
+                    $ref: '#/components/responses/error_404'
+                503:
+                    $ref: '#/components/responses/error_503'
+            tags: [Instances]
+    /instances/{instance}/ssh-config:
+        parameters:
+            - name: instance
+              in: path
+              description: Unique identifier of the instance
+              required: true
+              schema:
+                type: string
+                pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+        get:
+            operationId: instance_get_ssh_config
+            summary: Get SSH config for the instance
+            description: Returns the SSH config for the instance in OpenSSH format
+            responses:
+                200:
+                    description: Success
+                    content:
+                        application/json:
+                            schema:
+                                type: string
+                400:
+                    $ref: '#/components/responses/error_400'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+                404:
+                    $ref: '#/components/responses/error_404'
+            tags: [Instances]
+    /os-images:
+        get:
+            operationId: list_os_images
+            summary: List available OS images
+            responses:
+                200:
+                    description: Success
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/os_image_list'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+            tags: [OS Images]
+    /os-images/{os_image}:
+        parameters:
+            - name: os_image
+              in: path
+              description: Unique identifier of the OS image
+              required: true
+              schema:
+                type: string
+                pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+        get:
+            operationId: os_image_describe
+            summary: Describe an OS image
+            responses:
+                200:
+                    description: Success
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/os_image'
+                400:
+                    $ref: '#/components/responses/error_400'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+                404:
+                    $ref: '#/components/responses/error_404'
+            tags: [OS Images]
+    /projects/{project}/instances:
+        parameters:
+            - name: project
+              in: path
+              description: Unique identifier of the project
+              required: true
+              schema:
+                type: string
+                pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+        get:
+            operationId: project_list_instances
+            summary: List instances of a project
+            responses:
+                200:
+                    description: Success
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/instance_list'
+                400:
+                    $ref: '#/components/responses/error_400'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+                404:
+                    $ref: '#/components/responses/error_404'
+            tags: [Instances]
+components:
+    schemas:
+        console_url:
+            description: Remote console URL
+            type: object
+            required:
+                - url
+                - expires
+            properties:
+                url:
+                    description: URL to open remote console
+                    type: string
+                    format: uri
+                expires:
+                    description: Expiration time
+                    type: string
+                    format: date-time
+        init_type:
+            description: Type of init mechanism
+            type: string
+            enum: [ignition2, ignition3, cloud-init]
+        instance:
+            description: Description of the instance
+            type: object
+            required:
+                - id
+                - spec
+                - status
+            properties:
+                id:
+                    description: Unique ID of the instance
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                spec:
+                    $ref: '#/components/schemas/instance_spec'
+                    description: Specification of the instance
+                status:
+                    $ref: '#/components/schemas/instance_status'
+                    description: Status of the instance
+        instance_create:
+            description: Properties of the instance to create
+            type: object
+            required:
+                - network
+                - catalog_item
+                - os_image
+            properties:
+                initial_hostname:
+                    description: Hostname of the instance set on first boot
+                    type: string
+                    maxLength: 64
+                    pattern: ^[a-zA-Z0-9.-]+$
+                network:
+                    description: The network for the instance
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                catalog_item:
+                    description: The instance catalog item
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                os_image:
+                    description: The instance operating system image
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                public_ip:
+                    description: Does the instance request a public IP
+                    type: boolean
+                display_name:
+                    description: The display name of the instance
+                    type: string
+                    maxLength: 512
+                initial_ssh_public_keys:
+                    description: Public SSH keys installed on the instance during first boot
+                    type: array
+                    items:
+                        type: string
+                        pattern: ^[a-z0-9@.-]+\s[A-Za-z0-9/+]+
+                    default: []
+                ssh_whitelist:
+                    description: |
+                        The list of whitelisted networks for SSH in CIDR format (AAA.BBB.CCC.DDD/NN) or single IP (AAA.BBB.CCC.DDD). May only be specified if the instance does not have a public IP.
+                        If not specified, then the access from any IP is allowed.
+                        If the instance has a public IP, then SSH is exposed to Internet directly, and access should be managed by the firewall on the instance itself
+                    type: array
+                    items:
+                        type: string
+                        pattern: ^\d{1,3}(\.\d{1,3}){3}(/\d\d?)?$
+                    default: [0.0.0.0/0]
+                quantities:
+                    $ref: '#/components/schemas/instance_quantity_set'
+                    description: The minimum hardware configuration of the instance
+                initial_password:
+                    description: Password for the default user
+                    type: string
+                    maxLength: 1024
+                initial_boot_script:
+                    description: Shell script executed on first boot
+                    type: string
+                    maxLength: 65536
+                ignition_config_url:
+                    description: |
+                        Ignition config that will be merged with the default one. Only for distributions that support Ignition.
+                        Supported schemes are `http`, `https`, `s3`, `tftp`, or `data` (use `data:;base64,<base64-encoded ignition file>`).
+                        Extra parameters like `httpHeaders` or `verification` are not available in the API, but it's possible to use them inside the config that is embedded into a data URL
+                    type: string
+                    format: uri
+        instance_issues:
+            description: Instance issues
+            type: object
+            properties:
+                shortage:
+                    description: Indicates the instance is not fully provisioned due to a shortage at the data center
+                    type: boolean
+                out_of_quota:
+                    description: Indicates the instance is not fully provisioned due to quota limitation
+                    type: boolean
+                degraded:
+                    description: Indicates the instance is in degraded mode. There might be a delay between issuing a command for controlling this instance and a response
+                    type: boolean
+        instance_list:
+            description: List of instances
+            type: object
+            required:
+                - items
+            properties:
+                items:
+                    description: The instances
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/instance'
+        instance_phase:
+            description: The life cycle phase of the instance
+            type: string
+            enum: [creating, running, terminating, terminated, failed]
+        instance_quantity_set:
+            description: Instance quantities
+            type: object
+            properties:
+                cpu_cores:
+                    description: CPU cores
+                    type: integer
+                    format: int64
+                    minimum: 0
+                ram:
+                    description: RAM, bytes
+                    type: integer
+                    format: int64
+                    minimum: 0
+                instance_storage:
+                    description: Instance storage, bytes
+                    type: integer
+                    format: int64
+                    minimum: 0
+                bandwidth:
+                    description: Network bandwidth, bps
+                    type: integer
+                    format: int64
+                    minimum: 0
+        instance_spec:
+            description: Specification of the instance
+            type: object
+            required:
+                - network
+                - catalog_item
+                - os_image
+                - initial_ssh_public_keys
+                - ssh_whitelist
+                - created_at
+                - updated_at
+            properties:
+                initial_hostname:
+                    description: Hostname of the instance set on first boot
+                    type: string
+                    maxLength: 64
+                    pattern: ^[a-zA-Z0-9.-]+$
+                network:
+                    description: The network for the instance
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                catalog_item:
+                    description: The instance catalog item
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                os_image:
+                    description: The instance operating system image
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                public_ip:
+                    description: Does the instance request a public IP
+                    type: boolean
+                display_name:
+                    description: The display name of the instance
+                    type: string
+                    maxLength: 512
+                initial_ssh_public_keys:
+                    description: Public SSH keys installed on the instance during first boot
+                    type: array
+                    items:
+                        type: string
+                        pattern: ^[a-z0-9@.-]+\s[A-Za-z0-9/+]+
+                ssh_whitelist:
+                    description: |
+                        The list of whitelisted networks for SSH in CIDR format (AAA.BBB.CCC.DDD/NN) or single IP (AAA.BBB.CCC.DDD). May only be specified if the instance does not have a public IP.
+                        If not specified, then the access from any IP is allowed.
+                        If the instance has a public IP, then SSH is exposed to Internet directly, and access should be managed by the firewall on the instance itself
+                    type: array
+                    items:
+                        type: string
+                        pattern: ^\d{1,3}(\.\d{1,3}){3}(/\d\d?)?$
+                quantities:
+                    $ref: '#/components/schemas/instance_quantity_set'
+                    description: The minimum hardware configuration of the instance
+                ignition_config_url:
+                    description: |
+                        Ignition config that will be merged with the default one. Only for distributions that support Ignition.
+                        Supported schemes are `http`, `https`, `s3`, `tftp`, or `data` (use `data:;base64,<base64-encoded ignition file>`).
+                        Extra parameters like `httpHeaders` or `verification` are not available in the API, but it's possible to use them inside the config that is embedded into a data URL
+                    type: string
+                    format: uri
+                created_at:
+                    description: Time when the instance was created
+                    type: string
+                    format: date-time
+                updated_at:
+                    description: Time when the instance was last updated
+                    type: string
+                    format: date-time
+        instance_status:
+            description: Status of the instance
+            type: object
+            required:
+                - project
+                - powered_on
+                - phase
+            properties:
+                project:
+                    description: The unique identifier of the project
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                powered_on:
+                    description: The power state of the instance
+                    type: boolean
+                phase:
+                    $ref: '#/components/schemas/instance_phase'
+                pending_power_command:
+                    $ref: '#/components/schemas/power_command'
+                    description: Power command that is pending for the instance.
+                public_ip:
+                    description: Public IP of the instance. Only present if public IP is requested for the instance
+                    type: string
+                    format: ipv4
+                private_ip:
+                    description: Private IP of the instance.
+                    type: string
+                    format: ipv4
+                ssh_host:
+                    description: SSH server host. Only present if SSH access is enabled
+                    type: string
+                    format: ipv4
+                ssh_port:
+                    description: SSH server port. Only present if SSH access is enabled
+                    type: integer
+                    minimum: 1
+                    maximum: 65535
+                issues:
+                    $ref: '#/components/schemas/instance_issues'
+        instance_update:
+            description: Properties of the instance to update
+            type: object
+            properties:
+                display_name:
+                    description: The display name of the instance
+                    type: string
+                    maxLength: 512
+                ssh_whitelist:
+                    description: |
+                        The list of whitelisted networks for SSH in CIDR format (AAA.BBB.CCC.DDD/NN) or single IP (AAA.BBB.CCC.DDD). May only be specified if the instance does not have a public IP.
+                        If not specified, then the access from any IP is allowed.
+                        If the instance has a public IP, then SSH is exposed to Internet directly, and access should be managed by the firewall on the instance itself
+                    type: array
+                    items:
+                        type: string
+                        pattern: ^\d{1,3}(\.\d{1,3}){3}(/\d\d?)?$
+        os_image:
+            description: Description of the OS image
+            type: object
+            required:
+                - id
+                - family
+                - version
+                - init
+            properties:
+                id:
+                    description: Unique ID of the OS image
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                family:
+                    description: The name of operating system family (e.g. Flatcar, Ubuntu)
+                    type: string
+                version:
+                    description: Version of operating system
+                    type: string
+                recommended:
+                    description: True value means that this is the image we recommend to use for the family
+                    type: boolean
+                init:
+                    $ref: '#/components/schemas/init_type'
+                    description: Mechanism that is used to initialize operating system
+        os_image_list:
+            description: List of OS images
+            type: object
+            required:
+                - items
+            properties:
+                items:
+                    description: The OS images
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/os_image'
+        power_command:
+            description: The power command to be executed on the instance
+            type: string
+            enum: ["on", "off", reboot]
+        protocol_type:
+            description: Console type
+            type: string
+            enum: [vnc, serial]
+    responses:
+        error_400:
+            description: Bad Request
+            content:
+                application/json:
+                    schema:
+                        type: string
+        error_401:
+            description: Unauthorized
+            content:
+                application/json:
+                    schema:
+                        type: string
+        error_403:
+            description: Forbidden
+            content:
+                application/json:
+                    schema:
+                        type: string
+        error_404:
+            description: Not Found
+            content:
+                application/json:
+                    schema:
+                        type: string
+        error_503:
+            description: Service Unavailable
+            content:
+                application/json:
+                    schema:
+                        type: string
+tags:
+    - name: Instances
+      description: Operations on instances
+    - name: OS Images
+      description: Operations on OS images

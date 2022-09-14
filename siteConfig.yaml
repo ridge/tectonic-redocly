@@ -22,6 +22,7 @@ oasDefinitions:
   compute-experimental: ./api/compute/experimental/compute.yaml
   keyring-experimental: ./api/keyring/experimental/keyring.yaml
   ros-unstable: ./api/ros/unstable/ros.yaml
+  freerange-experimental: ./api/freerange/experimental/freerange.yaml
 stylesheets:
   - './main.css'
   - https://fonts.googleapis.com/css?family=Roboto+Mono:300,400,600,700
