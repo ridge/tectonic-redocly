@@ -29,11 +29,11 @@ api:
   - group: Compute
     expanded: false
     pages:
-      - group: Unstable
+      - group: Experimental 
         expanded: false
         pages:
-            - label: compute-unstable
-              page: api/compute/unstable/compute.page.yaml/*
+            - label: compute-experimental
+              page: api/compute/experimental/compute.page.yaml/*
   - group: External Credentials
     expanded: false
     pages:

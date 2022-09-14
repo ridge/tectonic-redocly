@@ -1,0 +1,852 @@
+openapi: 3.1.0
+info:
+    title: Data Center API
+    description: An API for obtaining information on data centers.
+    version: experimental
+servers:
+    - url: '{origin}/compute/experimental'
+      variables:
+        origin:
+            default: https://api.ridge.co
+            description: The scheme, domain name and optional port to access the API server
+paths:
+    /networks:
+        post:
+            operationId: network_create
+            summary: Create a network
+            parameters:
+                - name: X-Ridge-Request-ID
+                  in: header
+                  description: Client-generated request ID for idempotency
+                  schema:
+                    type: string
+                    maxLength: 64
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/network_create'
+                required: true
+            responses:
+                200:
+                    description: Success
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/network'
+                400:
+                    $ref: '#/components/responses/error_400'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+            tags: [Networks]
+    /networks/{network}:
+        parameters:
+            - name: network
+              in: path
+              description: Unique identifier of the network
+              required: true
+              schema:
+                type: string
+                pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+        get:
+            operationId: network_describe
+            summary: Describe a network
+            responses:
+                200:
+                    description: Success
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/network'
+                400:
+                    $ref: '#/components/responses/error_400'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+                404:
+                    $ref: '#/components/responses/error_404'
+            tags: [Networks]
+        patch:
+            operationId: network_update
+            summary: Update the properties of a network
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/network_update'
+                required: true
+            responses:
+                200:
+                    description: Success
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/network'
+                400:
+                    $ref: '#/components/responses/error_400'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+                404:
+                    $ref: '#/components/responses/error_404'
+            tags: [Networks]
+        delete:
+            operationId: network_delete
+            summary: Delete a network
+            responses:
+                204:
+                    description: Success
+                400:
+                    $ref: '#/components/responses/error_400'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+                404:
+                    $ref: '#/components/responses/error_404'
+            tags: [Networks]
+    /orgs/{org}/data-centers:
+        parameters:
+            - name: org
+              in: path
+              description: Unique identifier of the org
+              required: true
+              schema:
+                type: string
+                pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+        get:
+            operationId: org_list_data_centers
+            summary: List data centers of an org
+            responses:
+                200:
+                    description: Success
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/data_center_list'
+                400:
+                    $ref: '#/components/responses/error_400'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+                404:
+                    $ref: '#/components/responses/error_404'
+            tags: [Data Centers]
+    /orgs/{org}/instance-catalog:
+        parameters:
+            - name: org
+              in: path
+              description: Unique identifier of the org
+              required: true
+              schema:
+                type: string
+                pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+        get:
+            operationId: org_list_instance_catalog_items
+            summary: List instance catalog items of an org
+            parameters:
+                - name: data_center
+                  in: query
+                  explode: false
+                  schema:
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+            responses:
+                200:
+                    description: Success
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/instance_catalog_item_list'
+                400:
+                    $ref: '#/components/responses/error_400'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+                404:
+                    $ref: '#/components/responses/error_404'
+            tags: [Instance Catalog Items]
+    /partners/{partner}/data-centers:
+        parameters:
+            - name: partner
+              in: path
+              description: Unique identifier of the partner
+              required: true
+              schema:
+                type: string
+                pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+        get:
+            operationId: partner_list_data_centers
+            summary: List data centers of a partner
+            responses:
+                200:
+                    description: Success
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/data_center_list'
+                400:
+                    $ref: '#/components/responses/error_400'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+                404:
+                    $ref: '#/components/responses/error_404'
+            tags: [Data Centers]
+    /partners/{partner}/instance-catalog:
+        parameters:
+            - name: partner
+              in: path
+              description: Unique identifier of the partner
+              required: true
+              schema:
+                type: string
+                pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+        get:
+            operationId: partner_list_instance_catalog_items
+            summary: List instance catalog items of a partner
+            parameters:
+                - name: data_center
+                  in: query
+                  explode: false
+                  schema:
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+            responses:
+                200:
+                    description: Success
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/instance_catalog_item_list'
+                400:
+                    $ref: '#/components/responses/error_400'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+                404:
+                    $ref: '#/components/responses/error_404'
+            tags: [Instance Catalog Items]
+    /projects/{project}/networks:
+        parameters:
+            - name: project
+              in: path
+              description: Unique identifier of the project
+              required: true
+              schema:
+                type: string
+                pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+        get:
+            operationId: project_list_networks
+            summary: List networks of a project
+            responses:
+                200:
+                    description: Success
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/network_list'
+                400:
+                    $ref: '#/components/responses/error_400'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+                404:
+                    $ref: '#/components/responses/error_404'
+            tags: [Networks]
+    /qualities:
+        get:
+            operationId: list_qualities
+            summary: List all qualities defined in the system.
+            responses:
+                200:
+                    description: Success
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/quality_list'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+            tags: [Data Centers]
+    /quantities:
+        get:
+            operationId: list_quantities
+            summary: List all quantities defined in the system.
+            responses:
+                200:
+                    description: Success
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/quantity_list'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+            tags: [Data Centers]
+components:
+    schemas:
+        access_level:
+            description: |
+                The access level to data center:
+                * public: data center is available to all of ridge users.
+                * clients: data center is only available to all clients of the partner owning the DC.
+                * private: data center is only available to clients that are explicitly authorized (regardless of their partner).
+            type: string
+            enum: [public, clients, private]
+        data_center:
+            description: Description of the data center
+            type: object
+            required:
+                - id
+                - display_name
+                - partner
+                - location
+                - available
+                - enabled
+                - access_level
+                - qualities
+                - prices
+                - default_kubernetes_master
+            properties:
+                id:
+                    description: Unique ID of the data center
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                display_name:
+                    description: The display name of the data center.
+                    type: string
+                    maxLength: 512
+                partner:
+                    description: The unique identifier of the partner who is offering this data center.
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                location:
+                    $ref: '#/components/schemas/location'
+                    description: The geographical location of the data center.
+                available:
+                    description: Indicates if this data center is online and ready to use
+                    type: boolean
+                enabled:
+                    description: Indicates is this data center is currently enabled
+                    type: boolean
+                access_level:
+                    $ref: '#/components/schemas/access_level'
+                    description: Access level that is required to use the data center.
+                qualities:
+                    description: The list of qualities supported by the data center
+                    type: object
+                    propertyNames:
+                        type: string
+                        pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                    additionalProperties:
+                        type: integer
+                        format: int64
+                persistent_storage:
+                    $ref: '#/components/schemas/quantity_range'
+                    description: The range of supported persistent volume sizes. Absent if the data center does not offer persistent storage.
+                prices:
+                    $ref: '#/components/schemas/data_center_price_set'
+                    description: The prices in USD per hour for the data center resources.
+                default_kubernetes_master:
+                    $ref: '#/components/schemas/kubernetes_master_node'
+                    description: Default configuration of Kubernetes master nodes in this data center.
+        data_center_list:
+            description: List of data centers
+            type: object
+            required:
+                - items
+            properties:
+                items:
+                    description: The data centers
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/data_center'
+        data_center_price_set:
+            description: A set of data center resource prices. The object maps resource identifiers to price.
+            type: object
+            properties:
+                networks:
+                    description: Networks, USD per hour
+                    type: string
+                    pattern: ^([-+]?)(\d*)(?:\.(\d{0,9})\d*)?$
+                gateways:
+                    description: Gateways, USD per hour
+                    type: string
+                    pattern: ^([-+]?)(\d*)(?:\.(\d{0,9})\d*)?$
+                load_balancers:
+                    description: Load balancers, USD per hour
+                    type: string
+                    pattern: ^([-+]?)(\d*)(?:\.(\d{0,9})\d*)?$
+                public_ips:
+                    description: Public IPs, USD per hour
+                    type: string
+                    pattern: ^([-+]?)(\d*)(?:\.(\d{0,9})\d*)?$
+                floating_ips:
+                    description: Floating IPs, USD per hour
+                    type: string
+                    pattern: ^([-+]?)(\d*)(?:\.(\d{0,9})\d*)?$
+                persistent_storage:
+                    description: Persistent storage, USD per hour
+                    type: string
+                    pattern: ^([-+]?)(\d*)(?:\.(\d{0,9})\d*)?$
+        instance_catalog_item:
+            description: Description of the instance catalog item
+            type: object
+            required:
+                - id
+                - data_center
+                - qualities
+                - quantities
+                - prices
+            properties:
+                id:
+                    description: Unique ID of the instance catalog item
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                data_center:
+                    description: The unique identifier of the data center.
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                qualities:
+                    description: The list of qualities supported by instance
+                    type: object
+                    propertyNames:
+                        type: string
+                        pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                    additionalProperties:
+                        type: integer
+                        format: int64
+                quantities:
+                    description: A set of instance catalog item ranges such as amount of CPU, RAM and storage
+                    type: object
+                    propertyNames:
+                        type: string
+                        pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                    additionalProperties:
+                        $ref: '#/components/schemas/quantity_range'
+                prices:
+                    $ref: '#/components/schemas/instance_catalog_item_price_set'
+                    description: The prices in USD per hour per unit of each quantity
+                description:
+                    description: Additional information about the catalog item.
+                    type: string
+        instance_catalog_item_list:
+            description: List of instance catalog items
+            type: object
+            required:
+                - items
+            properties:
+                items:
+                    description: The instance catalog items
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/instance_catalog_item'
+        instance_catalog_item_price_set:
+            description: A set of instance catalog item prices. The object maps resource identifiers to price.
+            type: object
+            properties:
+                instances:
+                    description: Instances, USD per hour
+                    type: string
+                    pattern: ^([-+]?)(\d*)(?:\.(\d{0,9})\d*)?$
+                cpu_cores:
+                    description: CPU coress, USD per hour
+                    type: string
+                    pattern: ^([-+]?)(\d*)(?:\.(\d{0,9})\d*)?$
+                ram:
+                    description: RAM, USD per hour
+                    type: string
+                    pattern: ^([-+]?)(\d*)(?:\.(\d{0,9})\d*)?$
+                instance_storage:
+                    description: Instance storage, USD per hour
+                    type: string
+                    pattern: ^([-+]?)(\d*)(?:\.(\d{0,9})\d*)?$
+                bandwidth:
+                    description: Network bandwidth, USD per hour
+                    type: string
+                    pattern: ^([-+]?)(\d*)(?:\.(\d{0,9})\d*)?$
+        kubernetes_master_node:
+            description: Default configuration of Kubernetes master nodes in this data center.
+            type: object
+            required:
+                - catalog_item
+                - quantities
+            properties:
+                catalog_item:
+                    description: The catalog item unique identifier for Kubernetes master nodes.
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                quantities:
+                    $ref: '#/components/schemas/quantity_set'
+        location:
+            description: Location
+            type: object
+            required:
+                - continent
+                - country
+                - city
+                - latitude
+                - longitude
+            properties:
+                continent:
+                    $ref: '#/components/schemas/location_continent'
+                    description: The continent in which the data center is located
+                country:
+                    description: The 2 letter country code according to ISO-3166-1
+                    type: string
+                    pattern: ^[A-Z][A-Z]$
+                state_or_province:
+                    description: The country subdivision code according to ISO-3166-2
+                    type: string
+                    pattern: ^[A-Z0-9]*$
+                city:
+                    description: The city in which the data center is located
+                    type: string
+                latitude:
+                    description: The latitude in range (-90.0, 90.0)
+                    type: string
+                    pattern: ^-?\d+\.\d+$
+                longitude:
+                    description: The latitude in range (-180.0, 180.0)
+                    type: string
+                    pattern: ^-?\d+\.\d+$
+        location_continent:
+            description: Continent
+            type: string
+            enum: [africa, asia, europe, north-america, south-america, antarctica, oceania]
+        network:
+            description: Description of the network
+            type: object
+            required:
+                - id
+                - spec
+                - status
+            properties:
+                id:
+                    description: Unique ID of the network
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                spec:
+                    $ref: '#/components/schemas/network_spec'
+                    description: Specification of the network
+                status:
+                    $ref: '#/components/schemas/network_status'
+                    description: Status of the network
+        network_create:
+            description: Properties of the network to create
+            type: object
+            required:
+                - project
+                - data_center
+            properties:
+                project:
+                    description: The unique identifier of the project.
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                data_center:
+                    description: The ID of a data center to run the containers.
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                display_name:
+                    description: The display name of the network
+                    type: string
+                    maxLength: 512
+                disallowed_address_ranges:
+                    description: A list of address ranges in CIDR notation that the network is not allowed to overlap
+                    type: array
+                    items:
+                        type: string
+                        pattern: ^\d{1,3}(\.\d{1,3}){3}(/\d\d?)?$
+                    default: []
+        network_issues:
+            description: Network issues
+            type: object
+            properties:
+                degraded:
+                    description: The network is running in a degraded mode. There might be a delay between issuing a command for controlling this network and receiving a response.
+                    type: boolean
+                shortage:
+                    description: Indicates the network is not fully provisioned due to a shortage at the data center.
+                    type: boolean
+                out_of_quota:
+                    description: Indicates the network is not fully provisioned due to quota limitation.
+                    type: boolean
+        network_list:
+            description: List of networks
+            type: object
+            required:
+                - items
+            properties:
+                items:
+                    description: The networks
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/network'
+        network_phase:
+            description: The phase of the network life cycle
+            type: string
+            enum: [creating, running, terminating, terminated, failed]
+        network_spec:
+            description: Specification of the network
+            type: object
+            required:
+                - project
+                - data_center
+                - disallowed_address_ranges
+                - created_at
+                - updated_at
+            properties:
+                project:
+                    description: The unique identifier of the project.
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                data_center:
+                    description: The ID of a data center to run the containers.
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                display_name:
+                    description: The display name of the network
+                    type: string
+                    maxLength: 512
+                disallowed_address_ranges:
+                    description: A list of address ranges in CIDR notation that the network is not allowed to overlap
+                    type: array
+                    items:
+                        type: string
+                        pattern: ^\d{1,3}(\.\d{1,3}){3}(/\d\d?)?$
+                created_at:
+                    description: Time when the network was created
+                    type: string
+                    format: date-time
+                updated_at:
+                    description: Time when the network was last updated
+                    type: string
+                    format: date-time
+                deleted:
+                    description: If true, the network has been deleted
+                    type: boolean
+        network_status:
+            description: Status of the network
+            type: object
+            required:
+                - phase
+                - nat_ips
+            properties:
+                phase:
+                    $ref: '#/components/schemas/network_phase'
+                    description: The life cycle phase of the network.
+                nat_ips:
+                    description: |
+                        The list of IPs that are used for outgoing NATed connections from instances in this network. Instances with public IPs may use either NATed or public IPs for outgoing gonnections, depending on the data center.
+                    type: array
+                    items:
+                        type: string
+                        format: ipv4
+                private_ip_range:
+                    description: The private IPv4 range of the network, in CIDR format.
+                    type: string
+                    pattern: ^\d{1,3}(\.\d{1,3}){3}(/\d\d?)?$
+                issues:
+                    $ref: '#/components/schemas/network_issues'
+        network_update:
+            description: Properties of the network to update
+            type: object
+            properties:
+                display_name:
+                    description: The display name of the network
+                    type: string
+                    maxLength: 512
+        quality:
+            description: A single quality defined in the system
+            type: object
+            required:
+                - id
+                - display_name
+                - scope
+            properties:
+                id:
+                    description: The unique identifier of the quality
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                display_name:
+                    description: The display name of the quality
+                    type: string
+                    maxLength: 512
+                scope:
+                    $ref: '#/components/schemas/quality_scope'
+                    description: Specifies the scope the quality applies to.
+                values:
+                    $ref: '#/components/schemas/quality_value_mode'
+                    description: If specified, the quality has values, with either bigger or smaller numbers considered preferable
+        quality_list:
+            description: A list of qualities
+            type: object
+            required:
+                - items
+            properties:
+                items:
+                    description: Array of qualities
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/quality_section'
+        quality_scope:
+            description: Quality scope
+            type: string
+            enum: [data-center, instance]
+        quality_section:
+            description: A thematic section containing quality definitions
+            type: object
+            required:
+                - display_name
+                - qualities
+            properties:
+                display_name:
+                    description: The display name of the section
+                    type: string
+                    maxLength: 512
+                qualities:
+                    description: The list of qualities in the section
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/quality'
+        quality_value_mode:
+            description: Bigger or smaller numbers considered preferable for quality
+            type: string
+            enum: [more-is-better, less-is-better]
+        quantity:
+            description: A single quantity defined in the system
+            type: object
+            required:
+                - id
+                - display_name
+                - scope
+                - pricing_unit
+            properties:
+                id:
+                    description: The unique identifier of the quantity
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                display_name:
+                    description: The display name of the quantity
+                    type: string
+                    maxLength: 512
+                scope:
+                    $ref: '#/components/schemas/quantity_scope'
+                    description: Specifies the scope the quantity applies to.
+                pricing_unit:
+                    description: The basic amount of the quantity for which prices are expressed
+                    type: integer
+                    format: int64
+                    minimum: 1
+                unit:
+                    $ref: '#/components/schemas/quantity_unit'
+                    description: The optional measurement unit of the quantity values
+        quantity_list:
+            description: A list of quantities
+            type: object
+            required:
+                - items
+            properties:
+                items:
+                    description: Array of quantities
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/quantity'
+        quantity_range:
+            description: The range of allowed values of a quantity
+            type: object
+            required:
+                - min
+                - max
+            properties:
+                min:
+                    description: The minimum value of the quantity
+                    type: integer
+                    format: int64
+                max:
+                    description: The maximum value of the quantity
+                    type: integer
+                    format: int64
+                step:
+                    description: |
+                        The  value change step.
+                        When step is present, the scale is linear. Allowed values are min, min + step, min + step*2, ... not exceeding max.
+                        When step is absent, the scale is powers-of-two. Allowed values are min, min*2, min*4, ... not exceeding max.
+                    type: integer
+                    format: int64
+        quantity_scope:
+            description: Quantity scope
+            type: string
+            enum: [order, instance, volume]
+        quantity_set:
+            description: A set of quantities. The object maps quantity identifiers to values. See https://api.ridge.co/compute/unstable/quantities for possible properties.
+            type: object
+            properties:
+                cpu_cores:
+                    description: CPU cores
+                    type: integer
+                    format: int64
+                    minimum: 0
+                ram:
+                    description: RAM, bytes
+                    type: integer
+                    format: int64
+                    minimum: 0
+                instance_storage:
+                    description: Instance storage, bytes
+                    type: integer
+                    format: int64
+                    minimum: 0
+                bandwidth:
+                    description: Network bandwidth, bps
+                    type: integer
+                    format: int64
+                    minimum: 0
+        quantity_unit:
+            description: Units for quantity
+            type: string
+            enum: [bytes, bps]
+    responses:
+        error_400:
+            description: Bad Request
+            content:
+                application/json:
+                    schema:
+                        type: string
+        error_401:
+            description: Unauthorized
+            content:
+                application/json:
+                    schema:
+                        type: string
+        error_403:
+            description: Forbidden
+            content:
+                application/json:
+                    schema:
+                        type: string
+        error_404:
+            description: Not Found
+            content:
+                application/json:
+                    schema:
+                        type: string
+tags:
+    - name: Data Centers
+      description: Operations on data centers
+    - name: Networks
+      description: Operations on networks
+    - name: Instance Catalog Items
+      description: Operations on instance catalog items
