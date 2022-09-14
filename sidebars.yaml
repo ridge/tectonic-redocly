@@ -3,11 +3,11 @@ api:
   - group: Ridge Kubernetes Service (RKS)
     expanded: false
     pages:
-      - group: Unstable
+      - group: Experimental
         expanded: false
         pages:
-            - label: rks-unstable
-              page: api/rks/unstable/rks.page.yaml/*
+            - label: rks-experimental
+              page: api/rks/experimental/rks.page.yaml/*
   - group: Ridge Container Service (RCS)
     expanded: false
     pages:

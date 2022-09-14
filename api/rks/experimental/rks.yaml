@@ -1,0 +1,2449 @@
+openapi: 3.1.0
+info:
+    title: Ridge Kubernetes Service API
+    description: An API for the Managed Kubernetes Service
+    version: experimental
+servers:
+    - url: '{origin}/rks/experimental'
+      variables:
+        origin:
+            default: https://api.ridge.co
+            description: The scheme, domain name and optional port to access the API server
+paths:
+    /clusters:
+        post:
+            operationId: cluster_create
+            summary: Create a cluster
+            parameters:
+                - name: X-Ridge-Request-ID
+                  in: header
+                  description: Client-generated request ID for idempotency
+                  schema:
+                    type: string
+                    maxLength: 64
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/cluster_create'
+                required: true
+            responses:
+                200:
+                    description: Success
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/cluster'
+                400:
+                    $ref: '#/components/responses/error_400'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+            tags: [Clusters]
+    /clusters/{cluster}:
+        parameters:
+            - name: cluster
+              in: path
+              description: Unique identifier of the cluster
+              required: true
+              schema:
+                type: string
+                pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+        get:
+            operationId: cluster_describe
+            summary: Describe a cluster
+            responses:
+                200:
+                    description: Success
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/cluster'
+                400:
+                    $ref: '#/components/responses/error_400'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+                404:
+                    $ref: '#/components/responses/error_404'
+            tags: [Clusters]
+        patch:
+            operationId: cluster_update
+            summary: Update the properties of a cluster
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/cluster_update'
+                required: true
+            responses:
+                200:
+                    description: Success
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/cluster'
+                400:
+                    $ref: '#/components/responses/error_400'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+                404:
+                    $ref: '#/components/responses/error_404'
+            tags: [Clusters]
+        delete:
+            operationId: cluster_delete
+            summary: Delete a cluster
+            responses:
+                204:
+                    description: Success
+                400:
+                    $ref: '#/components/responses/error_400'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+                404:
+                    $ref: '#/components/responses/error_404'
+            tags: [Clusters]
+    /clusters/{cluster}/installed-apps:
+        parameters:
+            - name: cluster
+              in: path
+              description: Unique identifier of the cluster
+              required: true
+              schema:
+                type: string
+                pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+        get:
+            operationId: cluster_list_installed_apps
+            summary: List installed apps of a cluster
+            responses:
+                200:
+                    description: Success
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/installed_app_list'
+                400:
+                    $ref: '#/components/responses/error_400'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+                404:
+                    $ref: '#/components/responses/error_404'
+            tags: [Installed Apps]
+    /clusters/{cluster}/load-balancers:
+        parameters:
+            - name: cluster
+              in: path
+              description: Unique identifier of the cluster
+              required: true
+              schema:
+                type: string
+                pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+        get:
+            operationId: cluster_list_load_balancers
+            summary: List load balancers of a cluster
+            parameters:
+                - name: phase
+                  in: query
+                  description: Filter the load balancer by specified load balancer phases
+                  explode: false
+                  schema:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/resource_phase'
+            responses:
+                200:
+                    description: Success
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/load_balancer_list'
+                400:
+                    $ref: '#/components/responses/error_400'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+                404:
+                    $ref: '#/components/responses/error_404'
+            tags: [Load Balancers]
+    /clusters/{cluster}/node-pools:
+        parameters:
+            - name: cluster
+              in: path
+              description: Unique identifier of the cluster
+              required: true
+              schema:
+                type: string
+                pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+        get:
+            operationId: cluster_list_node_pools
+            summary: List node pools of a cluster
+            responses:
+                200:
+                    description: Success
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/node_pool_list'
+                400:
+                    $ref: '#/components/responses/error_400'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+                404:
+                    $ref: '#/components/responses/error_404'
+            tags: [Node Pools]
+    /clusters/{cluster}/nodes:
+        parameters:
+            - name: cluster
+              in: path
+              description: Unique identifier of the cluster
+              required: true
+              schema:
+                type: string
+                pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+        get:
+            operationId: cluster_list_nodes
+            summary: List nodes of a cluster
+            responses:
+                200:
+                    description: Success
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/node_list'
+                400:
+                    $ref: '#/components/responses/error_400'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+                404:
+                    $ref: '#/components/responses/error_404'
+            tags: [Nodes]
+    /clusters/{cluster}/tokens:
+        parameters:
+            - name: cluster
+              in: path
+              description: Unique identifier of the cluster
+              required: true
+              schema:
+                type: string
+                pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+        get:
+            operationId: cluster_list_tokens
+            summary: List tokens of a cluster
+            responses:
+                200:
+                    description: Success
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/token_list'
+                400:
+                    $ref: '#/components/responses/error_400'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+                404:
+                    $ref: '#/components/responses/error_404'
+            tags: [Tokens]
+    /clusters/{cluster}/volume-attachments:
+        parameters:
+            - name: cluster
+              in: path
+              description: Unique identifier of the cluster
+              required: true
+              schema:
+                type: string
+                pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+        get:
+            operationId: cluster_list_volume_attachments
+            summary: List volume attachments of a cluster
+            description: The volumes attached to this cluster
+            parameters:
+                - name: phase
+                  in: query
+                  description: Filter the volume by specified phases
+                  explode: false
+                  schema:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/resource_phase'
+            responses:
+                200:
+                    description: Success
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/volume_attachment_list'
+                400:
+                    $ref: '#/components/responses/error_400'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+                404:
+                    $ref: '#/components/responses/error_404'
+            tags: [Volume Attachments]
+    /clusters/{cluster}/vpns:
+        parameters:
+            - name: cluster
+              in: path
+              description: Unique identifier of the cluster
+              required: true
+              schema:
+                type: string
+                pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+        get:
+            operationId: cluster_list_vpns
+            summary: List VPNs of a cluster
+            responses:
+                200:
+                    description: Success
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/vpn_list'
+                400:
+                    $ref: '#/components/responses/error_400'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+                404:
+                    $ref: '#/components/responses/error_404'
+            tags: [VPNs]
+    /installed-apps:
+        post:
+            operationId: installed_app_create
+            summary: Create an installed app
+            parameters:
+                - name: X-Ridge-Request-ID
+                  in: header
+                  description: Client-generated request ID for idempotency
+                  schema:
+                    type: string
+                    maxLength: 64
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/installed_app_create'
+                required: true
+            responses:
+                200:
+                    description: Success
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/installed_app'
+                400:
+                    $ref: '#/components/responses/error_400'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+            tags: [Installed Apps]
+    /installed-apps/{installed_app}:
+        parameters:
+            - name: installed_app
+              in: path
+              description: Unique identifier of the installed app
+              required: true
+              schema:
+                type: string
+                pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+        get:
+            operationId: installed_app_describe
+            summary: Describe an installed app
+            responses:
+                200:
+                    description: Success
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/installed_app'
+                400:
+                    $ref: '#/components/responses/error_400'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+                404:
+                    $ref: '#/components/responses/error_404'
+            tags: [Installed Apps]
+        patch:
+            operationId: installed_app_update
+            summary: Update the properties of an installed app
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/installed_app_update'
+                required: true
+            responses:
+                200:
+                    description: Success
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/installed_app'
+                400:
+                    $ref: '#/components/responses/error_400'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+                404:
+                    $ref: '#/components/responses/error_404'
+            tags: [Installed Apps]
+        delete:
+            operationId: installed_app_delete
+            summary: Delete an installed app
+            responses:
+                204:
+                    description: Success
+                400:
+                    $ref: '#/components/responses/error_400'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+                404:
+                    $ref: '#/components/responses/error_404'
+            tags: [Installed Apps]
+    /k8s-releases:
+        get:
+            operationId: list_releases
+            summary: List supported Kubernetes releases
+            responses:
+                200:
+                    description: Success
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/release_list'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+            tags: [Clusters]
+    /marketplace-apps:
+        get:
+            operationId: list_marketplace_apps
+            summary: List the available apps deployable on Kubernetes clusters
+            responses:
+                200:
+                    description: Success
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/marketplace_app_list'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+            tags: [Marketplace Apps]
+    /node-pools:
+        post:
+            operationId: node_pool_create
+            summary: Create a node pool
+            parameters:
+                - name: X-Ridge-Request-ID
+                  in: header
+                  description: Client-generated request ID for idempotency
+                  schema:
+                    type: string
+                    maxLength: 64
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/node_pool_create'
+                required: true
+            responses:
+                200:
+                    description: Success
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/node_pool'
+                400:
+                    $ref: '#/components/responses/error_400'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+            tags: [Node Pools]
+    /node-pools/{node_pool}:
+        parameters:
+            - name: node_pool
+              in: path
+              description: Unique identifier of the node pool
+              required: true
+              schema:
+                type: string
+                pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+        get:
+            operationId: node_pool_describe
+            summary: Describe a node pool
+            responses:
+                200:
+                    description: Success
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/node_pool'
+                400:
+                    $ref: '#/components/responses/error_400'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+                404:
+                    $ref: '#/components/responses/error_404'
+            tags: [Node Pools]
+        patch:
+            operationId: node_pool_update
+            summary: Update the properties of a node pool
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/node_pool_update'
+                required: true
+            responses:
+                200:
+                    description: Success
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/node_pool'
+                400:
+                    $ref: '#/components/responses/error_400'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+                404:
+                    $ref: '#/components/responses/error_404'
+            tags: [Node Pools]
+        delete:
+            operationId: node_pool_delete
+            summary: Delete a node pool
+            responses:
+                204:
+                    description: Success
+                400:
+                    $ref: '#/components/responses/error_400'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+                404:
+                    $ref: '#/components/responses/error_404'
+            tags: [Node Pools]
+    /node-pools/{node_pool}/nodes:
+        parameters:
+            - name: node_pool
+              in: path
+              description: Unique identifier of the node pool
+              required: true
+              schema:
+                type: string
+                pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+        get:
+            operationId: node_pool_list_nodes
+            summary: List nodes of a node pool
+            parameters:
+                - name: phase
+                  in: query
+                  description: Filter the nodes by specified node phases
+                  explode: false
+                  schema:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/resource_phase'
+            responses:
+                200:
+                    description: Success
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/node_list'
+                400:
+                    $ref: '#/components/responses/error_400'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+                404:
+                    $ref: '#/components/responses/error_404'
+            tags: [Nodes]
+    /nodes/{node}:
+        parameters:
+            - name: node
+              in: path
+              description: Unique identifier of the node
+              required: true
+              schema:
+                type: string
+                pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+        get:
+            operationId: node_describe
+            summary: Describe a node
+            responses:
+                200:
+                    description: Success
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/node'
+                400:
+                    $ref: '#/components/responses/error_400'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+                404:
+                    $ref: '#/components/responses/error_404'
+            tags: [Nodes]
+        delete:
+            operationId: node_delete
+            summary: Delete a node
+            responses:
+                204:
+                    description: Success
+                400:
+                    $ref: '#/components/responses/error_400'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+                404:
+                    $ref: '#/components/responses/error_404'
+            tags: [Nodes]
+    /nodes/{node}/volume-attachments:
+        parameters:
+            - name: node
+              in: path
+              description: Unique identifier of the node
+              required: true
+              schema:
+                type: string
+                pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+        get:
+            operationId: node_list_volume_attachments
+            summary: List volume attachments of a node
+            parameters:
+                - name: phase
+                  in: query
+                  description: Filter the volume attachments by specified phases
+                  explode: false
+                  schema:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/resource_phase'
+            responses:
+                200:
+                    description: Success
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/volume_attachment_list'
+                400:
+                    $ref: '#/components/responses/error_400'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+                404:
+                    $ref: '#/components/responses/error_404'
+            tags: [Volume Attachments]
+    /projects/{project}/clusters:
+        parameters:
+            - name: project
+              in: path
+              description: Unique identifier of the project
+              required: true
+              schema:
+                type: string
+                pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+        get:
+            operationId: project_list_clusters
+            summary: List clusters of a project
+            responses:
+                200:
+                    description: Success
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/cluster_list'
+                400:
+                    $ref: '#/components/responses/error_400'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+                404:
+                    $ref: '#/components/responses/error_404'
+            tags: [Clusters]
+    /tokens:
+        post:
+            operationId: token_create
+            summary: Create a token
+            parameters:
+                - name: X-Ridge-Request-ID
+                  in: header
+                  description: Client-generated request ID for idempotency
+                  schema:
+                    type: string
+                    maxLength: 64
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/token_create'
+                required: true
+            responses:
+                200:
+                    description: Success
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/token_created'
+                400:
+                    $ref: '#/components/responses/error_400'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+                503:
+                    $ref: '#/components/responses/error_503'
+            tags: [Tokens]
+    /tokens/{token}:
+        parameters:
+            - name: token
+              in: path
+              description: Unique identifier of the token
+              required: true
+              schema:
+                type: string
+                pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+        get:
+            operationId: token_describe
+            summary: Describe a token
+            responses:
+                200:
+                    description: Success
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/token'
+                400:
+                    $ref: '#/components/responses/error_400'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+                404:
+                    $ref: '#/components/responses/error_404'
+            tags: [Tokens]
+        patch:
+            operationId: token_update
+            summary: Update the properties of a token
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/token_update'
+                required: true
+            responses:
+                200:
+                    description: Success
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/token'
+                400:
+                    $ref: '#/components/responses/error_400'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+                404:
+                    $ref: '#/components/responses/error_404'
+            tags: [Tokens]
+        delete:
+            operationId: token_delete
+            summary: Delete a token
+            responses:
+                204:
+                    description: Success
+                400:
+                    $ref: '#/components/responses/error_400'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+                404:
+                    $ref: '#/components/responses/error_404'
+            tags: [Tokens]
+    /volumes/{volume}:
+        parameters:
+            - name: volume
+              in: path
+              description: Unique identifier of the volume
+              required: true
+              schema:
+                type: string
+                pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+        get:
+            operationId: volume_describe
+            summary: Describe a volume
+            responses:
+                200:
+                    description: Success
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/volume'
+                400:
+                    $ref: '#/components/responses/error_400'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+                404:
+                    $ref: '#/components/responses/error_404'
+            tags: [Volumes]
+    /vpns:
+        post:
+            operationId: vpn_create
+            summary: Create a VPN
+            parameters:
+                - name: X-Ridge-Request-ID
+                  in: header
+                  description: Client-generated request ID for idempotency
+                  schema:
+                    type: string
+                    maxLength: 64
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/vpn_create'
+                required: true
+            responses:
+                200:
+                    description: Success
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/vpn'
+                400:
+                    $ref: '#/components/responses/error_400'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+            tags: [VPNs]
+    /vpns/{vpn}:
+        parameters:
+            - name: vpn
+              in: path
+              description: Unique identifier of the VPN
+              required: true
+              schema:
+                type: string
+                pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+        get:
+            operationId: vpn_describe
+            summary: Describe a VPN
+            responses:
+                200:
+                    description: Success
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/vpn'
+                400:
+                    $ref: '#/components/responses/error_400'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+                404:
+                    $ref: '#/components/responses/error_404'
+            tags: [VPNs]
+        patch:
+            operationId: vpn_update
+            summary: Update the properties of a VPN
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/vpn_update'
+                required: true
+            responses:
+                200:
+                    description: Success
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/vpn'
+                400:
+                    $ref: '#/components/responses/error_400'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+                404:
+                    $ref: '#/components/responses/error_404'
+            tags: [VPNs]
+        delete:
+            operationId: vpn_delete
+            summary: Delete a VPN
+            responses:
+                204:
+                    description: Success
+                400:
+                    $ref: '#/components/responses/error_400'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+                404:
+                    $ref: '#/components/responses/error_404'
+            tags: [VPNs]
+components:
+    schemas:
+        aws_role:
+            description: The IAM role that will grant the cluster permissions (using temporary credentials) to access AWS services
+            type: object
+            required:
+                - role_arn
+                - aws_access_key
+            properties:
+                role_arn:
+                    description: The unique identifier of the role in AWS
+                    type: string
+                    pattern: ^arn:aws:iam::\d{12}:role\/.+$
+                aws_access_key:
+                    description: The unique identifier of the AWS key that should be used to create temporary credentials for the cluster
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+        cluster:
+            description: Description of the cluster
+            type: object
+            required:
+                - id
+                - spec
+                - status
+                - node_pools
+            properties:
+                id:
+                    description: Unique ID of the cluster
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                spec:
+                    $ref: '#/components/schemas/cluster_spec'
+                    description: Specification of the cluster
+                status:
+                    $ref: '#/components/schemas/cluster_status'
+                    description: Status of the cluster
+                node_pools:
+                    description: The cluster node pools
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/node_pool'
+        cluster_create:
+            description: Properties of the cluster to create
+            type: object
+            required:
+                - network
+            properties:
+                display_name:
+                    description: The display name of the cluster
+                    type: string
+                    maxLength: 512
+                network:
+                    description: The network identifier
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                api_server_whitelist:
+                    description: The list of whitelisted networks for Kubernetes API server in CIDR or single IP format
+                    type: array
+                    items:
+                        type: string
+                        pattern: ^\d{1,3}(\.\d{1,3}){3}(/\d\d?)?$
+                    default: [0.0.0.0/0]
+                autoscaling_scale_down_delay:
+                    description: For how long, in seconds, a node pool is not scaled down after being scaled up
+                    type: integer
+                    minimum: 1
+                    default: 600
+                aws_role:
+                    $ref: '#/components/schemas/aws_role'
+                    description: The IAM role that will grant the cluster permissions (using temporary credentials) to access AWS services
+                cni_plugin:
+                    $ref: '#/components/schemas/cni_plugin_type'
+                    description: The container network interface plugin
+                    default: weave_net
+                highly_available:
+                    description: Indicates whether the cluster has high availability
+                    type: boolean
+                    default: true
+                master_nodes:
+                    $ref: '#/components/schemas/master_nodes'
+                    description: The master node specifications
+                pod_address_range:
+                    description: Address range for pods in the cluster, IPv4 in CIDR format
+                    type: string
+                    pattern: ^\d{1,3}(\.\d{1,3}){3}(/\d\d?)?$
+                    default: 172.28.0.0/16
+                service_address_range:
+                    description: Address range for services in the cluster, IPv4 in CIDR format
+                    type: string
+                    pattern: ^\d{1,3}(\.\d{1,3}){3}(/\d\d?)?$
+                    default: 10.96.0.0/12
+                version:
+                    description: The requested Kubernetes cluster version. The endpoint "/rks/k8s-versions" returns the list of available versions
+                    type: string
+                    pattern: ^v1\.\d+\.\d+$
+                node_pools:
+                    description: The cluster node pools
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/node_pool_cluster_create'
+                    default: []
+        cluster_issues:
+            description: Cluster issues
+            type: object
+            properties:
+                degraded:
+                    description: The cluster is running in a degraded mode. There might be a delay between issuing a command for controlling this cluster and receiving a response
+                    type: boolean
+                non_allocatable:
+                    description: Indicates the cluster is not fully provisioned because VM configurations could not be found
+                    type: boolean
+                offline:
+                    description: Indicates if the cluster is currently offline (API server is unreachable)
+                    type: boolean
+                out_of_quota:
+                    description: Indicates the cluster is not fully provisioned due to exceeded quota
+                    type: boolean
+                shortage:
+                    description: Indicates the cluster is not fully provisioned due to a shortage at the data center level
+                    type: boolean
+        cluster_list:
+            description: List of clusters
+            type: object
+            required:
+                - items
+            properties:
+                items:
+                    description: The clusters
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/cluster'
+        cluster_phase:
+            description: The phase of a cluster
+            type: string
+            enum: [creating, configuring, running, upgrading, terminating, terminated, failed]
+        cluster_spec:
+            description: Specification of the cluster
+            type: object
+            required:
+                - network
+                - api_server_whitelist
+                - autoscaling_scale_down_delay
+                - cni_plugin
+                - highly_available
+                - pod_address_range
+                - service_address_range
+                - created_at
+                - updated_at
+            properties:
+                display_name:
+                    description: The display name of the cluster
+                    type: string
+                    maxLength: 512
+                network:
+                    description: The network identifier
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                api_server_whitelist:
+                    description: The list of whitelisted networks for Kubernetes API server in CIDR or single IP format
+                    type: array
+                    items:
+                        type: string
+                        pattern: ^\d{1,3}(\.\d{1,3}){3}(/\d\d?)?$
+                autoscaling_scale_down_delay:
+                    description: For how long, in seconds, a node pool is not scaled down after being scaled up
+                    type: integer
+                    minimum: 1
+                aws_role:
+                    $ref: '#/components/schemas/aws_role'
+                    description: The IAM role that will grant the cluster permissions (using temporary credentials) to access AWS services
+                cni_plugin:
+                    $ref: '#/components/schemas/cni_plugin_type'
+                    description: The container network interface plugin
+                highly_available:
+                    description: Indicates whether the cluster has high availability
+                    type: boolean
+                master_nodes:
+                    $ref: '#/components/schemas/master_nodes'
+                    description: The master node specifications
+                pod_address_range:
+                    description: Address range for pods in the cluster, IPv4 in CIDR format
+                    type: string
+                    pattern: ^\d{1,3}(\.\d{1,3}){3}(/\d\d?)?$
+                service_address_range:
+                    description: Address range for services in the cluster, IPv4 in CIDR format
+                    type: string
+                    pattern: ^\d{1,3}(\.\d{1,3}){3}(/\d\d?)?$
+                version:
+                    description: The requested Kubernetes cluster version. The endpoint "/rks/k8s-versions" returns the list of available versions
+                    type: string
+                    pattern: ^v1\.\d+\.\d+$
+                created_at:
+                    description: Time when the cluster was created
+                    type: string
+                    format: date-time
+                updated_at:
+                    description: Time when the cluster was last updated
+                    type: string
+                    format: date-time
+                deleted:
+                    description: If true, the cluster has been deleted
+                    type: boolean
+        cluster_status:
+            description: Status of the cluster
+            type: object
+            required:
+                - project
+                - api_server_url
+                - phase
+                - version
+            properties:
+                project:
+                    description: The project identifier
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                api_server_url:
+                    description: URL to access Kubernetes API server
+                    type: string
+                    format: uri
+                issues:
+                    $ref: '#/components/schemas/cluster_issues'
+                    description: Cluster issues
+                phase:
+                    $ref: '#/components/schemas/cluster_phase'
+                    description: The current life cycle phase of the cluster
+                upgrade_progress:
+                    description: The upgrade progress percentage. Only present if `phase` is `upgrading`
+                    type: integer
+                    minimum: 0
+                    maximum: 100
+                version:
+                    description: The current Kubernetes cluster version. Might differ from the requested version during an upgrade to the cluster
+                    type: string
+                    pattern: ^v1\.\d+\.\d+$
+        cluster_update:
+            description: Properties of the cluster to update
+            type: object
+            properties:
+                display_name:
+                    description: The display name of the cluster
+                    type: string
+                    maxLength: 512
+                api_server_whitelist:
+                    description: The list of whitelisted networks for Kubernetes API server in CIDR or single IP format
+                    type: array
+                    items:
+                        type: string
+                        pattern: ^\d{1,3}(\.\d{1,3}){3}(/\d\d?)?$
+                autoscaling_scale_down_delay:
+                    description: For how long, in seconds, a node pool is not scaled down after being scaled up
+                    type: integer
+                    minimum: 1
+                aws_role:
+                    description: The IAM role that will grant the cluster permissions (using temporary credentials) to access AWS services
+                    anyOf:
+                        - $ref: '#/components/schemas/aws_role'
+                        - type: "null"
+                master_nodes:
+                    description: The master node specifications
+                    anyOf:
+                        - $ref: '#/components/schemas/master_nodes'
+                        - type: "null"
+                version:
+                    description: The requested Kubernetes cluster version. The endpoint "/rks/k8s-versions" returns the list of available versions
+                    type: string
+                    pattern: ^v1\.\d+\.\d+$
+        cni_plugin_type:
+            description: The type of the CNI plugin
+            type: string
+            enum: [weave_net, calico]
+        installed_app:
+            description: Description of the installed app
+            type: object
+            required:
+                - id
+                - spec
+                - status
+            properties:
+                id:
+                    description: Unique ID of the installed app
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                spec:
+                    $ref: '#/components/schemas/installed_app_spec'
+                    description: Specification of the installed app
+                status:
+                    $ref: '#/components/schemas/installed_app_status'
+                    description: Status of the installed app
+        installed_app_create:
+            description: Properties of the installed app to create
+            type: object
+            required:
+                - cluster
+                - marketplace_app
+                - kubernetes_name_prefix
+            properties:
+                display_name:
+                    description: The display name of the installed app
+                    type: string
+                    maxLength: 512
+                cluster:
+                    description: The cluster identifier
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                marketplace_app:
+                    description: The unique identifier of the Marketplace app
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                kubernetes_name_prefix:
+                    description: The name prefix of the resources installed on the Kubernetes cluster
+                    type: string
+                    maxLength: 53
+                    pattern: ^[a-z]([-a-z0-9]*[a-z0-9])?$
+                kubernetes_namespace:
+                    description: The Kubernetes namespace where the app is installed
+                    type: string
+                    maxLength: 63
+                    pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?$
+                    default: default
+        installed_app_list:
+            description: List of installed apps
+            type: object
+            required:
+                - items
+            properties:
+                items:
+                    description: The installed apps
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/installed_app'
+        installed_app_phase:
+            description: The phase of an installed app
+            type: string
+            enum: [starting, running, terminating, terminated]
+        installed_app_spec:
+            description: Specification of the installed app
+            type: object
+            required:
+                - cluster
+                - marketplace_app
+                - kubernetes_name_prefix
+                - kubernetes_namespace
+                - created_at
+                - updated_at
+            properties:
+                display_name:
+                    description: The display name of the installed app
+                    type: string
+                    maxLength: 512
+                cluster:
+                    description: The cluster identifier
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                marketplace_app:
+                    description: The unique identifier of the Marketplace app
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                kubernetes_name_prefix:
+                    description: The name prefix of the resources installed on the Kubernetes cluster
+                    type: string
+                    maxLength: 53
+                    pattern: ^[a-z]([-a-z0-9]*[a-z0-9])?$
+                kubernetes_namespace:
+                    description: The Kubernetes namespace where the app is installed
+                    type: string
+                    maxLength: 63
+                    pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?$
+                created_at:
+                    description: Time when the installed app was created
+                    type: string
+                    format: date-time
+                updated_at:
+                    description: Time when the installed app was last updated
+                    type: string
+                    format: date-time
+                deleted:
+                    description: If true, the installed app has been deleted
+                    type: boolean
+        installed_app_status:
+            description: Status of the installed app
+            type: object
+            required:
+                - phase
+                - instructions
+            properties:
+                phase:
+                    $ref: '#/components/schemas/installed_app_phase'
+                    description: The life cycle phase of the app
+                instructions:
+                    description: The instructions on how to use the app once installed
+                    type: string
+                    minLength: 1
+        installed_app_update:
+            description: Properties of the installed app to update
+            type: object
+            properties:
+                display_name:
+                    description: The display name of the installed app
+                    type: string
+                    maxLength: 512
+        load_balancer:
+            description: Description of the load balancer
+            type: object
+            required:
+                - id
+                - spec
+                - status
+            properties:
+                id:
+                    description: Unique ID of the load balancer
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                spec:
+                    $ref: '#/components/schemas/load_balancer_spec'
+                    description: Specification of the load balancer
+                status:
+                    $ref: '#/components/schemas/load_balancer_status'
+                    description: Status of the load balancer
+        load_balancer_list:
+            description: List of load balancers
+            type: object
+            required:
+                - items
+            properties:
+                items:
+                    description: The load balancers
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/load_balancer'
+        load_balancer_port:
+            description: The Kubernetes service ports
+            type: object
+            required:
+                - protocol
+                - port
+                - target_port
+                - targets
+            properties:
+                protocol:
+                    $ref: '#/components/schemas/protocol'
+                    description: The IP protocol
+                port:
+                    description: The protocol port on which the load balancer is listening
+                    type: integer
+                    minimum: 1
+                    maximum: 65536
+                target_port:
+                    description: The node port of the service
+                    type: integer
+                    minimum: 1
+                    maximum: 65536
+                targets:
+                    description: The load balancer targets
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/load_balancer_target'
+        load_balancer_spec:
+            description: Specification of the load balancer
+            type: object
+            required:
+                - cluster
+                - kubernetes_service
+                - kubernetes_namespace
+                - whitelist
+                - ports
+                - created_at
+            properties:
+                cluster:
+                    description: The cluster identifier
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                kubernetes_service:
+                    description: The Kubernetes service that makes use of this load balancer
+                    type: string
+                    maxLength: 63
+                    pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?$
+                kubernetes_namespace:
+                    description: The namespace of the service for which this load balancer was created
+                    type: string
+                    maxLength: 63
+                    pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?$
+                whitelist:
+                    description: The list of whitelisted networks in CIDR format
+                    type: array
+                    items:
+                        type: string
+                        pattern: ^\d{1,3}(\.\d{1,3}){3}(/\d\d?)?$
+                ports:
+                    description: The Kubernetes service ports
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/load_balancer_port'
+                created_at:
+                    description: Time when the load balancer was created
+                    type: string
+                    format: date-time
+        load_balancer_status:
+            description: Status of the load balancer
+            type: object
+            required:
+                - phase
+            properties:
+                phase:
+                    $ref: '#/components/schemas/resource_phase'
+                    description: The current life cycle phase of the load balancer
+                public_ip:
+                    description: The public IPv4 address of the load balancer
+                    type: string
+                    format: ipv4
+                issues:
+                    $ref: '#/components/schemas/resource_issues'
+                    description: Load balancer issues
+        load_balancer_target:
+            description: A load balancer target
+            type: object
+            required:
+                - node
+                - ip
+                - up
+            properties:
+                node:
+                    description: The node identifier
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                ip:
+                    description: The IP of the node
+                    type: string
+                    format: ipv4
+                up:
+                    description: True if the node is up, false if it is down
+                    type: boolean
+                checked_at:
+                    description: The last time the load balancer target has changed state. Omitted if unknown
+                    type: string
+                    format: date-time
+        marketplace_app:
+            description: Description of the marketplace app
+            type: object
+            required:
+                - id
+                - display_name
+                - version
+                - license
+                - license_url
+                - description
+                - website
+                - compatible_versions
+            properties:
+                id:
+                    description: Unique ID of the marketplace app
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                display_name:
+                    description: The display name of the marketplace app
+                    type: string
+                    maxLength: 512
+                version:
+                    description: The version of the app
+                    type: string
+                    minLength: 1
+                license:
+                    description: The license of the app
+                    type: string
+                license_url:
+                    description: The URL of the license of the app
+                    type: string
+                    format: uri
+                description:
+                    description: The description of the app
+                    type: string
+                website:
+                    description: The website of the app
+                    type: string
+                    format: uri
+                compatible_versions:
+                    description: The Kubernetes versions compatible with the app
+                    type: array
+                    items:
+                        type: string
+                        pattern: ^v1\.\d+\.\d+$
+        marketplace_app_list:
+            description: List of marketplace apps
+            type: object
+            required:
+                - items
+            properties:
+                items:
+                    description: The marketplace apps
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/marketplace_app'
+        master_nodes:
+            description: Master node specifications
+            type: object
+            required:
+                - catalog_item
+            properties:
+                catalog_item:
+                    description: The instance catalog item identifier
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                quantities:
+                    $ref: '#/components/schemas/quantity_set'
+                    description: The minimum hardware configuration
+        node:
+            description: Description of the node
+            type: object
+            required:
+                - id
+                - spec
+                - status
+            properties:
+                id:
+                    description: Unique ID of the node
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                spec:
+                    $ref: '#/components/schemas/node_spec'
+                    description: Specification of the node
+                status:
+                    $ref: '#/components/schemas/node_status'
+                    description: Status of the node
+        node_counts:
+            description: The count of nodes in each phase
+            type: object
+            required:
+                - starting
+                - running
+                - terminating
+                - shortage
+                - queued
+            properties:
+                starting:
+                    description: The number of nodes in the provisioning stage
+                    type: integer
+                    minimum: 0
+                running:
+                    description: The number of nodes that are running
+                    type: integer
+                    minimum: 0
+                terminating:
+                    description: The number of nodes that are in the process of being terminated
+                    type: integer
+                    minimum: 0
+                shortage:
+                    description: The number of nodes that can't be provisioned at this time due to a shortage at the provider's level
+                    type: integer
+                    minimum: 0
+                queued:
+                    description: The number of nodes waiting to be allocated
+                    type: integer
+                    minimum: 0
+        node_issues:
+            description: Node issues
+            type: object
+            properties:
+                shortage:
+                    description: Indicates the node is not provisioned due to a shortage at the provider's level
+                    type: boolean
+                degraded:
+                    description: The node is running in a degraded mode. There might be a delay between issuing a command for controlling this node and receiving a response
+                    type: boolean
+        node_list:
+            description: List of nodes
+            type: object
+            required:
+                - items
+            properties:
+                items:
+                    description: The nodes
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/node'
+        node_pool:
+            description: Description of the node pool
+            type: object
+            required:
+                - id
+                - spec
+                - status
+            properties:
+                id:
+                    description: Unique ID of the node pool
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                spec:
+                    $ref: '#/components/schemas/node_pool_spec'
+                    description: Specification of the node pool
+                status:
+                    $ref: '#/components/schemas/node_pool_status'
+                    description: Status of the node pool
+        node_pool_cluster_create:
+            description: The node pool at cluster creation
+            type: object
+            required:
+                - catalog_item
+                - min_nodes
+            properties:
+                display_name:
+                    description: The display name of the node pool
+                    type: string
+                    maxLength: 512
+                catalog_item:
+                    description: The instance catalog item identifier
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                autoscaling:
+                    description: If true, nodes are created and deleted within the bounds of min_node and max_nodes automatically according to the actual load on them. If false, nodes are created to maintain at least min_nodes, but never deleted automatically
+                    type: boolean
+                public_ips:
+                    description: If true, all the workers nodes in the node pool will be assigned a public IP.
+                    type: boolean
+                initial_kubernetes_labels:
+                    description: The initial Kubernetes labels (key-value pairs) that will be applied to the created nodes
+                    type: object
+                    default: {}
+                    propertyNames:
+                        type: string
+                        pattern: ^([\w.]{1,253}/)?[\w-.]{1,63}$
+                    additionalProperties:
+                        type: string
+                        pattern: ^[\w-.]{1,63}$
+                initial_taints:
+                    description: The initial Kubernetes taints that will be applied to the created nodes. A node taint is of form "Key=Value:Effect". Effect should be one of k8s known taint effects
+                    type: array
+                    items:
+                        type: string
+                        pattern: ^([\w.]{1,253}/)?[\w\-.]{1,63}(=[-.\w]{0,63})?:(NoSchedule|NoExecute|PreferNoSchedule)$
+                    default: []
+                initial_node_count:
+                    description: The initial number of worker nodes in the node pool
+                    type: integer
+                    minimum: 0
+                max_nodes:
+                    description: Maximum number of nodes in the node pool. If autoscaling is false, this setting does not apply
+                    type: integer
+                    minimum: 0
+                min_nodes:
+                    description: Minimum number of nodes in the node pool
+                    type: integer
+                    minimum: 0
+                quantities:
+                    $ref: '#/components/schemas/quantity_set'
+                    description: The quantities of the instances of the node pool
+                    default: {}
+        node_pool_create:
+            description: Properties of the node pool to create
+            type: object
+            required:
+                - cluster
+                - catalog_item
+                - min_nodes
+            properties:
+                display_name:
+                    description: The display name of the node pool
+                    type: string
+                    maxLength: 512
+                cluster:
+                    description: The cluster identifier
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                catalog_item:
+                    description: The instance catalog item identifier
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                autoscaling:
+                    description: If true, nodes are created and deleted within the bounds of min_node and max_nodes automatically according to the actual load on them. If false, nodes are created to maintain at least min_nodes, but never deleted automatically
+                    type: boolean
+                public_ips:
+                    description: If true, all the workers nodes in the node pool will be assigned a public IP.
+                    type: boolean
+                initial_kubernetes_labels:
+                    description: The initial Kubernetes labels (key-value pairs) that will be applied to the created nodes
+                    type: object
+                    default: {}
+                    propertyNames:
+                        type: string
+                        pattern: ^([\w.]{1,253}/)?[\w-.]{1,63}$
+                    additionalProperties:
+                        type: string
+                        pattern: ^[\w-.]{1,63}$
+                initial_taints:
+                    description: The initial Kubernetes taints that will be applied to the created nodes. A node taint is of form "Key=Value:Effect". Effect should be one of k8s known taint effects
+                    type: array
+                    items:
+                        type: string
+                        pattern: ^([\w.]{1,253}/)?[\w\-.]{1,63}(=[-.\w]{0,63})?:(NoSchedule|NoExecute|PreferNoSchedule)$
+                    default: []
+                initial_node_count:
+                    description: The initial number of worker nodes in the node pool
+                    type: integer
+                    minimum: 0
+                max_nodes:
+                    description: Maximum number of nodes in the node pool. If autoscaling is false, this setting does not apply
+                    type: integer
+                    minimum: 0
+                min_nodes:
+                    description: Minimum number of nodes in the node pool
+                    type: integer
+                    minimum: 0
+                quantities:
+                    $ref: '#/components/schemas/quantity_set'
+                    description: The quantities of the instances of the node pool
+                    default: {}
+        node_pool_issues:
+            description: Node Pool issues
+            type: object
+            properties:
+                non_allocatable:
+                    description: Indicates the node pool is not fully provisioned because matching VM configurations could not be found
+                    type: boolean
+                out_of_quota:
+                    description: Indicates the node pool is not fully provisioned due to quota exceeded
+                    type: boolean
+                shortage:
+                    description: Indicates the node pool is not fully provisioned due to a shortage at the data center level
+                    type: boolean
+        node_pool_list:
+            description: List of node pools
+            type: object
+            required:
+                - items
+            properties:
+                items:
+                    description: The node pools
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/node_pool'
+        node_pool_spec:
+            description: Specification of the node pool
+            type: object
+            required:
+                - cluster
+                - catalog_item
+                - initial_kubernetes_labels
+                - initial_taints
+                - min_nodes
+                - quantities
+                - created_at
+                - updated_at
+            properties:
+                display_name:
+                    description: The display name of the node pool
+                    type: string
+                    maxLength: 512
+                cluster:
+                    description: The cluster identifier
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                catalog_item:
+                    description: The instance catalog item identifier
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                autoscaling:
+                    description: If true, nodes are created and deleted within the bounds of min_node and max_nodes automatically according to the actual load on them. If false, nodes are created to maintain at least min_nodes, but never deleted automatically
+                    type: boolean
+                public_ips:
+                    description: If true, all the workers nodes in the node pool will be assigned a public IP.
+                    type: boolean
+                initial_kubernetes_labels:
+                    description: The initial Kubernetes labels (key-value pairs) that will be applied to the created nodes
+                    type: object
+                    propertyNames:
+                        type: string
+                        pattern: ^([\w.]{1,253}/)?[\w-.]{1,63}$
+                    additionalProperties:
+                        type: string
+                        pattern: ^[\w-.]{1,63}$
+                initial_taints:
+                    description: The initial Kubernetes taints that will be applied to the created nodes. A node taint is of form "Key=Value:Effect". Effect should be one of k8s known taint effects
+                    type: array
+                    items:
+                        type: string
+                        pattern: ^([\w.]{1,253}/)?[\w\-.]{1,63}(=[-.\w]{0,63})?:(NoSchedule|NoExecute|PreferNoSchedule)$
+                max_nodes:
+                    description: Maximum number of nodes in the node pool. If autoscaling is false, this setting does not apply
+                    type: integer
+                    minimum: 0
+                min_nodes:
+                    description: Minimum number of nodes in the node pool
+                    type: integer
+                    minimum: 0
+                quantities:
+                    $ref: '#/components/schemas/quantity_set'
+                    description: The quantities of the instances of the node pool
+                created_at:
+                    description: Time when the node pool was created
+                    type: string
+                    format: date-time
+                updated_at:
+                    description: Time when the node pool was last updated
+                    type: string
+                    format: date-time
+                deleted:
+                    description: If true, the node pool has been deleted
+                    type: boolean
+        node_pool_status:
+            description: Status of the node pool
+            type: object
+            required:
+                - node_counts
+            properties:
+                node_counts:
+                    $ref: '#/components/schemas/node_counts'
+                    description: The count of nodes in each phase
+                issues:
+                    $ref: '#/components/schemas/node_pool_issues'
+                    description: Node pool issues
+        node_pool_update:
+            description: Properties of the node pool to update
+            type: object
+            properties:
+                display_name:
+                    description: The display name of the node pool
+                    type: string
+                    maxLength: 512
+                autoscaling:
+                    description: If true, nodes are created and deleted within the bounds of min_node and max_nodes automatically according to the actual load on them. If false, nodes are created to maintain at least min_nodes, but never deleted automatically
+                    type: boolean
+                initial_kubernetes_labels:
+                    description: The initial Kubernetes labels (key-value pairs) that will be applied to the created nodes
+                    type: object
+                    propertyNames:
+                        type: string
+                        pattern: ^([\w.]{1,253}/)?[\w-.]{1,63}$
+                    additionalProperties:
+                        type: string
+                        pattern: ^[\w-.]{1,63}$
+                initial_taints:
+                    description: The initial Kubernetes taints that will be applied to the created nodes. A node taint is of form "Key=Value:Effect". Effect should be one of k8s known taint effects
+                    type: array
+                    items:
+                        type: string
+                        pattern: ^([\w.]{1,253}/)?[\w\-.]{1,63}(=[-.\w]{0,63})?:(NoSchedule|NoExecute|PreferNoSchedule)$
+                max_nodes:
+                    description: Maximum number of nodes in the node pool. If autoscaling is false, this setting does not apply
+                    type: [integer, "null"]
+                    minimum: 0
+                min_nodes:
+                    description: Minimum number of nodes in the node pool
+                    type: integer
+                    minimum: 0
+        node_spec:
+            description: Specification of the node
+            type: object
+            required:
+                - catalog_item
+                - quantities
+                - created_at
+            properties:
+                master:
+                    description: If true this node is a master node
+                    type: boolean
+                node_pool:
+                    description: The node pool identifier
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                catalog_item:
+                    description: The instance catalog item identifier
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                quantities:
+                    $ref: '#/components/schemas/quantity_set'
+                    description: The quantities of the node
+                created_at:
+                    description: Time when the node was created
+                    type: string
+                    format: date-time
+                deleted:
+                    description: If true, the node has been deleted
+                    type: boolean
+        node_status:
+            description: Status of the node
+            type: object
+            required:
+                - phase
+            properties:
+                phase:
+                    $ref: '#/components/schemas/resource_phase'
+                    description: The current life cycle phase of the node
+                private_ip:
+                    description: The private IPv4 address of the node
+                    type: string
+                    format: ipv4
+                public_ip:
+                    description: The public IPv4 address of the node
+                    type: string
+                    format: ipv4
+                issues:
+                    $ref: '#/components/schemas/node_issues'
+                    description: Node issues
+        protocol:
+            description: The IP protocol
+            type: string
+            enum: [tcp, udp]
+        quantity_set:
+            description: Resource quantities
+            type: object
+            properties:
+                cpu_cores:
+                    description: CPU cores
+                    type: integer
+                    format: int64
+                    minimum: 0
+                ram:
+                    description: RAM, bytes
+                    type: integer
+                    format: int64
+                    minimum: 0
+                instance_storage:
+                    description: Instance storage, bytes
+                    type: integer
+                    format: int64
+                    minimum: 0
+                bandwidth:
+                    description: Network bandwidth, bps
+                    type: integer
+                    format: int64
+                    minimum: 0
+        release:
+            description: A Kubernetes release
+            type: object
+            required:
+                - version
+            properties:
+                version:
+                    description: A Kubernetes version
+                    type: string
+                deprecated:
+                    description: If true, new clusters cannot be created on this version, but the version is still supported for existing clusters
+                    type: boolean
+        release_list:
+            description: A list of Kubernetes releases
+            type: object
+            required:
+                - items
+            properties:
+                items:
+                    description: The Kubernetes releases
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/release'
+        resource_issues:
+            description: Resource issues
+            type: object
+            properties:
+                degraded:
+                    description: The resource is running in a degraded mode. There might be a delay between issuing a command for controlling this resource and receiving a response
+                    type: boolean
+                out_of_quota:
+                    description: Indicates the resource is not fully provisioned due to quota exceeded
+                    type: boolean
+        resource_phase:
+            description: The phase of a resource
+            type: string
+            enum: [starting, running, updating, terminating, terminated]
+        token:
+            description: Description of the token
+            type: object
+            required:
+                - id
+                - spec
+            properties:
+                id:
+                    description: Unique ID of the token
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                spec:
+                    $ref: '#/components/schemas/token_spec'
+                    description: Specification of the token
+        token_create:
+            description: Properties of the token to create
+            type: object
+            required:
+                - cluster
+                - member
+            properties:
+                display_name:
+                    description: The display name of the token
+                    type: string
+                    maxLength: 512
+                cluster:
+                    description: The cluster identifier
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                member:
+                    description: The identifier of the Ridge member assigned to this token. The member ID is used as the Kubernetes username
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                kubernetes_groups:
+                    description: The list of Kubernetes groups the token is a member of
+                    type: array
+                    items:
+                        type: string
+                        minLength: 1
+                    default: ['system:masters']
+        token_created:
+            description: Description of the newly created token
+            type: object
+            required:
+                - id
+                - spec
+                - status
+            properties:
+                id:
+                    description: Unique ID of the token
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                spec:
+                    $ref: '#/components/schemas/token_spec'
+                    description: Specification of the token
+                status:
+                    $ref: '#/components/schemas/token_status_created'
+                    description: Status of the newly created token
+        token_list:
+            description: List of tokens
+            type: object
+            required:
+                - items
+            properties:
+                items:
+                    description: The tokens
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/token'
+        token_spec:
+            description: Specification of the token
+            type: object
+            required:
+                - cluster
+                - member
+                - kubernetes_groups
+                - created_at
+                - updated_at
+            properties:
+                display_name:
+                    description: The display name of the token
+                    type: string
+                    maxLength: 512
+                cluster:
+                    description: The cluster identifier
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                member:
+                    description: The identifier of the Ridge member assigned to this token. The member ID is used as the Kubernetes username
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                kubernetes_groups:
+                    description: The list of Kubernetes groups the token is a member of
+                    type: array
+                    items:
+                        type: string
+                        minLength: 1
+                created_at:
+                    description: Time when the token was created
+                    type: string
+                    format: date-time
+                updated_at:
+                    description: Time when the token was last updated
+                    type: string
+                    format: date-time
+                deleted:
+                    description: If true, the token has been deleted
+                    type: boolean
+        token_status_created:
+            description: Status of the newly created token
+            type: object
+            required:
+                - token
+                - kubeconfig
+            properties:
+                token:
+                    description: The authentication token.
+                    type: string
+                    minLength: 1
+                kubeconfig:
+                    description: The kubeconfig file for the cluster. It is returned only once, please save it in a safe place
+        token_update:
+            description: Properties of the token to update
+            type: object
+            properties:
+                display_name:
+                    description: The display name of the token
+                    type: string
+                    maxLength: 512
+                kubernetes_groups:
+                    description: The list of Kubernetes groups the token is a member of
+                    type: array
+                    items:
+                        type: string
+                        minLength: 1
+        volume:
+            description: Description of the volume
+            type: object
+            required:
+                - id
+                - spec
+                - status
+            properties:
+                id:
+                    description: Unique ID of the volume
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                spec:
+                    $ref: '#/components/schemas/volume_spec'
+                    description: Specification of the volume
+                status:
+                    $ref: '#/components/schemas/volume_status'
+                    description: Status of the volume
+        volume_attachment:
+            description: Description of the volume attachment
+            type: object
+            required:
+                - id
+                - spec
+                - status
+            properties:
+                id:
+                    description: Unique ID of the volume attachment
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                spec:
+                    $ref: '#/components/schemas/volume_attachment_spec'
+                    description: Specification of the volume attachment
+                status:
+                    $ref: '#/components/schemas/volume_attachment_status'
+                    description: Status of the volume attachment
+        volume_attachment_list:
+            description: List of volume attachments
+            type: object
+            required:
+                - items
+            properties:
+                items:
+                    description: The volume attachments
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/volume_attachment'
+        volume_attachment_spec:
+            description: Specification of the volume attachment
+            type: object
+            required:
+                - node
+                - volume
+            properties:
+                node:
+                    description: The node identifier the volume is attached to
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                volume:
+                    description: The volume identifier
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+        volume_attachment_status:
+            description: Status of the volume attachment
+            type: object
+            required:
+                - unix_device
+                - phase
+            properties:
+                unix_device:
+                    description: The device name for the volume attachment
+                    type: string
+                    pattern: ^/dev/
+                phase:
+                    $ref: '#/components/schemas/resource_phase'
+                    description: The current life cycle phase of the volume_attachment
+        volume_spec:
+            description: Specification of the volume
+            type: object
+            required:
+                - size
+                - persistent_volume
+                - created_at
+            properties:
+                size:
+                    description: The size of the volume in bytes
+                    type: integer
+                    format: int64
+                    minimum: 0
+                persistent_volume:
+                    description: Kubernetes PersistentVolume name
+                    type: string
+                    pattern: ^pvc-[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+                created_at:
+                    description: Time when the volume was created
+                    type: string
+                    format: date-time
+                deleted:
+                    description: If true, the volume has been deleted
+                    type: boolean
+        volume_status:
+            description: Status of the volume
+            type: object
+            required:
+                - phase
+            properties:
+                phase:
+                    $ref: '#/components/schemas/resource_phase'
+                    description: The current life cycle phase of the volume
+                issues:
+                    $ref: '#/components/schemas/resource_issues'
+                    description: Volume issues
+        vpn:
+            description: Description of the VPN
+            type: object
+            required:
+                - id
+                - spec
+                - status
+            properties:
+                id:
+                    description: Unique ID of the VPN
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                spec:
+                    $ref: '#/components/schemas/vpn_spec'
+                    description: Specification of the VPN
+                status:
+                    $ref: '#/components/schemas/vpn_status'
+                    description: Status of the VPN
+        vpn_create:
+            description: Properties of the VPN to create
+            type: object
+            required:
+                - cluster
+                - local_networks
+                - wireguard
+            properties:
+                display_name:
+                    description: The display name of the VPN
+                    type: string
+                    maxLength: 512
+                cluster:
+                    description: The cluster identifier
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                local_networks:
+                    description: The list of networks for which the VPN should forward data from cluster, in CIDR format
+                    type: array
+                    items:
+                        type: string
+                        pattern: ^\d{1,3}(\.\d{1,3}){3}(/\d\d?)?$
+                wireguard:
+                    $ref: '#/components/schemas/wireguard_create'
+                    description: The properties of a VPN of type WireGuard
+        vpn_issues:
+            description: VPN issues
+            type: object
+            properties:
+                overlaps_node_network:
+                    description: Indicates the VPN cannot be created because one of the local networks overlaps with it
+                    type: boolean
+        vpn_list:
+            description: List of VPNs
+            type: object
+            required:
+                - items
+            properties:
+                items:
+                    description: The VPNs
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/vpn'
+        vpn_phase:
+            description: The phase of a VPN
+            type: string
+            enum: [starting, updating, running, terminating, terminated]
+        vpn_spec:
+            description: Specification of the VPN
+            type: object
+            required:
+                - cluster
+                - local_networks
+                - created_at
+                - updated_at
+            properties:
+                display_name:
+                    description: The display name of the VPN
+                    type: string
+                    maxLength: 512
+                cluster:
+                    description: The cluster identifier
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                local_networks:
+                    description: The list of networks for which the VPN should forward data from cluster, in CIDR format
+                    type: array
+                    items:
+                        type: string
+                        pattern: ^\d{1,3}(\.\d{1,3}){3}(/\d\d?)?$
+                created_at:
+                    description: Time when the VPN was created
+                    type: string
+                    format: date-time
+                updated_at:
+                    description: Time when the VPN was last updated
+                    type: string
+                    format: date-time
+                deleted:
+                    description: If true, the VPN has been deleted
+                    type: boolean
+        vpn_status:
+            description: Status of the VPN
+            type: object
+            required:
+                - phase
+                - remote_networks
+                - endpoint
+                - wireguard
+            properties:
+                phase:
+                    $ref: '#/components/schemas/vpn_phase'
+                    description: The life cycle phase of the VPN server end
+                remote_networks:
+                    description: The list of networks that should be routed to VPN client for VPN to work, in CIDR format
+                    type: array
+                    items:
+                        type: string
+                        pattern: ^\d{1,3}(\.\d{1,3}){3}(/\d\d?)?$
+                endpoint:
+                    description: FQDN:port of the VPN server
+                    type: string
+                    pattern: ^[-\w]+(\.[-\w]+)*(:\d+)?$
+                wireguard:
+                    $ref: '#/components/schemas/wireguard'
+                    description: The properties of a VPN of type WireGuard
+                issues:
+                    $ref: '#/components/schemas/vpn_issues'
+                    description: VPN issues
+        vpn_update:
+            description: Properties of the VPN to update
+            type: object
+            properties:
+                display_name:
+                    description: The display name of the VPN
+                    type: string
+                    maxLength: 512
+                local_networks:
+                    description: The list of networks for which the VPN should forward data from cluster, in CIDR format
+                    type: array
+                    items:
+                        type: string
+                        pattern: ^\d{1,3}(\.\d{1,3}){3}(/\d\d?)?$
+        wireguard:
+            description: The WireGuard properties
+            type: object
+            required:
+                - server_public_key
+                - partial_config
+            properties:
+                server_public_key:
+                    description: The public key of the server end of WireGuard VPN
+                    type: string
+                    pattern: ^[A-Za-z0-9+\/]{42}[AEIMQUYcgkosw480]=$
+                partial_config:
+                    description: The partial WireGuard config. This config is missing the client's private key. The place to put his key is marked as "<<CLIENT PRIVATE KEY>>"
+                    type: string
+        wireguard_create:
+            description: The WireGuard input properties at creation
+            type: object
+            required:
+                - client_public_key
+            properties:
+                client_public_key:
+                    description: The public key of a client end of the WireGuard VPN.
+                    type: string
+                    pattern: ^[A-Za-z0-9+\/]{42}[AEIMQUYcgkosw480]=$
+    responses:
+        error_400:
+            description: Bad Request
+            content:
+                application/json:
+                    schema:
+                        type: string
+        error_401:
+            description: Unauthorized
+            content:
+                application/json:
+                    schema:
+                        type: string
+        error_403:
+            description: Forbidden
+            content:
+                application/json:
+                    schema:
+                        type: string
+        error_404:
+            description: Not Found
+            content:
+                application/json:
+                    schema:
+                        type: string
+        error_503:
+            description: Service Unavailable
+            content:
+                application/json:
+                    schema:
+                        type: string
+tags:
+    - name: Volume Attachments
+      description: Operations on volume attachments
+    - name: Clusters
+      description: Operations on clusters
+    - name: Nodes
+      description: Operations on nodes
+    - name: Tokens
+      description: Operations on tokens
+    - name: VPNs
+      description: Operations on VPNs
+    - name: Load Balancers
+      description: Operations on load balancers
+    - name: Volumes
+      description: Operations on volumes
+    - name: Node Pools
+      description: Operations on node pools
+    - name: Marketplace Apps
+      description: Operations on marketplace apps
+    - name: Installed Apps
+      description: Operations on installed apps
