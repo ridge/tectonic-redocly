@@ -1,0 +1,309 @@
+openapi: 3.1.0
+info:
+    title: Ridge Object Storage API
+    description: An API for the Ridge Object Storage
+    version: experimental
+servers:
+    - url: '{origin}/ros/experimental'
+      variables:
+        origin:
+            default: https://api.ridge.co
+            description: The scheme, domain name and optional port to access the API server
+paths:
+    /partners/{partner}/partner-storage-sites:
+        parameters:
+            - name: partner
+              in: path
+              description: Unique identifier of the partner
+              required: true
+              schema:
+                type: string
+                pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+        get:
+            operationId: partner_list_partner_storage_sites
+            summary: List partner storage sites of a partner
+            responses:
+                200:
+                    description: Success
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/partner_storage_site_list'
+                400:
+                    $ref: '#/components/responses/error_400'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+                404:
+                    $ref: '#/components/responses/error_404'
+            tags: [Partner Storage Sites]
+    /projects/{project}/storage-sites:
+        parameters:
+            - name: project
+              in: path
+              description: Unique identifier of the project
+              required: true
+              schema:
+                type: string
+                pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+        get:
+            operationId: project_list_storage_sites
+            summary: List storage sites of a project
+            responses:
+                200:
+                    description: Success
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/storage_site_list'
+                400:
+                    $ref: '#/components/responses/error_400'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+                404:
+                    $ref: '#/components/responses/error_404'
+            tags: [Storage Sites]
+    /storage-sites/{storage_site}:
+        parameters:
+            - name: storage_site
+              in: path
+              description: Unique identifier of the storage site
+              required: true
+              schema:
+                type: string
+                pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+        get:
+            operationId: storage_site_describe
+            summary: Describe a storage site
+            responses:
+                200:
+                    description: Success
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/storage_site'
+                400:
+                    $ref: '#/components/responses/error_400'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+                404:
+                    $ref: '#/components/responses/error_404'
+            tags: [Storage Sites]
+components:
+    schemas:
+        access_level:
+            description: |
+                The access level to data center:
+                * public: data center is available to all of ridge users.
+                * clients: data center is only available to all clients of the partner owning the DC.
+                * private: data center is only available to clients that are explicitly authorized (regardless of their partner).
+            type: string
+            enum: [public, clients, private]
+        location:
+            description: Location
+            type: object
+            required:
+                - continent
+                - country
+                - city
+                - latitude
+                - longitude
+            properties:
+                continent:
+                    $ref: '#/components/schemas/location_continent'
+                    description: The continent in which the data center is located
+                country:
+                    description: The 2 letter country code according to ISO-3166-1
+                    type: string
+                    pattern: ^[A-Z][A-Z]$
+                state_or_province:
+                    description: The country subdivision code according to ISO-3166-2
+                    type: string
+                    pattern: ^[A-Z0-9]*$
+                city:
+                    description: The city in which the data center is located
+                    type: string
+                latitude:
+                    description: The latitude in range (-90.0, 90.0)
+                    type: string
+                    pattern: ^-?\d+\.\d+$
+                longitude:
+                    description: The latitude in range (-180.0, 180.0)
+                    type: string
+                    pattern: ^-?\d+\.\d+$
+        location_continent:
+            description: Continent
+            type: string
+            enum: [africa, asia, europe, north-america, south-america, antarctica, oceania]
+        partner_storage_site:
+            description: Description of the partner storage site
+            type: object
+            required:
+                - id
+                - spec
+                - status
+            properties:
+                id:
+                    description: Unique ID of the partner storage site
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                spec:
+                    $ref: '#/components/schemas/partner_storage_site_spec'
+                    description: Specification of the partner storage site
+                status:
+                    $ref: '#/components/schemas/partner_storage_site_status'
+                    description: Status of the partner storage site
+        partner_storage_site_list:
+            description: List of partner storage sites
+            type: object
+            required:
+                - items
+            properties:
+                items:
+                    description: The partner storage sites
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/partner_storage_site'
+        partner_storage_site_spec:
+            description: Specification of the partner storage site
+            type: object
+            required:
+                - partner
+                - endpoint
+                - location
+                - data_center
+            properties:
+                partner:
+                    description: The unique identifier of the partner
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                endpoint:
+                    description: The S3-like API endpoint
+                    type: string
+                    format: uri
+                location:
+                    $ref: '#/components/schemas/location'
+                    description: The storage site actual geographical location
+                data_center:
+                    description: The unique identifier of the data center.
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+        partner_storage_site_status:
+            description: Status of the partner storage site
+            type: object
+            required:
+                - enabled
+            properties:
+                enabled:
+                    description: Indicates whether the storage site is enabled
+                    type: boolean
+        storage_site:
+            description: Description of the storage site
+            type: object
+            required:
+                - id
+                - spec
+                - status
+            properties:
+                id:
+                    description: Unique ID of the storage site
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                spec:
+                    $ref: '#/components/schemas/storage_site_spec'
+                    description: Specification of the storage site
+                status:
+                    $ref: '#/components/schemas/storage_site_status'
+                    description: Status of the storage site
+        storage_site_list:
+            description: List of storage sites
+            type: object
+            required:
+                - items
+            properties:
+                items:
+                    description: The storage sites
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/storage_site'
+        storage_site_spec:
+            description: Specification of the storage site
+            type: object
+            required:
+                - project
+                - endpoint
+                - location
+                - data_center
+                - partner
+                - access_level
+            properties:
+                project:
+                    description: The unique identifier of the project
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                endpoint:
+                    description: The S3-like API endpoint
+                    type: string
+                    format: uri
+                location:
+                    $ref: '#/components/schemas/location'
+                    description: The storage site actual geographical location
+                data_center:
+                    description: The unique identifier of the data center.
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                partner:
+                    description: The unique identifier of the partner
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                access_level:
+                    $ref: '#/components/schemas/access_level'
+                    description: The access level that is required to use the storage site.
+        storage_site_status:
+            description: Status of the storage site
+            type: object
+            required:
+                - active
+                - enabled
+            properties:
+                active:
+                    description: Indicates if the project has, or recently had, buckets or storage keys in this storage site
+                    type: boolean
+                enabled:
+                    description: Indicates whether the storage site is enabled
+                    type: boolean
+    responses:
+        error_400:
+            description: Bad Request
+            content:
+                application/json:
+                    schema:
+                        type: string
+        error_401:
+            description: Unauthorized
+            content:
+                application/json:
+                    schema:
+                        type: string
+        error_403:
+            description: Forbidden
+            content:
+                application/json:
+                    schema:
+                        type: string
+        error_404:
+            description: Not Found
+            content:
+                application/json:
+                    schema:
+                        type: string
+tags:
+    - name: Storage Sites
+      description: Operations on storage sites
+    - name: Partner Storage Sites
+      description: Operations on partner storage sites

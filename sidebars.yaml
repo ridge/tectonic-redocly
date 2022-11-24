@@ -53,11 +53,11 @@ api:
   - group: Object Storage
     expanded: false
     pages:
-      - group: Unstable
+      - group: Experimental
         expanded: false
         pages:
             - label: ros-unstable
-              page: api/ros/unstable/ros.page.yaml/*
+              page: api/ros/experimental/ros.page.yaml/*
 getting-started:
     - page: getting-started/index.md
     - page: getting-started/iam/iam-getting-started.md

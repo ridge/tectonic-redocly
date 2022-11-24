@@ -21,7 +21,7 @@ oasDefinitions:
   iam-experimental: ./api/iam/experimental/iam.yaml
   compute-experimental: ./api/compute/experimental/compute.yaml
   keyring-experimental: ./api/keyring/experimental/keyring.yaml
-  ros-unstable: ./api/ros/unstable/ros.yaml
+  ros-experimental: ./api/ros/experimental/ros.yaml
   freerange-experimental: ./api/freerange/experimental/freerange.yaml
 stylesheets:
   - './main.css'
