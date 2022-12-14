@@ -109,90 +109,6 @@ paths:
                 404:
                     $ref: '#/components/responses/error_404'
             tags: [API Keys]
-    /clients:
-        post:
-            operationId: client_create
-            summary: Create a client
-            parameters:
-                - name: X-Ridge-Request-ID
-                  in: header
-                  description: Client-generated request ID for idempotency
-                  schema:
-                    type: string
-                    maxLength: 64
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/client_create'
-                required: true
-            responses:
-                200:
-                    description: Success
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/client'
-                400:
-                    $ref: '#/components/responses/error_400'
-                401:
-                    $ref: '#/components/responses/error_401'
-                403:
-                    $ref: '#/components/responses/error_403'
-            tags: [Clients]
-    /clients/{client}:
-        parameters:
-            - name: client
-              in: path
-              description: Unique identifier of the client
-              required: true
-              schema:
-                type: string
-                pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
-        get:
-            operationId: client_describe
-            summary: Describe a client
-            responses:
-                200:
-                    description: Success
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/client'
-                400:
-                    $ref: '#/components/responses/error_400'
-                401:
-                    $ref: '#/components/responses/error_401'
-                403:
-                    $ref: '#/components/responses/error_403'
-                404:
-                    $ref: '#/components/responses/error_404'
-            tags: [Clients]
-        patch:
-            operationId: client_update
-            summary: Update the properties of a client
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/client_update'
-                required: true
-            responses:
-                200:
-                    description: Success
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/client'
-                400:
-                    $ref: '#/components/responses/error_400'
-                401:
-                    $ref: '#/components/responses/error_401'
-                403:
-                    $ref: '#/components/responses/error_403'
-                404:
-                    $ref: '#/components/responses/error_404'
-            tags: [Clients]
     /group-memberships:
         post:
             operationId: group_membership_create
@@ -366,7 +282,7 @@ paths:
                 404:
                     $ref: '#/components/responses/error_404'
             tags: [Groups]
-    /groups/{group}/members:
+    /groups/{group}/memberships:
         parameters:
             - name: group
               in: path
@@ -376,8 +292,8 @@ paths:
                 type: string
                 pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
         get:
-            operationId: group_list_members
-            summary: List members of a group
+            operationId: group_list_group_memberships
+            summary: List memberships of a group
             responses:
                 200:
                     description: Success
@@ -393,7 +309,7 @@ paths:
                     $ref: '#/components/responses/error_403'
                 404:
                     $ref: '#/components/responses/error_404'
-            tags: [Groups]
+            tags: [Group Memberships]
     /groups/{group}/privileges:
         parameters:
             - name: group
@@ -549,34 +465,6 @@ paths:
                 404:
                     $ref: '#/components/responses/error_404'
             tags: [API Keys]
-    /members/{member}/group-memberships:
-        parameters:
-            - name: member
-              in: path
-              description: Unique identifier of the member
-              required: true
-              schema:
-                type: string
-                pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
-        get:
-            operationId: member_list_group_memberships
-            summary: List group memberships of a member
-            responses:
-                200:
-                    description: Success
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/group_membership_list'
-                400:
-                    $ref: '#/components/responses/error_400'
-                401:
-                    $ref: '#/components/responses/error_401'
-                403:
-                    $ref: '#/components/responses/error_403'
-                404:
-                    $ref: '#/components/responses/error_404'
-            tags: [Group Memberships]
     /members/{member}/invitation/send:
         parameters:
             - name: member
@@ -631,6 +519,34 @@ paths:
                 404:
                     $ref: '#/components/responses/error_404'
             tags: [Members]
+    /members/{member}/memberships:
+        parameters:
+            - name: member
+              in: path
+              description: Unique identifier of the member
+              required: true
+              schema:
+                type: string
+                pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+        get:
+            operationId: member_list_group_memberships
+            summary: List memberships of a member
+            responses:
+                200:
+                    description: Success
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/group_membership_list'
+                400:
+                    $ref: '#/components/responses/error_400'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+                404:
+                    $ref: '#/components/responses/error_404'
+            tags: [Group Memberships]
     /members/{member}/privileges:
         parameters:
             - name: member
@@ -855,162 +771,6 @@ paths:
                 404:
                     $ref: '#/components/responses/error_404'
             tags: [Organizations]
-    /partners:
-        get:
-            operationId: list_partners
-            summary: List partners
-            responses:
-                200:
-                    description: Success
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/partner_list'
-                401:
-                    $ref: '#/components/responses/error_401'
-                403:
-                    $ref: '#/components/responses/error_403'
-            tags: [Partners]
-    /partners/{partner}:
-        parameters:
-            - name: partner
-              in: path
-              description: Unique identifier of the partner
-              required: true
-              schema:
-                type: string
-                pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
-        get:
-            operationId: partner_describe
-            summary: Describe a partner
-            responses:
-                200:
-                    description: Success
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/partner'
-                400:
-                    $ref: '#/components/responses/error_400'
-                401:
-                    $ref: '#/components/responses/error_401'
-                403:
-                    $ref: '#/components/responses/error_403'
-                404:
-                    $ref: '#/components/responses/error_404'
-            tags: [Partners]
-    /partners/{partner}/clients:
-        parameters:
-            - name: partner
-              in: path
-              description: Unique identifier of the partner
-              required: true
-              schema:
-                type: string
-                pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
-        get:
-            operationId: partner_list_clients
-            summary: List clients of a partner
-            responses:
-                200:
-                    description: Success
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/client_list'
-                400:
-                    $ref: '#/components/responses/error_400'
-                401:
-                    $ref: '#/components/responses/error_401'
-                403:
-                    $ref: '#/components/responses/error_403'
-                404:
-                    $ref: '#/components/responses/error_404'
-            tags: [Clients]
-    /partners/{partner}/groups:
-        parameters:
-            - name: partner
-              in: path
-              description: Unique identifier of the partner
-              required: true
-              schema:
-                type: string
-                pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
-        get:
-            operationId: partner_list_groups
-            summary: List groups of a partner
-            responses:
-                200:
-                    description: Success
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/group_list'
-                400:
-                    $ref: '#/components/responses/error_400'
-                401:
-                    $ref: '#/components/responses/error_401'
-                403:
-                    $ref: '#/components/responses/error_403'
-                404:
-                    $ref: '#/components/responses/error_404'
-            tags: [Groups]
-    /partners/{partner}/members:
-        parameters:
-            - name: partner
-              in: path
-              description: Unique identifier of the partner
-              required: true
-              schema:
-                type: string
-                pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
-        get:
-            operationId: partner_list_members
-            summary: List members of a partner
-            responses:
-                200:
-                    description: Success
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/member_list'
-                400:
-                    $ref: '#/components/responses/error_400'
-                401:
-                    $ref: '#/components/responses/error_401'
-                403:
-                    $ref: '#/components/responses/error_403'
-                404:
-                    $ref: '#/components/responses/error_404'
-            tags: [Members]
-    /partners/{partner}/policies:
-        parameters:
-            - name: partner
-              in: path
-              description: Unique identifier of the partner
-              required: true
-              schema:
-                type: string
-                pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
-        get:
-            operationId: partner_list_policies
-            summary: List policies of a partner
-            responses:
-                200:
-                    description: Success
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/policy_list'
-                400:
-                    $ref: '#/components/responses/error_400'
-                401:
-                    $ref: '#/components/responses/error_401'
-                403:
-                    $ref: '#/components/responses/error_403'
-                404:
-                    $ref: '#/components/responses/error_404'
-            tags: [Policies]
     /policies:
         post:
             operationId: policy_create
@@ -1402,79 +1162,12 @@ components:
                     description: The display name of the API key
                     type: string
                     maxLength: 512
-        client:
-            description: Description of the client
-            type: object
-            required:
-                - id
-                - partner
-                - org
-                - trial
-            properties:
-                id:
-                    description: Unique ID of the client
-                    type: string
-                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
-                display_name:
-                    description: The display name of the client
-                    type: string
-                    maxLength: 512
-                partner:
-                    description: The client's partner ID
-                    type: string
-                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
-                org:
-                    description: The client organization ID
-                    type: string
-                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
-                trial:
-                    description: True if the client is in trial stage
-                    type: boolean
-        client_create:
-            description: Properties of the client to create
-            type: object
-            required:
-                - partner
-                - trial
-            properties:
-                display_name:
-                    description: The display name of the client
-                    type: string
-                    maxLength: 512
-                partner:
-                    description: The client's partner ID
-                    type: string
-                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
-                trial:
-                    description: True if the client is in trial stage
-                    type: boolean
-        client_list:
-            description: List of clients
-            type: object
-            required:
-                - items
-            properties:
-                items:
-                    description: The clients
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/client'
-        client_update:
-            description: Properties of the client to update
-            type: object
-            properties:
-                display_name:
-                    description: The display name of the client
-                    type: string
-                    maxLength: 512
-                trial:
-                    description: True if the client is in trial stage
-                    type: boolean
         group:
             description: Description of the group
             type: object
             required:
                 - id
+                - realm
                 - realm_type
                 - created_at
                 - updated_at
@@ -1490,6 +1183,7 @@ components:
                 realm:
                     description: The parent realm of the group
                     type: string
+                    minLength: 1
                 realm_type:
                     $ref: '#/components/schemas/realm_type'
                     description: The type of the realm
@@ -1505,6 +1199,7 @@ components:
             description: Properties of the group to create
             type: object
             required:
+                - realm
                 - realm_type
             properties:
                 display_name:
@@ -1514,6 +1209,7 @@ components:
                 realm:
                     description: The parent realm of the group
                     type: string
+                    minLength: 1
                 realm_type:
                     $ref: '#/components/schemas/realm_type'
                     description: The type of the realm
@@ -1681,7 +1377,7 @@ components:
         object_type:
             description: The type of a policy object
             type: string
-            enum: [project, org, partner]
+            enum: [project, org, partner, admin]
         org:
             description: Description of the org
             type: object
@@ -1717,38 +1413,6 @@ components:
                 deleted:
                     description: If true, the org has been deleted
                     type: boolean
-        partner:
-            description: Description of the partner
-            type: object
-            required:
-                - id
-            properties:
-                id:
-                    description: Unique ID of the partner
-                    type: string
-                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
-                display_name:
-                    description: The display name of the partner
-                    type: string
-                    maxLength: 512
-                subsidiary:
-                    description: Indicates that organizations that belong to this partner will be billed by Ridge
-                    type: boolean
-                website:
-                    description: Partner's corporate website
-                    type: string
-                    pattern: ^https?://
-        partner_list:
-            description: List of partners
-            type: object
-            required:
-                - items
-            properties:
-                items:
-                    description: The partners
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/partner'
         personal_info:
             description: The personal information of a user
             type: object
@@ -1771,6 +1435,8 @@ components:
                 - id
                 - subject
                 - subject_type
+                - object
+                - object_type
                 - role
                 - created_at
             properties:
@@ -1806,6 +1472,8 @@ components:
             required:
                 - subject
                 - subject_type
+                - object
+                - object_type
                 - role
             properties:
                 subject:
@@ -1946,10 +1614,6 @@ components:
                     description: Public IPs
                     type: integer
                     format: int64
-                floating_ips:
-                    description: Floating IPs
-                    type: integer
-                    format: int64
         quota:
             description: Organization quota info
             type: object
@@ -1973,6 +1637,7 @@ components:
             required:
                 - id
                 - realm_type
+                - object_type
             properties:
                 id:
                     description: Unique ID of the role
@@ -2004,7 +1669,6 @@ components:
             type: object
             required:
                 - id
-                - project
                 - member
                 - storage_site
                 - created_at
@@ -2018,10 +1682,6 @@ components:
                     description: The display name of the storage key
                     type: string
                     maxLength: 512
-                project:
-                    description: Project ID
-                    type: string
-                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
                 member:
                     description: Member ID
                     type: string
@@ -2045,7 +1705,6 @@ components:
             description: Properties of the storage key to create
             type: object
             required:
-                - project
                 - member
                 - storage_site
             properties:
@@ -2053,10 +1712,6 @@ components:
                     description: The display name of the storage key
                     type: string
                     maxLength: 512
-                project:
-                    description: Project ID
-                    type: string
-                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
                 member:
                     description: Member ID
                     type: string
@@ -2114,25 +1769,21 @@ components:
                     schema:
                         type: string
 tags:
-    - name: Roles
-      description: Operations on roles
-    - name: Partners
-      description: Operations on partners
-    - name: Policies
-      description: Operations on policies
-    - name: API Keys
-      description: Operations on API keys
-    - name: Storage Keys
-      description: Operations on storage keys
-    - name: Organizations
-      description: Operations on organizations
-    - name: Clients
-      description: Operations on clients
-    - name: Projects
-      description: Operations on projects
-    - name: Members
-      description: Operations on members
     - name: Groups
       description: Operations on groups
     - name: Group Memberships
       description: Operations on group memberships
+    - name: API Keys
+      description: Operations on API keys
+    - name: Roles
+      description: Operations on roles
+    - name: Organizations
+      description: Operations on organizations
+    - name: Projects
+      description: Operations on projects
+    - name: Members
+      description: Operations on members
+    - name: Policies
+      description: Operations on policies
+    - name: Storage Keys
+      description: Operations on storage keys

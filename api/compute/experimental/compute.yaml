@@ -172,69 +172,6 @@ paths:
                 404:
                     $ref: '#/components/responses/error_404'
             tags: [Instance Catalog Items]
-    /partners/{partner}/data-centers:
-        parameters:
-            - name: partner
-              in: path
-              description: Unique identifier of the partner
-              required: true
-              schema:
-                type: string
-                pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
-        get:
-            operationId: partner_list_data_centers
-            summary: List data centers of a partner
-            responses:
-                200:
-                    description: Success
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/data_center_list'
-                400:
-                    $ref: '#/components/responses/error_400'
-                401:
-                    $ref: '#/components/responses/error_401'
-                403:
-                    $ref: '#/components/responses/error_403'
-                404:
-                    $ref: '#/components/responses/error_404'
-            tags: [Data Centers]
-    /partners/{partner}/instance-catalog:
-        parameters:
-            - name: partner
-              in: path
-              description: Unique identifier of the partner
-              required: true
-              schema:
-                type: string
-                pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
-        get:
-            operationId: partner_list_instance_catalog_items
-            summary: List instance catalog items of a partner
-            parameters:
-                - name: data_center
-                  in: query
-                  explode: false
-                  schema:
-                    type: string
-                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
-            responses:
-                200:
-                    description: Success
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/instance_catalog_item_list'
-                400:
-                    $ref: '#/components/responses/error_400'
-                401:
-                    $ref: '#/components/responses/error_401'
-                403:
-                    $ref: '#/components/responses/error_403'
-                404:
-                    $ref: '#/components/responses/error_404'
-            tags: [Instance Catalog Items]
     /projects/{project}/networks:
         parameters:
             - name: project
@@ -263,6 +200,34 @@ paths:
                 404:
                     $ref: '#/components/responses/error_404'
             tags: [Networks]
+    /projects/{project}/volumes:
+        parameters:
+            - name: project
+              in: path
+              description: Unique identifier of the project
+              required: true
+              schema:
+                type: string
+                pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+        get:
+            operationId: project_list_volumes
+            summary: List volumes of a project
+            responses:
+                200:
+                    description: Success
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/volume_list'
+                400:
+                    $ref: '#/components/responses/error_400'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+                404:
+                    $ref: '#/components/responses/error_404'
+            tags: [Volumes]
     /qualities:
         get:
             operationId: list_qualities
@@ -295,6 +260,90 @@ paths:
                 403:
                     $ref: '#/components/responses/error_403'
             tags: [Data Centers]
+    /volumes:
+        post:
+            operationId: volume_create
+            summary: Create a volume
+            parameters:
+                - name: X-Ridge-Request-ID
+                  in: header
+                  description: Client-generated request ID for idempotency
+                  schema:
+                    type: string
+                    maxLength: 64
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/volume_create'
+                required: true
+            responses:
+                200:
+                    description: Success
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/volume'
+                400:
+                    $ref: '#/components/responses/error_400'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+            tags: [Volumes]
+    /volumes/{volume}:
+        parameters:
+            - name: volume
+              in: path
+              description: Unique identifier of the volume
+              required: true
+              schema:
+                type: string
+                pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+        get:
+            operationId: volume_describe
+            summary: Describe a volume
+            responses:
+                200:
+                    description: Success
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/volume'
+                400:
+                    $ref: '#/components/responses/error_400'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+                404:
+                    $ref: '#/components/responses/error_404'
+            tags: [Volumes]
+        patch:
+            operationId: volume_update
+            summary: Update the properties of a volume
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/volume_update'
+                required: true
+            responses:
+                200:
+                    description: Success
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/volume'
+                400:
+                    $ref: '#/components/responses/error_400'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+                404:
+                    $ref: '#/components/responses/error_404'
+            tags: [Volumes]
 components:
     schemas:
         access_level:
@@ -525,7 +574,7 @@ components:
         location_continent:
             description: Continent
             type: string
-            enum: [africa, asia, europe, north-america, south-america, antarctica, oceania]
+            enum: [africa, asia, europe, north_america, south_america, antarctica, oceania]
         network:
             description: Description of the network
             type: object
@@ -704,7 +753,7 @@ components:
         quality_scope:
             description: Quality scope
             type: string
-            enum: [data-center, instance]
+            enum: [data_center, instance]
         quality_section:
             description: A thematic section containing quality definitions
             type: object
@@ -724,7 +773,7 @@ components:
         quality_value_mode:
             description: Bigger or smaller numbers considered preferable for quality
             type: string
-            enum: [more-is-better, less-is-better]
+            enum: [more_is_better, less_is_better]
         quantity:
             description: A single quantity defined in the system
             type: object
@@ -818,6 +867,150 @@ components:
             description: Units for quantity
             type: string
             enum: [bytes, bps]
+        volume:
+            description: Description of the volume
+            type: object
+            required:
+                - id
+                - spec
+                - status
+            properties:
+                id:
+                    description: Unique ID of the volume
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                spec:
+                    $ref: '#/components/schemas/volume_spec'
+                    description: Specification of the volume
+                status:
+                    $ref: '#/components/schemas/volume_status'
+                    description: Status of the volume
+        volume_create:
+            description: Properties of the volume to create
+            type: object
+            required:
+                - project
+                - data_center
+                - size
+            properties:
+                project:
+                    description: The unique identifier of the project.
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                data_center:
+                    description: The ID of a data center to run the containers.
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                size:
+                    description: Desired size for the persistent volume
+                    type: integer
+                    format: int64
+                    minimum: 0
+                display_name:
+                    description: The display name of the volume
+                    type: string
+                    maxLength: 512
+        volume_issues:
+            description: Volume issues
+            type: object
+            properties:
+                degraded:
+                    description: The volume is running in a degraded mode. There might be a delay between issuing a command for controlling this volume and receiving a response.
+                    type: boolean
+                shortage:
+                    description: Indicates the volume is not fully provisioned due to a shortage at the data center.
+                    type: boolean
+                out_of_quota:
+                    description: Indicates the volume is not fully provisioned due to quota limitation.
+                    type: boolean
+        volume_list:
+            description: List of volumes
+            type: object
+            required:
+                - items
+            properties:
+                items:
+                    description: The volumes
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/volume'
+        volume_phase:
+            description: The phase of the volume life cycle
+            type: string
+            enum: [missing, starting, running, terminating, terminated]
+        volume_spec:
+            description: Specification of the volume
+            type: object
+            required:
+                - project
+                - data_center
+                - size
+                - created_at
+                - updated_at
+            properties:
+                project:
+                    description: The unique identifier of the project.
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                data_center:
+                    description: The ID of a data center to run the containers.
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                size:
+                    description: Desired size for the persistent volume
+                    type: integer
+                    format: int64
+                    minimum: 0
+                keep:
+                    description: If true then the volume will be kept even nothing used it
+                    type: boolean
+                display_name:
+                    description: The display name of the volume
+                    type: string
+                    maxLength: 512
+                created_at:
+                    description: Time when the volume was created
+                    type: string
+                    format: date-time
+                updated_at:
+                    description: Time when the volume was last updated
+                    type: string
+                    format: date-time
+                deleted:
+                    description: If true, the volume has been deleted
+                    type: boolean
+        volume_status:
+            description: Status of the volume
+            type: object
+            required:
+                - phase
+            properties:
+                phase:
+                    $ref: '#/components/schemas/volume_phase'
+                    description: The life cycle phase of the volume.
+                issues:
+                    $ref: '#/components/schemas/volume_issues'
+                size:
+                    description: Actual size for the persistent volume
+                    type: integer
+                    format: int64
+                    minimum: 0
+        volume_update:
+            description: Properties of the volume to update
+            type: object
+            properties:
+                size:
+                    description: Desired size for the persistent volume
+                    type: integer
+                    format: int64
+                    minimum: 0
+                keep:
+                    description: If true then the volume will be kept even nothing used it
+                    type: boolean
+                display_name:
+                    description: The display name of the volume
+                    type: string
+                    maxLength: 512
     responses:
         error_400:
             description: Bad Request
@@ -844,9 +1037,11 @@ components:
                     schema:
                         type: string
 tags:
+    - name: Instance Catalog Items
+      description: Operations on instance catalog items
     - name: Data Centers
       description: Operations on data centers
     - name: Networks
       description: Operations on networks
-    - name: Instance Catalog Items
-      description: Operations on instance catalog items
+    - name: Volumes
+      description: Operations on volumes

@@ -10,34 +10,6 @@ servers:
             default: https://api.ridge.co
             description: The scheme, domain name and optional port to access the API server
 paths:
-    /partners/{partner}/partner-storage-sites:
-        parameters:
-            - name: partner
-              in: path
-              description: Unique identifier of the partner
-              required: true
-              schema:
-                type: string
-                pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
-        get:
-            operationId: partner_list_partner_storage_sites
-            summary: List partner storage sites of a partner
-            responses:
-                200:
-                    description: Success
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/partner_storage_site_list'
-                400:
-                    $ref: '#/components/responses/error_400'
-                401:
-                    $ref: '#/components/responses/error_401'
-                403:
-                    $ref: '#/components/responses/error_403'
-                404:
-                    $ref: '#/components/responses/error_404'
-            tags: [Partner Storage Sites]
     /projects/{project}/storage-sites:
         parameters:
             - name: project
@@ -139,69 +111,7 @@ components:
         location_continent:
             description: Continent
             type: string
-            enum: [africa, asia, europe, north-america, south-america, antarctica, oceania]
-        partner_storage_site:
-            description: Description of the partner storage site
-            type: object
-            required:
-                - id
-                - spec
-                - status
-            properties:
-                id:
-                    description: Unique ID of the partner storage site
-                    type: string
-                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
-                spec:
-                    $ref: '#/components/schemas/partner_storage_site_spec'
-                    description: Specification of the partner storage site
-                status:
-                    $ref: '#/components/schemas/partner_storage_site_status'
-                    description: Status of the partner storage site
-        partner_storage_site_list:
-            description: List of partner storage sites
-            type: object
-            required:
-                - items
-            properties:
-                items:
-                    description: The partner storage sites
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/partner_storage_site'
-        partner_storage_site_spec:
-            description: Specification of the partner storage site
-            type: object
-            required:
-                - partner
-                - endpoint
-                - location
-                - data_center
-            properties:
-                partner:
-                    description: The unique identifier of the partner
-                    type: string
-                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
-                endpoint:
-                    description: The S3-like API endpoint
-                    type: string
-                    format: uri
-                location:
-                    $ref: '#/components/schemas/location'
-                    description: The storage site actual geographical location
-                data_center:
-                    description: The unique identifier of the data center.
-                    type: string
-                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
-        partner_storage_site_status:
-            description: Status of the partner storage site
-            type: object
-            required:
-                - enabled
-            properties:
-                enabled:
-                    description: Indicates whether the storage site is enabled
-                    type: boolean
+            enum: [africa, asia, europe, north_america, south_america, antarctica, oceania]
         storage_site:
             description: Description of the storage site
             type: object
@@ -235,6 +145,7 @@ components:
             description: Specification of the storage site
             type: object
             required:
+                - display_name
                 - project
                 - endpoint
                 - location
@@ -242,6 +153,10 @@ components:
                 - partner
                 - access_level
             properties:
+                display_name:
+                    description: The storage site display name
+                    type: string
+                    minLength: 1
                 project:
                     description: The unique identifier of the project
                     type: string
@@ -305,5 +220,3 @@ components:
 tags:
     - name: Storage Sites
       description: Operations on storage sites
-    - name: Partner Storage Sites
-      description: Operations on partner storage sites
