@@ -21,11 +21,11 @@ api:
     pages:
       - label: Overview
         page: api/iam/iam-overview.md
-      - group: Unstable
+      - group: Experimental
         expanded: false
         pages:
-            - label: iam-unstable
-              page: api/iam/unstable/iam.page.yaml/*
+            - label: iam-experimental
+              page: api/iam/experimental/iam.page.yaml/*
   - group: Compute
     expanded: false
     pages:
