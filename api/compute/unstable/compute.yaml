@@ -2,9 +2,9 @@ openapi: 3.1.0
 info:
     title: Data Center API
     description: An API for obtaining information on data centers.
-    version: experimental
+    version: unstable
 servers:
-    - url: '{origin}/compute/experimental'
+    - url: '{origin}/compute/unstable'
       variables:
         origin:
             default: https://api.ridge.co
@@ -121,6 +121,7 @@ paths:
         get:
             operationId: org_list_data_centers
             summary: List data centers of an org
+            description: List data centers available to an organization
             responses:
                 200:
                     description: Success
@@ -152,6 +153,7 @@ paths:
             parameters:
                 - name: data_center
                   in: query
+                  description: List only the catalog items in the given data center, if specified
                   explode: false
                   schema:
                     type: string
@@ -172,6 +174,76 @@ paths:
                 404:
                     $ref: '#/components/responses/error_404'
             tags: [Instance Catalog Items]
+    /orgs/{org}/volume-catalog:
+        parameters:
+            - name: org
+              in: path
+              description: Unique identifier of the org
+              required: true
+              schema:
+                type: string
+                pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+        get:
+            operationId: org_list_volume_catalog_items
+            summary: List volume catalog items of an org
+            parameters:
+                - name: data_center
+                  in: query
+                  explode: false
+                  schema:
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+            responses:
+                200:
+                    description: Success
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/volume_catalog_item_list'
+                400:
+                    $ref: '#/components/responses/error_400'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+                404:
+                    $ref: '#/components/responses/error_404'
+            tags: [Volume Catalog Items]
+    /partners/{partner}/volume-catalog:
+        parameters:
+            - name: partner
+              in: path
+              description: Unique identifier of the partner
+              required: true
+              schema:
+                type: string
+                pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+        get:
+            operationId: partner_list_volume_catalog_items
+            summary: List volume catalog items of a partner
+            parameters:
+                - name: data_center
+                  in: query
+                  explode: false
+                  schema:
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+            responses:
+                200:
+                    description: Success
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/volume_catalog_item_list'
+                400:
+                    $ref: '#/components/responses/error_400'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+                404:
+                    $ref: '#/components/responses/error_404'
+            tags: [Volume Catalog Items]
     /projects/{project}/networks:
         parameters:
             - name: project
@@ -344,6 +416,34 @@ paths:
                 404:
                     $ref: '#/components/responses/error_404'
             tags: [Volumes]
+    /volumes/{volume}/references:
+        parameters:
+            - name: volume
+              in: path
+              description: Unique identifier of the volume
+              required: true
+              schema:
+                type: string
+                pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+        get:
+            operationId: volume_list_references
+            summary: List of objects referencing the volume
+            responses:
+                200:
+                    description: Success
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/volume_reference_list'
+                400:
+                    $ref: '#/components/responses/error_400'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+                404:
+                    $ref: '#/components/responses/error_404'
+            tags: [Volumes]
 components:
     schemas:
         access_level:
@@ -360,7 +460,6 @@ components:
             required:
                 - id
                 - display_name
-                - partner
                 - location
                 - available
                 - enabled
@@ -374,13 +473,9 @@ components:
                     type: string
                     pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
                 display_name:
-                    description: The display name of the data center.
+                    description: The display name of the data center
                     type: string
                     maxLength: 512
-                partner:
-                    description: The unique identifier of the partner who is offering this data center.
-                    type: string
-                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
                 location:
                     $ref: '#/components/schemas/location'
                     description: The geographical location of the data center.
@@ -402,9 +497,6 @@ components:
                     additionalProperties:
                         type: integer
                         format: int64
-                persistent_storage:
-                    $ref: '#/components/schemas/quantity_range'
-                    description: The range of supported persistent volume sizes. Absent if the data center does not offer persistent storage.
                 prices:
                     $ref: '#/components/schemas/data_center_price_set'
                     description: The prices in USD per hour for the data center resources.
@@ -442,14 +534,6 @@ components:
                     description: Public IPs, USD per hour
                     type: string
                     pattern: ^([-+]?)(\d*)(?:\.(\d{0,9})\d*)?$
-                floating_ips:
-                    description: Floating IPs, USD per hour
-                    type: string
-                    pattern: ^([-+]?)(\d*)(?:\.(\d{0,9})\d*)?$
-                persistent_storage:
-                    description: Persistent storage, USD per hour
-                    type: string
-                    pattern: ^([-+]?)(\d*)(?:\.(\d{0,9})\d*)?$
         instance_catalog_item:
             description: Description of the instance catalog item
             type: object
@@ -459,6 +543,7 @@ components:
                 - qualities
                 - quantities
                 - prices
+                - enabled
             properties:
                 id:
                     description: Unique ID of the instance catalog item
@@ -491,6 +576,9 @@ components:
                 description:
                     description: Additional information about the catalog item.
                     type: string
+                enabled:
+                    description: This catalog item is enabled
+                    type: boolean
         instance_catalog_item_list:
             description: List of instance catalog items
             type: object
@@ -646,7 +734,7 @@ components:
         network_phase:
             description: The phase of the network life cycle
             type: string
-            enum: [creating, running, terminating, terminated, failed]
+            enum: [creating, running, terminating, terminated]
         network_spec:
             description: Specification of the network
             type: object
@@ -885,6 +973,51 @@ components:
                 status:
                     $ref: '#/components/schemas/volume_status'
                     description: Status of the volume
+        volume_catalog_item:
+            description: Description of the volume catalog item
+            type: object
+            required:
+                - id
+                - data_center
+                - size_range
+                - price
+                - enabled
+            properties:
+                id:
+                    description: Unique ID of the volume catalog item
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                data_center:
+                    description: The unique identifier of the data center.
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                default:
+                    description: This volume catalog item is used by default for the data center
+                    type: boolean
+                description:
+                    description: Additional information about the catalog item.
+                    type: string
+                size_range:
+                    $ref: '#/components/schemas/quantity_range'
+                    description: The range of supported persistent volume sizes
+                price:
+                    description: The price in USD per hour per gigabyte
+                    type: string
+                    pattern: ^([-+]?)(\d*)(?:\.(\d{0,9})\d*)?$
+                enabled:
+                    description: This catalog item is enabled
+                    type: boolean
+        volume_catalog_item_list:
+            description: List of volume catalog items
+            type: object
+            required:
+                - items
+            properties:
+                items:
+                    description: The volume catalog items
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/volume_catalog_item'
         volume_create:
             description: Properties of the volume to create
             type: object
@@ -894,11 +1027,15 @@ components:
                 - size
             properties:
                 project:
-                    description: The unique identifier of the project.
+                    description: The unique identifier of the project
                     type: string
                     pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
                 data_center:
                     description: The ID of a data center to run the containers.
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                catalog_item:
+                    description: The volume catalog item identifier
                     type: string
                     pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
                 size:
@@ -938,6 +1075,43 @@ components:
             description: The phase of the volume life cycle
             type: string
             enum: [missing, starting, running, terminating, terminated]
+        volume_reference:
+            description: An object referencing a volume
+            type: object
+            required:
+                - id
+                - type
+                - created_at
+            properties:
+                id:
+                    description: ID of the object referencing the volume
+                    type: string
+                type:
+                    $ref: '#/components/schemas/volume_reference_type'
+                    description: Type of the referencing object
+                created_at:
+                    description: Time when the object referencing a volume was created
+                    type: string
+                    format: date-time
+        volume_reference_list:
+            description: A list of objects referencing a volume
+            type: object
+            required:
+                - items
+            properties:
+                items:
+                    description: Array of references
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/volume_reference'
+        volume_reference_type:
+            description: |
+                Type of referencing object:
+                * `persistent_volume`: a persistent volume in Ridge Kubernetes Service API (`/rks/unstable/persistent-volumes/...`)
+                * `persistent_volume_claim`: a persistent volume claim in Ridge Kubernetes Service API (`/rks/unstable/persistent-volume-claims/...`)
+                * `volume_attachment`: a volume attachment in Ridge IaaS API  (`/ria/unstable/volume-attachments/...`)
+            type: string
+            enum: [persistent_volume, persistent_volume_claim, volume_attachment]
         volume_spec:
             description: Specification of the volume
             type: object
@@ -946,14 +1120,17 @@ components:
                 - data_center
                 - size
                 - created_at
-                - updated_at
             properties:
                 project:
-                    description: The unique identifier of the project.
+                    description: The unique identifier of the project
                     type: string
                     pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
                 data_center:
                     description: The ID of a data center to run the containers.
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                catalog_item:
+                    description: The volume catalog item identifier
                     type: string
                     pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
                 size:
@@ -970,10 +1147,6 @@ components:
                     maxLength: 512
                 created_at:
                     description: Time when the volume was created
-                    type: string
-                    format: date-time
-                updated_at:
-                    description: Time when the volume was last updated
                     type: string
                     format: date-time
                 deleted:
@@ -1037,11 +1210,13 @@ components:
                     schema:
                         type: string
 tags:
-    - name: Instance Catalog Items
-      description: Operations on instance catalog items
-    - name: Data Centers
-      description: Operations on data centers
     - name: Networks
       description: Operations on networks
     - name: Volumes
       description: Operations on volumes
+    - name: Instance Catalog Items
+      description: Operations on instance catalog items
+    - name: Volume Catalog Items
+      description: Operations on volume catalog items
+    - name: Data Centers
+      description: Operations on data centers

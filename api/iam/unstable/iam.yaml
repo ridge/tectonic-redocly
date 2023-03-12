@@ -2,9 +2,9 @@ openapi: 3.1.0
 info:
     title: IAM API
     description: An API for identity and access management
-    version: experimental
+    version: unstable
 servers:
-    - url: '{origin}/iam/experimental'
+    - url: '{origin}/iam/unstable'
       variables:
         origin:
             default: https://api.ridge.co
@@ -293,7 +293,7 @@ paths:
                 pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
         get:
             operationId: group_list_group_memberships
-            summary: List memberships of a group
+            summary: List memberships in a group
             responses:
                 200:
                     description: Success
@@ -337,7 +337,7 @@ paths:
                     $ref: '#/components/responses/error_403'
                 404:
                     $ref: '#/components/responses/error_404'
-            tags: [Groups]
+            tags: [Policies]
     /members:
         post:
             operationId: member_create
@@ -465,6 +465,34 @@ paths:
                 404:
                     $ref: '#/components/responses/error_404'
             tags: [API Keys]
+    /members/{member}/group-memberships:
+        parameters:
+            - name: member
+              in: path
+              description: Unique identifier of the member
+              required: true
+              schema:
+                type: string
+                pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+        get:
+            operationId: member_list_group_memberships
+            summary: List group memberships of a member
+            responses:
+                200:
+                    description: Success
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/group_membership_list'
+                400:
+                    $ref: '#/components/responses/error_400'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+                404:
+                    $ref: '#/components/responses/error_404'
+            tags: [Group Memberships]
     /members/{member}/invitation/send:
         parameters:
             - name: member
@@ -519,34 +547,6 @@ paths:
                 404:
                     $ref: '#/components/responses/error_404'
             tags: [Members]
-    /members/{member}/memberships:
-        parameters:
-            - name: member
-              in: path
-              description: Unique identifier of the member
-              required: true
-              schema:
-                type: string
-                pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
-        get:
-            operationId: member_list_group_memberships
-            summary: List memberships of a member
-            responses:
-                200:
-                    description: Success
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/group_membership_list'
-                400:
-                    $ref: '#/components/responses/error_400'
-                401:
-                    $ref: '#/components/responses/error_401'
-                403:
-                    $ref: '#/components/responses/error_403'
-                404:
-                    $ref: '#/components/responses/error_404'
-            tags: [Group Memberships]
     /members/{member}/privileges:
         parameters:
             - name: member
@@ -574,7 +574,7 @@ paths:
                     $ref: '#/components/responses/error_403'
                 404:
                     $ref: '#/components/responses/error_404'
-            tags: [Members]
+            tags: [Policies]
     /members/{member}/storage-keys:
         parameters:
             - name: member
@@ -753,7 +753,7 @@ paths:
                 type: string
                 pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
         get:
-            operationId: org_describe_quota
+            operationId: org_get_quota
             summary: Get the quota of an organization
             responses:
                 200:
@@ -1578,42 +1578,52 @@ components:
                     description: CPU cores
                     type: integer
                     format: int64
+                    minimum: 0
                 ram:
                     description: RAM, bytes
                     type: integer
                     format: int64
+                    minimum: 0
                 instance_storage:
                     description: Instance storage, bytes
                     type: integer
                     format: int64
+                    minimum: 0
                 bandwidth:
                     description: Network bandwidth, bps
                     type: integer
                     format: int64
+                    minimum: 0
                 persistent_storage:
                     description: Persistent storage, bytes
                     type: integer
                     format: int64
+                    minimum: 0
                 instances:
                     description: Instances
                     type: integer
                     format: int64
+                    minimum: 0
                 networks:
                     description: Networks
                     type: integer
                     format: int64
+                    minimum: 0
                 gateways:
                     description: Gateways
                     type: integer
                     format: int64
+                    minimum: 0
                 load_balancers:
                     description: Load balancers
                     type: integer
                     format: int64
+                    minimum: 0
                 public_ips:
                     description: Public IPs
                     type: integer
                     format: int64
+                    minimum: 0
         quota:
             description: Organization quota info
             type: object
@@ -1636,6 +1646,7 @@ components:
             type: object
             required:
                 - id
+                - display_name
                 - realm_type
                 - object_type
             properties:
@@ -1769,20 +1780,20 @@ components:
                     schema:
                         type: string
 tags:
-    - name: Groups
-      description: Operations on groups
-    - name: Group Memberships
-      description: Operations on group memberships
-    - name: API Keys
-      description: Operations on API keys
     - name: Roles
       description: Operations on roles
     - name: Organizations
       description: Operations on organizations
-    - name: Projects
-      description: Operations on projects
     - name: Members
       description: Operations on members
+    - name: API Keys
+      description: Operations on API keys
+    - name: Projects
+      description: Operations on projects
+    - name: Groups
+      description: Operations on groups
+    - name: Group Memberships
+      description: Operations on group memberships
     - name: Policies
       description: Operations on policies
     - name: Storage Keys

@@ -2,9 +2,9 @@ openapi: 3.1.0
 info:
     title: Ridge IaaS API
     description: An API for managing computing infrastructure
-    version: experimental
+    version: unstable
 servers:
-    - url: '{origin}/ria/experimental'
+    - url: '{origin}/ria/unstable'
       variables:
         origin:
             default: https://api.ridge.co
@@ -127,7 +127,7 @@ paths:
                   required: true
                   explode: false
                   schema:
-                    $ref: '#/components/schemas/protocol_type'
+                    $ref: '#/components/schemas/console_protocol_type'
             responses:
                 200:
                     description: Success
@@ -251,6 +251,34 @@ paths:
                 404:
                     $ref: '#/components/responses/error_404'
             tags: [Instances]
+    /instances/{instance}/volume-attachments:
+        parameters:
+            - name: instance
+              in: path
+              description: Unique identifier of the instance
+              required: true
+              schema:
+                type: string
+                pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+        get:
+            operationId: instance_list_volume_attachments
+            summary: List volume attachments of an instance
+            responses:
+                200:
+                    description: Success
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/volume_attachment_list'
+                400:
+                    $ref: '#/components/responses/error_400'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+                404:
+                    $ref: '#/components/responses/error_404'
+            tags: [Volume Attachments]
     /os-images:
         get:
             operationId: list_os_images
@@ -323,8 +351,114 @@ paths:
                 404:
                     $ref: '#/components/responses/error_404'
             tags: [Instances]
+    /volume-attachments:
+        post:
+            operationId: volume_attachment_create
+            summary: Create a volume attachment
+            parameters:
+                - name: X-Ridge-Request-ID
+                  in: header
+                  description: Client-generated request ID for idempotency
+                  schema:
+                    type: string
+                    maxLength: 64
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/volume_attachment_create'
+                required: true
+            responses:
+                200:
+                    description: Success
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/volume_attachment'
+                400:
+                    $ref: '#/components/responses/error_400'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+            tags: [Volume Attachments]
+    /volume-attachments/{volume_attachment}:
+        parameters:
+            - name: volume_attachment
+              in: path
+              description: Unique identifier of the volume attachment
+              required: true
+              schema:
+                type: string
+                pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+        get:
+            operationId: volume_attachment_describe
+            summary: Describe a volume attachment
+            responses:
+                200:
+                    description: Success
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/volume_attachment'
+                400:
+                    $ref: '#/components/responses/error_400'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+                404:
+                    $ref: '#/components/responses/error_404'
+            tags: [Volume Attachments]
+        delete:
+            operationId: volume_attachment_delete
+            summary: Delete a volume attachment
+            responses:
+                204:
+                    description: Success
+                400:
+                    $ref: '#/components/responses/error_400'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+                404:
+                    $ref: '#/components/responses/error_404'
+            tags: [Volume Attachments]
+    /volumes/{volume}/volume-attachments:
+        parameters:
+            - name: volume
+              in: path
+              description: Unique identifier of the volume
+              required: true
+              schema:
+                type: string
+                pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+        get:
+            operationId: volume_list_volume_attachments
+            summary: List volume attachments of a volume
+            responses:
+                200:
+                    description: Success
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/volume_attachment_list'
+                400:
+                    $ref: '#/components/responses/error_400'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+                404:
+                    $ref: '#/components/responses/error_404'
+            tags: [Volume Attachments]
 components:
     schemas:
+        console_protocol_type:
+            description: Console type
+            type: string
+            enum: [vnc, serial]
         console_url:
             description: Remote console URL
             type: object
@@ -343,7 +477,7 @@ components:
         init_type:
             description: Type of init mechanism
             type: string
-            enum: [ignition2, ignition3, cloud-init]
+            enum: [ignition2, ignition3, cloud_init]
         instance:
             description: Description of the instance
             type: object
@@ -370,11 +504,10 @@ components:
                 - catalog_item
                 - os_image
             properties:
-                initial_hostname:
-                    description: Hostname of the instance set on first boot
+                display_name:
+                    description: The display name of the instance
                     type: string
-                    maxLength: 64
-                    pattern: ^[a-zA-Z0-9.-]+$
+                    maxLength: 512
                 network:
                     description: The network for the instance
                     type: string
@@ -388,12 +521,13 @@ components:
                     type: string
                     pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
                 public_ip:
-                    description: Does the instance request a public IP
+                    description: Does the instance need a public IP?
                     type: boolean
-                display_name:
-                    description: The display name of the instance
+                initial_hostname:
+                    description: Hostname of the instance set on first boot
                     type: string
-                    maxLength: 512
+                    maxLength: 64
+                    pattern: ^[a-zA-Z0-9.-]+$
                 initial_ssh_public_keys:
                     description: Public SSH keys installed on the instance during first boot
                     type: array
@@ -493,11 +627,10 @@ components:
                 - created_at
                 - updated_at
             properties:
-                initial_hostname:
-                    description: Hostname of the instance set on first boot
+                display_name:
+                    description: The display name of the instance
                     type: string
-                    maxLength: 64
-                    pattern: ^[a-zA-Z0-9.-]+$
+                    maxLength: 512
                 network:
                     description: The network for the instance
                     type: string
@@ -511,12 +644,13 @@ components:
                     type: string
                     pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
                 public_ip:
-                    description: Does the instance request a public IP
+                    description: Does the instance need a public IP?
                     type: boolean
-                display_name:
-                    description: The display name of the instance
+                initial_hostname:
+                    description: Hostname of the instance set on first boot
                     type: string
-                    maxLength: 512
+                    maxLength: 64
+                    pattern: ^[a-zA-Z0-9.-]+$
                 initial_ssh_public_keys:
                     description: Public SSH keys installed on the instance during first boot
                     type: array
@@ -535,13 +669,6 @@ components:
                 quantities:
                     $ref: '#/components/schemas/instance_quantity_set'
                     description: The minimum hardware configuration of the instance
-                ignition_config_url:
-                    description: |
-                        Ignition config that will be merged with the default one. Only for distributions that support Ignition.
-                        Supported schemes are `http`, `https`, `s3`, `tftp`, or `data` (use `data:;base64,<base64-encoded ignition file>`).
-                        Extra parameters like `httpHeaders` or `verification` are not available in the API, but it's possible to use them inside the config that is embedded into a data URL
-                    type: string
-                    format: uri
                 created_at:
                     description: Time when the instance was created
                     type: string
@@ -550,6 +677,9 @@ components:
                     description: Time when the instance was last updated
                     type: string
                     format: date-time
+                deleted:
+                    description: If true, the instance has been deleted
+                    type: boolean
         instance_status:
             description: Status of the instance
             type: object
@@ -557,6 +687,7 @@ components:
                 - project
                 - powered_on
                 - phase
+                - ssh_user
             properties:
                 project:
                     description: The unique identifier of the project
@@ -579,14 +710,17 @@ components:
                     type: string
                     format: ipv4
                 ssh_host:
-                    description: SSH server host. Only present if SSH access is enabled
+                    description: SSH server host. Requires SSH service running on the instance to function
                     type: string
                     format: ipv4
                 ssh_port:
-                    description: SSH server port. Only present if SSH access is enabled
+                    description: SSH server port. Requires SSH service running on the instance to function
                     type: integer
                     minimum: 1
                     maximum: 65535
+                ssh_user:
+                    description: SSH user for which initial SSH keys were installed.
+                    type: string
                 issues:
                     $ref: '#/components/schemas/instance_issues'
         instance_update:
@@ -614,6 +748,7 @@ components:
                 - family
                 - version
                 - init
+                - instance_specs
             properties:
                 id:
                     description: Unique ID of the OS image
@@ -631,6 +766,9 @@ components:
                 init:
                     $ref: '#/components/schemas/init_type'
                     description: Mechanism that is used to initialize operating system
+                instance_specs:
+                    $ref: '#/components/schemas/instance_quantity_set'
+                    description: The minimum hardware configuration needed for an instance with this image
         os_image_list:
             description: List of OS images
             type: object
@@ -646,10 +784,108 @@ components:
             description: The power command to be executed on the instance
             type: string
             enum: ["on", "off", reboot]
-        protocol_type:
-            description: Console type
+        resource_phase:
+            description: The phase of a resource
             type: string
-            enum: [vnc, serial]
+            enum: [starting, running, updating, terminating, terminated]
+        volume_attachment:
+            description: Description of the volume attachment
+            type: object
+            required:
+                - id
+                - spec
+                - status
+            properties:
+                id:
+                    description: Unique ID of the volume attachment
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                spec:
+                    $ref: '#/components/schemas/volume_attachment_spec'
+                    description: Specification of the volume attachment
+                status:
+                    $ref: '#/components/schemas/volume_attachment_status'
+                    description: Status of the volume attachment
+        volume_attachment_create:
+            description: Properties of the volume attachment to create
+            type: object
+            required:
+                - volume
+                - instance
+            properties:
+                volume:
+                    description: The volume identifier
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                instance:
+                    description: The instance identifier
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+        volume_attachment_issues:
+            description: Volume attachment issues
+            type: object
+            properties:
+                out_of_quota:
+                    description: Indicates the volume attachment is not fully provisioned due to exceeded quota
+                    type: boolean
+                degraded:
+                    description: The volume is running in a degraded mode. There might be a delay between issuing a command for controlling this volume and receiving a response
+                    type: boolean
+        volume_attachment_list:
+            description: List of volume attachments
+            type: object
+            required:
+                - items
+            properties:
+                items:
+                    description: The volume attachments
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/volume_attachment'
+        volume_attachment_spec:
+            description: Specification of the volume attachment
+            type: object
+            required:
+                - volume
+                - instance
+                - created_at
+            properties:
+                volume:
+                    description: The volume identifier
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                instance:
+                    description: The instance identifier
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                created_at:
+                    description: Time when the volume attachment was created
+                    type: string
+                    format: date-time
+                deleted:
+                    description: If true, the volume attachment has been deleted
+                    type: boolean
+        volume_attachment_status:
+            description: Status of the volume attachment
+            type: object
+            required:
+                - phase
+            properties:
+                phase:
+                    $ref: '#/components/schemas/resource_phase'
+                    description: The current life cycle phase of the persistent volume claim
+                size:
+                    description: Actual size of the persistent volume
+                    type: integer
+                    format: int64
+                    minimum: 0
+                issues:
+                    $ref: '#/components/schemas/volume_attachment_issues'
+                    description: Volume attachment issues
+                unix_device:
+                    description: The device name for the persistent volume claim
+                    type: string
+                    pattern: ^/dev/
     responses:
         error_400:
             description: Bad Request
@@ -686,3 +922,5 @@ tags:
       description: Operations on instances
     - name: OS Images
       description: Operations on OS images
+    - name: Volume Attachments
+      description: Operations on volume attachments

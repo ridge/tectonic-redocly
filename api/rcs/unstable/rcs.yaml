@@ -2,9 +2,9 @@ openapi: 3.1.0
 info:
     title: Ridge Container Service API
     description: An API for managing containers
-    version: experimental
+    version: unstable
 servers:
-    - url: '{origin}/rcs/experimental'
+    - url: '{origin}/rcs/unstable'
       variables:
         origin:
             default: https://api.ridge.co
@@ -258,7 +258,7 @@ components:
                 number:
                     description: The requested number of containers.
                     type: integer
-                    minimum: 0
+                    minimum: 1
                 container_image:
                     description: The path where the container image can be found.
                     type: string
@@ -290,7 +290,7 @@ components:
                     $ref: '#/components/schemas/aws_role'
                     description: The AWS IAM role ans the AWS credentials that will be used to grant the container permission to access AWS services. The container will receive temporary credentials.
                 catalog_item:
-                    description: The VM catalog item ID.
+                    description: The instance catalog item ID.
                     type: string
                     pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
                 network:
@@ -344,7 +344,7 @@ components:
                 number:
                     description: The requested number of containers.
                     type: integer
-                    minimum: 0
+                    minimum: 1
                 container_image:
                     description: The path where the container image can be found.
                     type: string
@@ -374,7 +374,7 @@ components:
                     $ref: '#/components/schemas/aws_role'
                     description: The AWS IAM role ans the AWS credentials that will be used to grant the container permission to access AWS services. The container will receive temporary credentials.
                 catalog_item:
-                    description: The VM catalog item ID.
+                    description: The instance catalog item ID.
                     type: string
                     pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
                 network:
@@ -517,45 +517,10 @@ components:
                     type: integer
                     format: int64
                     minimum: 0
-                persistent_storage:
-                    description: Persistent storage, bytes
-                    type: integer
-                    format: int64
-                    minimum: 0
-                instances:
-                    description: Instances
-                    type: integer
-                    format: int64
-                    minimum: 0
-                networks:
-                    description: Networks
-                    type: integer
-                    format: int64
-                    minimum: 0
-                gateways:
-                    description: Gateways
-                    type: integer
-                    format: int64
-                    minimum: 0
-                load_balancers:
-                    description: Load balancers
-                    type: integer
-                    format: int64
-                    minimum: 0
-                public_ips:
-                    description: Public IPs
-                    type: integer
-                    format: int64
-                    minimum: 0
-                floating_ips:
-                    description: Floating IPs
-                    type: integer
-                    format: int64
-                    minimum: 0
         termination_reason:
-            description: Possible values are startingFailed (container failed to start), exited (containerized app exited itself), vmDeleted (vm of container terminated), undesiredCreated (container was forced to terminate because it is no longer desired), undesired (container has never started and is no longer desired), failed (container failed during running), failedToRetrieveAWSCredentials (system failed to retrieve AWS credentials for container batch for a limited period of time). The absence of that field should be treated as "container hasn't terminated yet".
+            description: Possible values are starting_failed (container failed to start), exited (containerized app exited itself), undesired_created (container was forced to terminate because it is no longer desired), undesired (container has never started and is no longer desired), failed (container failed during running), failed_to_retrieve_aws_credentials (system failed to retrieve AWS credentials for container batch for a limited period of time). The absence of that field should be treated as "container hasn't terminated yet".
             type: string
-            enum: [startingFailed, exited, vmDeleted, undesiredCreated, undesired, failed, failedToRetrieveAWSCredentials]
+            enum: [starting_failed, exited, undesired_created, undesired, failed, failed_to_retrieve_aws_credentials]
     responses:
         error_400:
             description: Bad Request

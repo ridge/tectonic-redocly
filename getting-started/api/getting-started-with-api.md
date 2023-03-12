@@ -13,7 +13,7 @@ Ridge resources can be identified by an unique Id, an identifier which is genera
 
 For example, describe a Kubernetes cluster:
 
-GET  https://api.ridge.co/rks/experimental/clusters/cluster/<CLUSTER ID>
+GET  https://api.ridge.co/rks/unstable/clusters/cluster/<CLUSTER ID>
 
 ### Display Name
 Each Ridge resource can have a display_name that is used only for display (UI) purpose.

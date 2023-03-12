@@ -2,9 +2,9 @@ openapi: 3.1.0
 info:
     title: Ridge Object Storage API
     description: An API for the Ridge Object Storage
-    version: experimental
+    version: unstable
 servers:
-    - url: '{origin}/ros/experimental'
+    - url: '{origin}/ros/unstable'
       variables:
         origin:
             default: https://api.ridge.co
@@ -150,13 +150,12 @@ components:
                 - endpoint
                 - location
                 - data_center
-                - partner
                 - access_level
             properties:
                 display_name:
-                    description: The storage site display name
+                    description: The display name of the storage site
                     type: string
-                    minLength: 1
+                    maxLength: 512
                 project:
                     description: The unique identifier of the project
                     type: string
@@ -170,10 +169,6 @@ components:
                     description: The storage site actual geographical location
                 data_center:
                     description: The unique identifier of the data center.
-                    type: string
-                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
-                partner:
-                    description: The unique identifier of the partner
                     type: string
                     pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
                 access_level:

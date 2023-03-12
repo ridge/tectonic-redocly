@@ -2,9 +2,9 @@ openapi: 3.1.0
 info:
     title: Ridge Kubernetes Service API
     description: An API for the Managed Kubernetes Service
-    version: experimental
+    version: unstable
 servers:
-    - url: '{origin}/rks/experimental'
+    - url: '{origin}/rks/unstable'
       variables:
         origin:
             default: https://api.ridge.co
@@ -230,6 +230,80 @@ paths:
                 404:
                     $ref: '#/components/responses/error_404'
             tags: [Nodes]
+    /clusters/{cluster}/persistent-volume-claims:
+        parameters:
+            - name: cluster
+              in: path
+              description: Unique identifier of the cluster
+              required: true
+              schema:
+                type: string
+                pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+        get:
+            operationId: cluster_list_persistent_volume_claims
+            summary: List persistent volume claims of a cluster
+            parameters:
+                - name: phase
+                  in: query
+                  description: Filter the persistent volume claims by specified phases
+                  explode: false
+                  schema:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/resource_phase'
+            responses:
+                200:
+                    description: Success
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/persistent_volume_claim_list'
+                400:
+                    $ref: '#/components/responses/error_400'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+                404:
+                    $ref: '#/components/responses/error_404'
+            tags: [Persistent Volume Claims]
+    /clusters/{cluster}/persistent-volumes:
+        parameters:
+            - name: cluster
+              in: path
+              description: Unique identifier of the cluster
+              required: true
+              schema:
+                type: string
+                pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+        get:
+            operationId: cluster_list_persistent_volumes
+            summary: List persistent volumes of a cluster
+            parameters:
+                - name: phase
+                  in: query
+                  description: Filter the peristent volumes by specified phases
+                  explode: false
+                  schema:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/resource_phase'
+            responses:
+                200:
+                    description: Success
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/persistent_volume_list'
+                400:
+                    $ref: '#/components/responses/error_400'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+                404:
+                    $ref: '#/components/responses/error_404'
+            tags: [Persistent Volumes]
     /clusters/{cluster}/tokens:
         parameters:
             - name: cluster
@@ -258,44 +332,6 @@ paths:
                 404:
                     $ref: '#/components/responses/error_404'
             tags: [Tokens]
-    /clusters/{cluster}/volume-attachments:
-        parameters:
-            - name: cluster
-              in: path
-              description: Unique identifier of the cluster
-              required: true
-              schema:
-                type: string
-                pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
-        get:
-            operationId: cluster_list_volume_attachments
-            summary: List volume attachments of a cluster
-            description: The volumes attached to this cluster
-            parameters:
-                - name: phase
-                  in: query
-                  description: Filter the volume by specified phases
-                  explode: false
-                  schema:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/resource_phase'
-            responses:
-                200:
-                    description: Success
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/volume_attachment_list'
-                400:
-                    $ref: '#/components/responses/error_400'
-                401:
-                    $ref: '#/components/responses/error_401'
-                403:
-                    $ref: '#/components/responses/error_403'
-                404:
-                    $ref: '#/components/responses/error_404'
-            tags: [Volume Attachments]
     /clusters/{cluster}/vpns:
         parameters:
             - name: cluster
@@ -423,7 +459,7 @@ paths:
                 404:
                     $ref: '#/components/responses/error_404'
             tags: [Installed Apps]
-    /k8s-releases:
+    /kubernetes-releases:
         get:
             operationId: list_releases
             summary: List supported Kubernetes releases
@@ -634,7 +670,7 @@ paths:
                 404:
                     $ref: '#/components/responses/error_404'
             tags: [Nodes]
-    /nodes/{node}/volume-attachments:
+    /nodes/{node}/persistent-volume-claims:
         parameters:
             - name: node
               in: path
@@ -644,12 +680,12 @@ paths:
                 type: string
                 pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
         get:
-            operationId: node_list_volume_attachments
-            summary: List volume attachments of a node
+            operationId: node_list_persistent_volume_claims
+            summary: List persistent volume claims of a node
             parameters:
                 - name: phase
                   in: query
-                  description: Filter the volume attachments by specified phases
+                  description: Filter the persistent volume claims by specified phases
                   explode: false
                   schema:
                     type: array
@@ -661,7 +697,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/volume_attachment_list'
+                                $ref: '#/components/schemas/persistent_volume_claim_list'
                 400:
                     $ref: '#/components/responses/error_400'
                 401:
@@ -670,7 +706,100 @@ paths:
                     $ref: '#/components/responses/error_403'
                 404:
                     $ref: '#/components/responses/error_404'
-            tags: [Volume Attachments]
+            tags: [Persistent Volume Claims]
+    /persistent-volume-claims/{persistent_volume_claim}:
+        parameters:
+            - name: persistent_volume_claim
+              in: path
+              description: Unique identifier of the persistent volume claim
+              required: true
+              schema:
+                type: string
+                pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+        get:
+            operationId: persistent_volume_claim_describe
+            summary: Describe a persistent volume claim
+            responses:
+                200:
+                    description: Success
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/persistent_volume_claim'
+                400:
+                    $ref: '#/components/responses/error_400'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+                404:
+                    $ref: '#/components/responses/error_404'
+            tags: [Persistent Volume Claims]
+    /persistent-volumes/{persistent_volume}:
+        parameters:
+            - name: persistent_volume
+              in: path
+              description: Unique identifier of the persistent volume
+              required: true
+              schema:
+                type: string
+                pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+        get:
+            operationId: persistent_volume_describe
+            summary: Describe a persistent volume
+            responses:
+                200:
+                    description: Success
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/persistent_volume'
+                400:
+                    $ref: '#/components/responses/error_400'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+                404:
+                    $ref: '#/components/responses/error_404'
+            tags: [Persistent Volumes]
+    /persistent-volumes/{persistent_volume}/claims:
+        parameters:
+            - name: persistent_volume
+              in: path
+              description: Unique identifier of the persistent volume
+              required: true
+              schema:
+                type: string
+                pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+        get:
+            operationId: persistent_volume_list_persistent_volume_claims
+            summary: List persistent volume claims of a persistent volume
+            parameters:
+                - name: phase
+                  in: query
+                  description: Filter the persistent volume claims by specified phases
+                  explode: false
+                  schema:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/resource_phase'
+            responses:
+                200:
+                    description: Success
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/persistent_volume_claim_list'
+                400:
+                    $ref: '#/components/responses/error_400'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+                404:
+                    $ref: '#/components/responses/error_404'
+            tags: [Persistent Volume Claims]
     /projects/{project}/clusters:
         parameters:
             - name: project
@@ -800,34 +929,6 @@ paths:
                 404:
                     $ref: '#/components/responses/error_404'
             tags: [Tokens]
-    /volumes/{volume}:
-        parameters:
-            - name: volume
-              in: path
-              description: Unique identifier of the volume
-              required: true
-              schema:
-                type: string
-                pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
-        get:
-            operationId: volume_describe
-            summary: Describe a volume
-            responses:
-                200:
-                    description: Success
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/volume'
-                400:
-                    $ref: '#/components/responses/error_400'
-                401:
-                    $ref: '#/components/responses/error_401'
-                403:
-                    $ref: '#/components/responses/error_403'
-                404:
-                    $ref: '#/components/responses/error_404'
-            tags: [Volumes]
     /vpns:
         post:
             operationId: vpn_create
@@ -1019,9 +1120,9 @@ components:
                     pattern: ^\d{1,3}(\.\d{1,3}){3}(/\d\d?)?$
                     default: 10.96.0.0/12
                 version:
-                    description: The requested Kubernetes cluster version. The endpoint "/rks/k8s-versions" returns the list of available versions
+                    description: The requested Kubernetes cluster version. The endpoint "kubernetes-releases" returns the list of available versions
                     type: string
-                    pattern: ^v1\.\d+\.\d+$
+                    pattern: ^1\.\d+\.\d+$
                 node_pools:
                     description: The cluster node pools
                     type: array
@@ -1036,7 +1137,7 @@ components:
                     description: The cluster is running in a degraded mode. There might be a delay between issuing a command for controlling this cluster and receiving a response
                     type: boolean
                 non_allocatable:
-                    description: Indicates the cluster is not fully provisioned because VM configurations could not be found
+                    description: Indicates the cluster is not fully provisioned because the data center is experiencing temporary disruptions
                     type: boolean
                 offline:
                     description: Indicates if the cluster is currently offline (API server is unreachable)
@@ -1115,9 +1216,9 @@ components:
                     type: string
                     pattern: ^\d{1,3}(\.\d{1,3}){3}(/\d\d?)?$
                 version:
-                    description: The requested Kubernetes cluster version. The endpoint "/rks/k8s-versions" returns the list of available versions
+                    description: The requested Kubernetes cluster version. The endpoint "kubernetes-releases" returns the list of available versions
                     type: string
-                    pattern: ^v1\.\d+\.\d+$
+                    pattern: ^1\.\d+\.\d+$
                 created_at:
                     description: Time when the cluster was created
                     type: string
@@ -1160,7 +1261,7 @@ components:
                 version:
                     description: The current Kubernetes cluster version. Might differ from the requested version during an upgrade to the cluster
                     type: string
-                    pattern: ^v1\.\d+\.\d+$
+                    pattern: ^1\.\d+\.\d+$
         cluster_update:
             description: Properties of the cluster to update
             type: object
@@ -1190,9 +1291,9 @@ components:
                         - $ref: '#/components/schemas/master_nodes'
                         - type: "null"
                 version:
-                    description: The requested Kubernetes cluster version. The endpoint "/rks/k8s-versions" returns the list of available versions
+                    description: The requested Kubernetes cluster version. The endpoint "kubernetes-releases" returns the list of available versions
                     type: string
-                    pattern: ^v1\.\d+\.\d+$
+                    pattern: ^1\.\d+\.\d+$
         cni_plugin_type:
             description: The type of the CNI plugin
             type: string
@@ -1452,14 +1553,14 @@ components:
                     type: string
                     pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
                 ip:
-                    description: The IP of the node
+                    description: The IP address of the node
                     type: string
                     format: ipv4
                 up:
                     description: True if the node is up, false if it is down
                     type: boolean
                 checked_at:
-                    description: The last time the load balancer target has changed state. Omitted if unknown
+                    description: The last time the load balancer target has changed phase. Omitted if unknown
                     type: string
                     format: date-time
         marketplace_app:
@@ -1506,7 +1607,7 @@ components:
                     type: array
                     items:
                         type: string
-                        pattern: ^v1\.\d+\.\d+$
+                        pattern: ^1\.\d+\.\d+$
         marketplace_app_list:
             description: List of marketplace apps
             type: object
@@ -1633,6 +1734,10 @@ components:
                     description: The instance catalog item identifier
                     type: string
                     pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                quantities:
+                    $ref: '#/components/schemas/quantity_set'
+                    description: The quantities of the instances of the node pool
+                    default: {}
                 autoscaling:
                     description: If true, nodes are created and deleted within the bounds of min_node and max_nodes automatically according to the actual load on them. If false, nodes are created to maintain at least min_nodes, but never deleted automatically
                     type: boolean
@@ -1645,33 +1750,29 @@ components:
                     default: {}
                     propertyNames:
                         type: string
-                        pattern: ^([\w.]{1,253}/)?[\w-.]{1,63}$
+                        pattern: ^([\w-.]{1,253}/)?[\w-.]{1,63}$
                     additionalProperties:
                         type: string
                         pattern: ^[\w-.]{1,63}$
                 initial_taints:
-                    description: The initial Kubernetes taints that will be applied to the created nodes. A node taint is of form "Key=Value:Effect". Effect should be one of k8s known taint effects
+                    description: The initial Kubernetes taints that will be applied to the created nodes. A node taint is of form "Key=Value:Effect". Effect should be one of Kubernetes known taint effects
                     type: array
                     items:
                         type: string
-                        pattern: ^([\w.]{1,253}/)?[\w\-.]{1,63}(=[-.\w]{0,63})?:(NoSchedule|NoExecute|PreferNoSchedule)$
+                        pattern: ^([\w-.]{1,253}/)?[\w-.]{1,63}(=[-.\w]{0,63})?:(NoSchedule|NoExecute|PreferNoSchedule)$
                     default: []
                 initial_node_count:
-                    description: The initial number of worker nodes in the node pool
+                    description: The initial number of worker nodes in the node pool. Can only be set when autoscaling is true. Must be between min_nodes and max_nodes.
+                    type: integer
+                    minimum: 0
+                min_nodes:
+                    description: Minimum number of nodes in the node pool. See autoscaling property for exact behavior
                     type: integer
                     minimum: 0
                 max_nodes:
                     description: Maximum number of nodes in the node pool. If autoscaling is false, this setting does not apply
                     type: integer
                     minimum: 0
-                min_nodes:
-                    description: Minimum number of nodes in the node pool
-                    type: integer
-                    minimum: 0
-                quantities:
-                    $ref: '#/components/schemas/quantity_set'
-                    description: The quantities of the instances of the node pool
-                    default: {}
         node_pool_create:
             description: Properties of the node pool to create
             type: object
@@ -1692,51 +1793,51 @@ components:
                     description: The instance catalog item identifier
                     type: string
                     pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                quantities:
+                    $ref: '#/components/schemas/quantity_set'
+                    description: The quantities of the instances of the node pool
+                    default: {}
                 autoscaling:
                     description: If true, nodes are created and deleted within the bounds of min_node and max_nodes automatically according to the actual load on them. If false, nodes are created to maintain at least min_nodes, but never deleted automatically
                     type: boolean
                 public_ips:
-                    description: If true, all the workers nodes in the node pool will be assigned a public IP.
+                    description: If true, each workers node in the node pool will be assigned a public IP.
                     type: boolean
                 initial_kubernetes_labels:
-                    description: The initial Kubernetes labels (key-value pairs) that will be applied to the created nodes
+                    description: The initial Kubernetes labels (key-value pairs) to be applied to the created nodes
                     type: object
                     default: {}
                     propertyNames:
                         type: string
-                        pattern: ^([\w.]{1,253}/)?[\w-.]{1,63}$
+                        pattern: ^([\w-.]{1,253}/)?[\w-.]{1,63}$
                     additionalProperties:
                         type: string
                         pattern: ^[\w-.]{1,63}$
                 initial_taints:
-                    description: The initial Kubernetes taints that will be applied to the created nodes. A node taint is of form "Key=Value:Effect". Effect should be one of k8s known taint effects
+                    description: The initial Kubernetes taints to be applied to the created nodes. A node taint is of form "Key=Value:Effect". Effect should be one of Kubernetes known taint effects
                     type: array
                     items:
                         type: string
-                        pattern: ^([\w.]{1,253}/)?[\w\-.]{1,63}(=[-.\w]{0,63})?:(NoSchedule|NoExecute|PreferNoSchedule)$
+                        pattern: ^([\w-.]{1,253}/)?[\w-.]{1,63}(=[-.\w]{0,63})?:(NoSchedule|NoExecute|PreferNoSchedule)$
                     default: []
                 initial_node_count:
-                    description: The initial number of worker nodes in the node pool
+                    description: The initial number of worker nodes in the node pool. Can only be set when autoscaling is true. Must be between min_nodes and max_nodes.
+                    type: integer
+                    minimum: 0
+                min_nodes:
+                    description: Minimum number of nodes in the node pool. See autoscaling property for exact behavior
                     type: integer
                     minimum: 0
                 max_nodes:
                     description: Maximum number of nodes in the node pool. If autoscaling is false, this setting does not apply
                     type: integer
                     minimum: 0
-                min_nodes:
-                    description: Minimum number of nodes in the node pool
-                    type: integer
-                    minimum: 0
-                quantities:
-                    $ref: '#/components/schemas/quantity_set'
-                    description: The quantities of the instances of the node pool
-                    default: {}
         node_pool_issues:
             description: Node Pool issues
             type: object
             properties:
                 non_allocatable:
-                    description: Indicates the node pool is not fully provisioned because matching VM configurations could not be found
+                    description: Indicates the node pool is not fully provisioned because the data center is experiencing temporary disruptions
                     type: boolean
                 out_of_quota:
                     description: Indicates the node pool is not fully provisioned due to quota exceeded
@@ -1761,10 +1862,10 @@ components:
             required:
                 - cluster
                 - catalog_item
+                - quantities
                 - initial_kubernetes_labels
                 - initial_taints
                 - min_nodes
-                - quantities
                 - created_at
                 - updated_at
             properties:
@@ -1780,38 +1881,38 @@ components:
                     description: The instance catalog item identifier
                     type: string
                     pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                quantities:
+                    $ref: '#/components/schemas/quantity_set'
+                    description: The quantities of the instances of the node pool
                 autoscaling:
                     description: If true, nodes are created and deleted within the bounds of min_node and max_nodes automatically according to the actual load on them. If false, nodes are created to maintain at least min_nodes, but never deleted automatically
                     type: boolean
                 public_ips:
-                    description: If true, all the workers nodes in the node pool will be assigned a public IP.
+                    description: If true, each workers node in the node pool will be assigned a public IP.
                     type: boolean
                 initial_kubernetes_labels:
-                    description: The initial Kubernetes labels (key-value pairs) that will be applied to the created nodes
+                    description: The initial Kubernetes labels (key-value pairs) to be applied to the created nodes
                     type: object
                     propertyNames:
                         type: string
-                        pattern: ^([\w.]{1,253}/)?[\w-.]{1,63}$
+                        pattern: ^([\w-.]{1,253}/)?[\w-.]{1,63}$
                     additionalProperties:
                         type: string
                         pattern: ^[\w-.]{1,63}$
                 initial_taints:
-                    description: The initial Kubernetes taints that will be applied to the created nodes. A node taint is of form "Key=Value:Effect". Effect should be one of k8s known taint effects
+                    description: The initial Kubernetes taints to be applied to the created nodes. A node taint is of form "Key=Value:Effect". Effect should be one of Kubernetes known taint effects
                     type: array
                     items:
                         type: string
-                        pattern: ^([\w.]{1,253}/)?[\w\-.]{1,63}(=[-.\w]{0,63})?:(NoSchedule|NoExecute|PreferNoSchedule)$
+                        pattern: ^([\w-.]{1,253}/)?[\w-.]{1,63}(=[-.\w]{0,63})?:(NoSchedule|NoExecute|PreferNoSchedule)$
+                min_nodes:
+                    description: Minimum number of nodes in the node pool. See autoscaling property for exact behavior
+                    type: integer
+                    minimum: 0
                 max_nodes:
                     description: Maximum number of nodes in the node pool. If autoscaling is false, this setting does not apply
                     type: integer
                     minimum: 0
-                min_nodes:
-                    description: Minimum number of nodes in the node pool
-                    type: integer
-                    minimum: 0
-                quantities:
-                    $ref: '#/components/schemas/quantity_set'
-                    description: The quantities of the instances of the node pool
                 created_at:
                     description: Time when the node pool was created
                     type: string
@@ -1847,27 +1948,27 @@ components:
                     description: If true, nodes are created and deleted within the bounds of min_node and max_nodes automatically according to the actual load on them. If false, nodes are created to maintain at least min_nodes, but never deleted automatically
                     type: boolean
                 initial_kubernetes_labels:
-                    description: The initial Kubernetes labels (key-value pairs) that will be applied to the created nodes
+                    description: The initial Kubernetes labels (key-value pairs) to be applied to the created nodes
                     type: object
                     propertyNames:
                         type: string
-                        pattern: ^([\w.]{1,253}/)?[\w-.]{1,63}$
+                        pattern: ^([\w-.]{1,253}/)?[\w-.]{1,63}$
                     additionalProperties:
                         type: string
                         pattern: ^[\w-.]{1,63}$
                 initial_taints:
-                    description: The initial Kubernetes taints that will be applied to the created nodes. A node taint is of form "Key=Value:Effect". Effect should be one of k8s known taint effects
+                    description: The initial Kubernetes taints to be applied to the created nodes. A node taint is of form "Key=Value:Effect". Effect should be one of Kubernetes known taint effects
                     type: array
                     items:
                         type: string
-                        pattern: ^([\w.]{1,253}/)?[\w\-.]{1,63}(=[-.\w]{0,63})?:(NoSchedule|NoExecute|PreferNoSchedule)$
+                        pattern: ^([\w-.]{1,253}/)?[\w-.]{1,63}(=[-.\w]{0,63})?:(NoSchedule|NoExecute|PreferNoSchedule)$
+                min_nodes:
+                    description: Minimum number of nodes in the node pool. See autoscaling property for exact behavior
+                    type: integer
+                    minimum: 0
                 max_nodes:
                     description: Maximum number of nodes in the node pool. If autoscaling is false, this setting does not apply
                     type: [integer, "null"]
-                    minimum: 0
-                min_nodes:
-                    description: Minimum number of nodes in the node pool
-                    type: integer
                     minimum: 0
         node_spec:
             description: Specification of the node
@@ -1918,6 +2019,166 @@ components:
                 issues:
                     $ref: '#/components/schemas/node_issues'
                     description: Node issues
+        persistent_volume:
+            description: Description of the persistent volume
+            type: object
+            required:
+                - id
+                - spec
+                - status
+            properties:
+                id:
+                    description: Unique ID of the persistent volume
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                spec:
+                    $ref: '#/components/schemas/persistent_volume_spec'
+                    description: Specification of the persistent volume
+                status:
+                    $ref: '#/components/schemas/persistent_volume_status'
+                    description: Status of the persistent volume
+        persistent_volume_claim:
+            description: Description of the persistent volume claim
+            type: object
+            required:
+                - id
+                - spec
+                - status
+            properties:
+                id:
+                    description: Unique ID of the persistent volume claim
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                spec:
+                    $ref: '#/components/schemas/persistent_volume_claim_spec'
+                    description: Specification of the persistent volume claim
+                status:
+                    $ref: '#/components/schemas/persistent_volume_claim_status'
+                    description: Status of the persistent volume claim
+        persistent_volume_claim_list:
+            description: List of persistent volume claims
+            type: object
+            required:
+                - items
+            properties:
+                items:
+                    description: The persistent volume claims
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/persistent_volume_claim'
+        persistent_volume_claim_spec:
+            description: Specification of the persistent volume claim
+            type: object
+            required:
+                - global_volume
+                - node
+                - persistent_volume
+                - created_at
+            properties:
+                global_volume:
+                    description: The globally unique volume identifier through which it is possible to assure access to it from different clusters
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                node:
+                    description: The node identifier
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                persistent_volume:
+                    description: The corresponding persistent volume
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                created_at:
+                    description: Time when the persistent volume claim was created
+                    type: string
+                    format: date-time
+                deleted:
+                    description: If true, the persistent volume claim has been deleted
+                    type: boolean
+        persistent_volume_claim_status:
+            description: Status of the persistent volume claim
+            type: object
+            required:
+                - phase
+            properties:
+                phase:
+                    $ref: '#/components/schemas/resource_phase'
+                    description: The current life cycle phase of the persistent volume claim
+                size:
+                    description: Actual size of the persistent volume in bytes
+                    type: integer
+                    format: int64
+                    minimum: 0
+                issues:
+                    $ref: '#/components/schemas/resource_issues'
+                    description: Persistent volume claim issues
+                unix_device:
+                    description: The device name for the persistent volume claim
+                    type: string
+                    pattern: ^/dev/
+        persistent_volume_list:
+            description: List of persistent volumes
+            type: object
+            required:
+                - items
+            properties:
+                items:
+                    description: The persistent volumes
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/persistent_volume'
+        persistent_volume_spec:
+            description: Specification of the persistent volume
+            type: object
+            required:
+                - kubernetes_name
+                - global_volume
+                - size
+                - cluster
+                - created_at
+            properties:
+                kubernetes_name:
+                    description: Kubernetes PersistentVolume name
+                    type: string
+                    minLength: 1
+                    maxLength: 63
+                    pattern: ^[a-z]([-a-z0-9]*[a-z0-9])?$
+                global_volume:
+                    description: The globally unique volume identifier through which it is possible to assure access to it from different clusters
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                size:
+                    description: Desired size for the persistent volume in bytes
+                    type: integer
+                    format: int64
+                    minimum: 0
+                cluster:
+                    description: The cluster identifier
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                created_at:
+                    description: Time when the persistent volume was created
+                    type: string
+                    format: date-time
+                deleted:
+                    description: If true, the persistent volume has been deleted
+                    type: boolean
+        persistent_volume_status:
+            description: Status of the persistent volume
+            type: object
+            required:
+                - phase
+            properties:
+                phase:
+                    $ref: '#/components/schemas/resource_phase'
+                    description: The current life cycle phase of the persistent volume
+                size:
+                    description: Actual size of the persistent volume in bytes
+                    type: integer
+                    format: int64
+                    minimum: 0
+                issues:
+                    $ref: '#/components/schemas/resource_issues'
+                    description: Persistent volume issues
         protocol:
             description: The IP protocol
             type: string
@@ -1955,6 +2216,7 @@ components:
                 version:
                     description: A Kubernetes version
                     type: string
+                    pattern: ^1\.\d+\.\d+$
                 deprecated:
                     description: If true, new clusters cannot be created on this version, but the version is still supported for existing clusters
                     type: boolean
@@ -2099,7 +2361,7 @@ components:
                 - kubeconfig
             properties:
                 token:
-                    description: The authentication token.
+                    description: The authentication token
                     type: string
                     minLength: 1
                 kubeconfig:
@@ -2118,118 +2380,6 @@ components:
                     items:
                         type: string
                         minLength: 1
-        volume:
-            description: Description of the volume
-            type: object
-            required:
-                - id
-                - spec
-                - status
-            properties:
-                id:
-                    description: Unique ID of the volume
-                    type: string
-                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
-                spec:
-                    $ref: '#/components/schemas/volume_spec'
-                    description: Specification of the volume
-                status:
-                    $ref: '#/components/schemas/volume_status'
-                    description: Status of the volume
-        volume_attachment:
-            description: Description of the volume attachment
-            type: object
-            required:
-                - id
-                - spec
-                - status
-            properties:
-                id:
-                    description: Unique ID of the volume attachment
-                    type: string
-                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
-                spec:
-                    $ref: '#/components/schemas/volume_attachment_spec'
-                    description: Specification of the volume attachment
-                status:
-                    $ref: '#/components/schemas/volume_attachment_status'
-                    description: Status of the volume attachment
-        volume_attachment_list:
-            description: List of volume attachments
-            type: object
-            required:
-                - items
-            properties:
-                items:
-                    description: The volume attachments
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/volume_attachment'
-        volume_attachment_spec:
-            description: Specification of the volume attachment
-            type: object
-            required:
-                - node
-                - volume
-            properties:
-                node:
-                    description: The node identifier the volume is attached to
-                    type: string
-                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
-                volume:
-                    description: The volume identifier
-                    type: string
-                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
-        volume_attachment_status:
-            description: Status of the volume attachment
-            type: object
-            required:
-                - unix_device
-                - phase
-            properties:
-                unix_device:
-                    description: The device name for the volume attachment
-                    type: string
-                    pattern: ^/dev/
-                phase:
-                    $ref: '#/components/schemas/resource_phase'
-                    description: The current life cycle phase of the volume_attachment
-        volume_spec:
-            description: Specification of the volume
-            type: object
-            required:
-                - size
-                - persistent_volume
-                - created_at
-            properties:
-                size:
-                    description: The size of the volume in bytes
-                    type: integer
-                    format: int64
-                    minimum: 0
-                persistent_volume:
-                    description: Kubernetes PersistentVolume name
-                    type: string
-                    pattern: ^pvc-[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
-                created_at:
-                    description: Time when the volume was created
-                    type: string
-                    format: date-time
-                deleted:
-                    description: If true, the volume has been deleted
-                    type: boolean
-        volume_status:
-            description: Status of the volume
-            type: object
-            required:
-                - phase
-            properties:
-                phase:
-                    $ref: '#/components/schemas/resource_phase'
-                    description: The current life cycle phase of the volume
-                issues:
-                    $ref: '#/components/schemas/resource_issues'
-                    description: Volume issues
         vpn:
             description: Description of the VPN
             type: object
@@ -2427,23 +2577,23 @@ components:
                     schema:
                         type: string
 tags:
-    - name: Volume Attachments
-      description: Operations on volume attachments
-    - name: Clusters
-      description: Operations on clusters
-    - name: Nodes
-      description: Operations on nodes
     - name: Tokens
       description: Operations on tokens
     - name: VPNs
       description: Operations on VPNs
-    - name: Load Balancers
-      description: Operations on load balancers
-    - name: Volumes
-      description: Operations on volumes
-    - name: Node Pools
-      description: Operations on node pools
+    - name: Persistent Volumes
+      description: Operations on persistent volumes
+    - name: Persistent Volume Claims
+      description: Operations on persistent volume claims
     - name: Marketplace Apps
       description: Operations on marketplace apps
     - name: Installed Apps
       description: Operations on installed apps
+    - name: Node Pools
+      description: Operations on node pools
+    - name: Clusters
+      description: Operations on clusters
+    - name: Nodes
+      description: Operations on nodes
+    - name: Load Balancers
+      description: Operations on load balancers
