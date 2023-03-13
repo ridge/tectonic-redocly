@@ -18,7 +18,6 @@ oasDefinitions:
   rks-unstable: ./api/rks/unstable/rks.yaml
   rcs-unstable: ./api/rcs/unstable/rcs.yaml
   iam-unstable: ./api/iam/unstable/iam.yaml
-  iam-unstable: ./api/iam/unstable/iam.yaml
   compute-unstable: ./api/compute/unstable/compute.yaml
   keyring-unstable: ./api/keyring/unstable/keyring.yaml
   ros-unstable: ./api/ros/unstable/ros.yaml
