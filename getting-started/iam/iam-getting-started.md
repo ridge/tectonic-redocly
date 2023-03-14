@@ -62,7 +62,7 @@ You will then see the new member of type invitee. This will change to user when 
 
 ### Creating an API Key
 Access to the Ridge Cloud API requires an API key.
-Once the user accepts the invitation, he can generate a key for himself.
+Once the user accepts the invitation, they can generate a key themselves.
 To create the key, select a member to create an API key for and press the `Edit` button and press `Add Key`
 
 ![API Keys](create-api-key.png)
