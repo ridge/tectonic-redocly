@@ -42,8 +42,8 @@ At this stage, you can start using [Ridge Cloud services](https://www.ridge.co).
 There are two prerequisites to add a person as a member of you organization
 - You must have the person's email address
 - The person can be authenticated using Google or Github
-Select the Members item in the IAM section of the side navigation bar.
-Click the Add Member button on top right
+  Select the Members item in the IAM section of the side navigation bar.
+  Click the Add Member button on top right
 
 
 ![add member](add-member.png)
@@ -61,7 +61,9 @@ You will then see the new member of type invitee. This will change to user when 
 ![pending member](added-member.png)
 
 ### Creating an API Key
-Access to the Ridge Cloud API requires an API key. Once the user accepts the invitation, he can generate a key for himself. To create the key, select your avatar in the upper right hand corner to. This will drop down a menu where you can select the `API Keys`.
+Access to the Ridge Cloud API requires an API key.
+Once the user accepts the invitation, he can generate a key for himself.
+To create the key, select a member to create an API key for and press the `Edit` button and press `Add Key`
 
 ![API Keys](create-api-key.png)
 
