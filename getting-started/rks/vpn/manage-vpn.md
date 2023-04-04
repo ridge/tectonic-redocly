@@ -12,11 +12,14 @@ On a _running_ cluster choose the VPN tab and press "Add VPN", this will open th
 ![vpn](vpn-1.png)
 Configure the following properties:
  - Name - the display name of the VPN
- - _WireGuard_ Public Key - you can bring your own key. if left empty, one will be automatically generated
+ - _WireGuard_ Public Key - create a private and public keys as described in https://www.wireguard.com/quickstart/#key-generation and paste the public key here
  - Local Networks - the CIDR of the network that you want to connect to the cluster
 
 Press `Create` and Ridge will install and configure the VPN endpoint.
-Copy or download the WireGuard configuration. If you manually generated your keys, replace `<<CLIENT PRIVATE KEY>>` by your private key.
+
+Copy or download the WireGuard configuration.
+
+Replace `<<CLIENT PRIVATE KEY>>` with the private key you generated in previous steps
 
 ![vpn-properties](vpn-2.png)
 
