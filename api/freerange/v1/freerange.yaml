@@ -2,9 +2,9 @@ openapi: 3.1.0
 info:
     title: Ridge IaaS API
     description: An API for managing computing infrastructure
-    version: unstable
+    version: v1
 servers:
-    - url: '{origin}/ria/unstable'
+    - url: '{origin}/iaas/v1'
       variables:
         origin:
             default: https://api.ridge.co
@@ -196,6 +196,80 @@ paths:
                 503:
                     $ref: '#/components/responses/error_503'
             tags: [Instances]
+    /instances/{instance}/public-ips:
+        parameters:
+            - name: instance
+              in: path
+              description: Unique identifier of the instance
+              required: true
+              schema:
+                type: string
+                pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+        get:
+            operationId: instance_list_public_ips
+            summary: List public IP addresses attached to the instance
+            responses:
+                200:
+                    description: Success
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/instance_public_ip_list'
+                400:
+                    $ref: '#/components/responses/error_400'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+                404:
+                    $ref: '#/components/responses/error_404'
+            tags: [Public IPs]
+    /instances/{instance}/public-ips/{public_ip}:
+        parameters:
+            - name: instance
+              in: path
+              description: Unique identifier of the instance
+              required: true
+              schema:
+                type: string
+                pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+            - name: public_ip
+              in: path
+              description: Unique identifier of the public IP
+              required: true
+              schema:
+                type: string
+                pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+        post:
+            operationId: instance_public_ip_attach
+            summary: Attach a public IP to an instance
+            responses:
+                204:
+                    description: Success
+                400:
+                    $ref: '#/components/responses/error_400'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+                404:
+                    $ref: '#/components/responses/error_404'
+            tags: [Public IPs]
+        delete:
+            operationId: instance_public_ip_detach
+            summary: Detach a public IP from an instance
+            responses:
+                204:
+                    description: Success
+                400:
+                    $ref: '#/components/responses/error_400'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+                404:
+                    $ref: '#/components/responses/error_404'
+            tags: [Public IPs]
     /instances/{instance}/reboot:
         parameters:
             - name: instance
@@ -455,6 +529,19 @@ paths:
             tags: [Volume Attachments]
 components:
     schemas:
+        api_error:
+            description: Error response body
+            type: object
+            required:
+                - error
+            properties:
+                error:
+                    description: Human-readable error message
+                    type: string
+        architecture:
+            description: Hardware architecture
+            type: string
+            enum: [amd64]
         console_protocol_type:
             description: Console type
             type: string
@@ -520,9 +607,13 @@ components:
                     description: The instance operating system image
                     type: string
                     pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
-                public_ip:
-                    description: Does the instance need a public IP?
+                new_public_ip:
+                    description: If true, a new public IP address will be created and attached to the instance. Note that it's also possible to attach and detach public IP addresses later. (mutually exclusive with attach_public_ip)
                     type: boolean
+                attach_public_ip:
+                    description: If present specified public IP will be attached to created instance. (mutually exclusive with new_public_ip)
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
                 initial_hostname:
                     description: Hostname of the instance set on first boot
                     type: string
@@ -587,10 +678,59 @@ components:
                     type: array
                     items:
                         $ref: '#/components/schemas/instance'
-        instance_phase:
-            description: The life cycle phase of the instance
-            type: string
-            enum: [creating, running, terminating, terminated, failed]
+        instance_public_ip:
+            description: Description of the public IP
+            type: object
+            required:
+                - id
+                - spec
+                - status
+            properties:
+                id:
+                    description: Unique ID of the public IP
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                spec:
+                    $ref: '#/components/schemas/instance_public_ip_spec'
+                    description: Specification of the public IP
+                status:
+                    $ref: '#/components/schemas/instance_public_ip_status'
+                    description: Status of the public IP
+        instance_public_ip_list:
+            description: List of public IPs
+            type: object
+            required:
+                - items
+            properties:
+                items:
+                    description: The public IPs
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/instance_public_ip'
+        instance_public_ip_spec:
+            description: Specification of the public IP
+            type: object
+            properties:
+                display_name:
+                    description: The display name of the public IP
+                    type: string
+                    maxLength: 512
+        instance_public_ip_status:
+            description: Status of the public IP
+            type: object
+            required:
+                - phase
+            properties:
+                phase:
+                    $ref: '#/components/schemas/phase'
+                    description: The life cycle phase of the public IP
+                configuring:
+                    description: True while the public IP is being attached or detached
+                    type: boolean
+                ip_address:
+                    description: The IP address
+                    type: string
+                    format: ipv4
         instance_quantity_set:
             description: Instance quantities
             type: object
@@ -643,9 +783,6 @@ components:
                     description: The instance operating system image
                     type: string
                     pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
-                public_ip:
-                    description: Does the instance need a public IP?
-                    type: boolean
                 initial_hostname:
                     description: Hostname of the instance set on first boot
                     type: string
@@ -685,27 +822,27 @@ components:
             type: object
             required:
                 - project
-                - powered_on
                 - phase
+                - powered_on
                 - ssh_user
             properties:
                 project:
                     description: The unique identifier of the project
                     type: string
                     pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                phase:
+                    $ref: '#/components/schemas/phase'
+                    description: The life cycle phase of the instance
+                configuring:
+                    description: When true, the actual instance configuration may lag behind as the requested settings are being applied
+                    type: boolean
                 powered_on:
                     description: The power state of the instance
                     type: boolean
-                phase:
-                    $ref: '#/components/schemas/instance_phase'
                 pending_power_command:
                     $ref: '#/components/schemas/power_command'
                     description: Power command that is pending for the instance.
-                public_ip:
-                    description: Public IP of the instance. Only present if public IP is requested for the instance
-                    type: string
-                    format: ipv4
-                private_ip:
+                private_ip_address:
                     description: Private IP of the instance.
                     type: string
                     format: ipv4
@@ -747,6 +884,7 @@ components:
                 - id
                 - family
                 - version
+                - architecture
                 - init
                 - instance_specs
             properties:
@@ -760,6 +898,9 @@ components:
                 version:
                     description: Version of operating system
                     type: string
+                architecture:
+                    $ref: '#/components/schemas/architecture'
+                    description: The hardware architecture of this image
                 recommended:
                     description: True value means that this is the image we recommend to use for the family
                     type: boolean
@@ -780,14 +921,14 @@ components:
                     type: array
                     items:
                         $ref: '#/components/schemas/os_image'
+        phase:
+            description: The life cycle phase
+            type: string
+            enum: [creating, ready, terminating, terminated]
         power_command:
             description: The power command to be executed on the instance
             type: string
             enum: ["on", "off", reboot]
-        resource_phase:
-            description: The phase of a resource
-            type: string
-            enum: [starting, running, updating, terminating, terminated]
         volume_attachment:
             description: Description of the volume attachment
             type: object
@@ -872,10 +1013,10 @@ components:
                 - phase
             properties:
                 phase:
-                    $ref: '#/components/schemas/resource_phase'
-                    description: The current life cycle phase of the persistent volume claim
+                    $ref: '#/components/schemas/phase'
+                    description: The life cycle phase of the volume attachment
                 size:
-                    description: Actual size of the persistent volume
+                    description: Actual size of the volume
                     type: integer
                     format: int64
                     minimum: 0
@@ -883,7 +1024,7 @@ components:
                     $ref: '#/components/schemas/volume_attachment_issues'
                     description: Volume attachment issues
                 unix_device:
-                    description: The device name for the persistent volume claim
+                    description: The device name for the volume attachment
                     type: string
                     pattern: ^/dev/
     responses:
@@ -892,35 +1033,37 @@ components:
             content:
                 application/json:
                     schema:
-                        type: string
+                        $ref: '#/components/schemas/api_error'
         error_401:
             description: Unauthorized
             content:
                 application/json:
                     schema:
-                        type: string
+                        $ref: '#/components/schemas/api_error'
         error_403:
             description: Forbidden
             content:
                 application/json:
                     schema:
-                        type: string
+                        $ref: '#/components/schemas/api_error'
         error_404:
             description: Not Found
             content:
                 application/json:
                     schema:
-                        type: string
+                        $ref: '#/components/schemas/api_error'
         error_503:
             description: Service Unavailable
             content:
                 application/json:
                     schema:
-                        type: string
+                        $ref: '#/components/schemas/api_error'
 tags:
-    - name: Instances
-      description: Operations on instances
     - name: OS Images
       description: Operations on OS images
     - name: Volume Attachments
       description: Operations on volume attachments
+    - name: Instances
+      description: Operations on instances
+    - name: Public IPs
+      description: Operations on public IPs

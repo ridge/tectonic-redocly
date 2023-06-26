@@ -1,10 +1,10 @@
 openapi: 3.1.0
 info:
-    title: Data Center API
-    description: An API for obtaining information on data centers.
-    version: unstable
+    title: Ridge Compute API
+    description: An API for obtaining information on compute and managing resources.
+    version: v1
 servers:
-    - url: '{origin}/compute/unstable'
+    - url: '{origin}/compute/v1'
       variables:
         origin:
             default: https://api.ridge.co
@@ -109,6 +109,34 @@ paths:
                 404:
                     $ref: '#/components/responses/error_404'
             tags: [Networks]
+    /networks/{network}/public-ips:
+        parameters:
+            - name: network
+              in: path
+              description: Unique identifier of the network
+              required: true
+              schema:
+                type: string
+                pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+        get:
+            operationId: network_list_public_ips
+            summary: List public IPs of a network
+            responses:
+                200:
+                    description: Success
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/public_ip_list'
+                400:
+                    $ref: '#/components/responses/error_400'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+                404:
+                    $ref: '#/components/responses/error_404'
+            tags: [Public IPs]
     /orgs/{org}/data-centers:
         parameters:
             - name: org
@@ -138,7 +166,7 @@ paths:
                 404:
                     $ref: '#/components/responses/error_404'
             tags: [Data Centers]
-    /orgs/{org}/instance-catalog:
+    /orgs/{org}/data-centers/{data_center}:
         parameters:
             - name: org
               in: path
@@ -147,17 +175,51 @@ paths:
               schema:
                 type: string
                 pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+            - name: data_center
+              in: path
+              description: Unique identifier of the data center
+              required: true
+              schema:
+                type: string
+                pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
         get:
-            operationId: org_list_instance_catalog_items
-            summary: List instance catalog items of an org
-            parameters:
-                - name: data_center
-                  in: query
-                  description: List only the catalog items in the given data center, if specified
-                  explode: false
-                  schema:
-                    type: string
-                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+            operationId: org_data_center_describe
+            summary: Describe a data center
+            responses:
+                200:
+                    description: Success
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/data_center'
+                400:
+                    $ref: '#/components/responses/error_400'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+                404:
+                    $ref: '#/components/responses/error_404'
+            tags: [Data Centers]
+    /orgs/{org}/data-centers/{data_center}/instance-catalog:
+        parameters:
+            - name: org
+              in: path
+              description: Unique identifier of the org
+              required: true
+              schema:
+                type: string
+                pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+            - name: data_center
+              in: path
+              description: Unique identifier of the data center
+              required: true
+              schema:
+                type: string
+                pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+        get:
+            operationId: org_data_center_list_instance_catalog_items
+            summary: List instance catalog items of a data center
             responses:
                 200:
                     description: Success
@@ -173,8 +235,8 @@ paths:
                     $ref: '#/components/responses/error_403'
                 404:
                     $ref: '#/components/responses/error_404'
-            tags: [Instance Catalog Items]
-    /orgs/{org}/volume-catalog:
+            tags: [Data Centers]
+    /orgs/{org}/data-centers/{data_center}/volume-catalog:
         parameters:
             - name: org
               in: path
@@ -183,51 +245,16 @@ paths:
               schema:
                 type: string
                 pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
-        get:
-            operationId: org_list_volume_catalog_items
-            summary: List volume catalog items of an org
-            parameters:
-                - name: data_center
-                  in: query
-                  explode: false
-                  schema:
-                    type: string
-                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
-            responses:
-                200:
-                    description: Success
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/volume_catalog_item_list'
-                400:
-                    $ref: '#/components/responses/error_400'
-                401:
-                    $ref: '#/components/responses/error_401'
-                403:
-                    $ref: '#/components/responses/error_403'
-                404:
-                    $ref: '#/components/responses/error_404'
-            tags: [Volume Catalog Items]
-    /partners/{partner}/volume-catalog:
-        parameters:
-            - name: partner
+            - name: data_center
               in: path
-              description: Unique identifier of the partner
+              description: Unique identifier of the data center
               required: true
               schema:
                 type: string
                 pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
         get:
-            operationId: partner_list_volume_catalog_items
-            summary: List volume catalog items of a partner
-            parameters:
-                - name: data_center
-                  in: query
-                  explode: false
-                  schema:
-                    type: string
-                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+            operationId: org_data_center_list_volume_catalog_items
+            summary: List volume catalog items of a data center
             responses:
                 200:
                     description: Success
@@ -243,7 +270,7 @@ paths:
                     $ref: '#/components/responses/error_403'
                 404:
                     $ref: '#/components/responses/error_404'
-            tags: [Volume Catalog Items]
+            tags: [Data Centers]
     /projects/{project}/networks:
         parameters:
             - name: project
@@ -300,6 +327,90 @@ paths:
                 404:
                     $ref: '#/components/responses/error_404'
             tags: [Volumes]
+    /public-ips:
+        post:
+            operationId: public_ip_create
+            summary: Create a public IP
+            parameters:
+                - name: X-Ridge-Request-ID
+                  in: header
+                  description: Client-generated request ID for idempotency
+                  schema:
+                    type: string
+                    maxLength: 64
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/public_ip_create'
+                required: true
+            responses:
+                200:
+                    description: Success
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/public_ip'
+                400:
+                    $ref: '#/components/responses/error_400'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+            tags: [Public IPs]
+    /public-ips/{public_ip}:
+        parameters:
+            - name: public_ip
+              in: path
+              description: Unique identifier of the public IP
+              required: true
+              schema:
+                type: string
+                pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+        get:
+            operationId: public_ip_describe
+            summary: Describe a public IP
+            responses:
+                200:
+                    description: Success
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/public_ip'
+                400:
+                    $ref: '#/components/responses/error_400'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+                404:
+                    $ref: '#/components/responses/error_404'
+            tags: [Public IPs]
+        patch:
+            operationId: public_ip_update
+            summary: Update the properties of a public IP
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/public_ip_update'
+                required: true
+            responses:
+                200:
+                    description: Success
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/public_ip'
+                400:
+                    $ref: '#/components/responses/error_400'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+                404:
+                    $ref: '#/components/responses/error_404'
+            tags: [Public IPs]
     /qualities:
         get:
             operationId: list_qualities
@@ -446,63 +557,37 @@ paths:
             tags: [Volumes]
 components:
     schemas:
-        access_level:
-            description: |
-                The access level to data center:
-                * public: data center is available to all of ridge users.
-                * clients: data center is only available to all clients of the partner owning the DC.
-                * private: data center is only available to clients that are explicitly authorized (regardless of their partner).
+        api_error:
+            description: Error response body
+            type: object
+            required:
+                - error
+            properties:
+                error:
+                    description: Human-readable error message
+                    type: string
+        architecture:
+            description: Hardware architecture
             type: string
-            enum: [public, clients, private]
+            enum: [amd64]
         data_center:
             description: Description of the data center
             type: object
             required:
                 - id
-                - display_name
-                - location
-                - available
-                - enabled
-                - access_level
-                - qualities
-                - prices
-                - default_kubernetes_master
+                - spec
+                - status
             properties:
                 id:
                     description: Unique ID of the data center
                     type: string
                     pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
-                display_name:
-                    description: The display name of the data center
-                    type: string
-                    maxLength: 512
-                location:
-                    $ref: '#/components/schemas/location'
-                    description: The geographical location of the data center.
-                available:
-                    description: Indicates if this data center is online and ready to use
-                    type: boolean
-                enabled:
-                    description: Indicates is this data center is currently enabled
-                    type: boolean
-                access_level:
-                    $ref: '#/components/schemas/access_level'
-                    description: Access level that is required to use the data center.
-                qualities:
-                    description: The list of qualities supported by the data center
-                    type: object
-                    propertyNames:
-                        type: string
-                        pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
-                    additionalProperties:
-                        type: integer
-                        format: int64
-                prices:
-                    $ref: '#/components/schemas/data_center_price_set'
-                    description: The prices in USD per hour for the data center resources.
-                default_kubernetes_master:
-                    $ref: '#/components/schemas/kubernetes_master_node'
-                    description: Default configuration of Kubernetes master nodes in this data center.
+                spec:
+                    $ref: '#/components/schemas/data_center_spec'
+                    description: Specification of the data center
+                status:
+                    $ref: '#/components/schemas/data_center_status'
+                    description: Status of the data center
         data_center_list:
             description: List of data centers
             type: object
@@ -522,10 +607,6 @@ components:
                     description: Networks, USD per hour
                     type: string
                     pattern: ^([-+]?)(\d*)(?:\.(\d{0,9})\d*)?$
-                gateways:
-                    description: Gateways, USD per hour
-                    type: string
-                    pattern: ^([-+]?)(\d*)(?:\.(\d{0,9})\d*)?$
                 load_balancers:
                     description: Load balancers, USD per hour
                     type: string
@@ -534,27 +615,22 @@ components:
                     description: Public IPs, USD per hour
                     type: string
                     pattern: ^([-+]?)(\d*)(?:\.(\d{0,9})\d*)?$
-        instance_catalog_item:
-            description: Description of the instance catalog item
+        data_center_spec:
+            description: Specification of the data center
             type: object
             required:
-                - id
-                - data_center
+                - location
                 - qualities
-                - quantities
-                - prices
-                - enabled
+                - default_kubernetes_control_plane_nodes
             properties:
-                id:
-                    description: Unique ID of the instance catalog item
-                    type: string
-                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
-                data_center:
-                    description: The unique identifier of the data center.
-                    type: string
-                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                location:
+                    $ref: '#/components/schemas/location'
+                    description: The geographical location of the data center.
+                private:
+                    description: Indicates if the data center is exclusively available to one organization
+                    type: boolean
                 qualities:
-                    description: The list of qualities supported by instance
+                    description: The set of qualities supported by the data center
                     type: object
                     propertyNames:
                         type: string
@@ -562,23 +638,44 @@ components:
                     additionalProperties:
                         type: integer
                         format: int64
-                quantities:
-                    description: A set of instance catalog item ranges such as amount of CPU, RAM and storage
-                    type: object
-                    propertyNames:
-                        type: string
-                        pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
-                    additionalProperties:
-                        $ref: '#/components/schemas/quantity_range'
-                prices:
-                    $ref: '#/components/schemas/instance_catalog_item_price_set'
-                    description: The prices in USD per hour per unit of each quantity
-                description:
-                    description: Additional information about the catalog item.
-                    type: string
-                enabled:
-                    description: This catalog item is enabled
+                default_kubernetes_control_plane_nodes:
+                    $ref: '#/components/schemas/kubernetes_control_plane_nodes'
+                    description: Default configuration of Kubernetes control plane nodes in this data center.
+        data_center_status:
+            description: Status of the data center
+            type: object
+            required:
+                - healthy
+                - enabled
+                - prices
+            properties:
+                healthy:
+                    description: Indicates if this data center is healthy (online and ready to use)
                     type: boolean
+                enabled:
+                    description: Indicates if this data center is currently enabled
+                    type: boolean
+                prices:
+                    $ref: '#/components/schemas/data_center_price_set'
+                    description: The prices in USD per hour for the data center resources.
+        instance_catalog_item:
+            description: Description of the instance catalog item
+            type: object
+            required:
+                - id
+                - spec
+                - status
+            properties:
+                id:
+                    description: Unique ID of the instance catalog item
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                spec:
+                    $ref: '#/components/schemas/instance_catalog_item_spec'
+                    description: Specification of the instance catalog item
+                status:
+                    $ref: '#/components/schemas/instance_catalog_item_status'
+                    description: Status of the instance catalog item
         instance_catalog_item_list:
             description: List of instance catalog items
             type: object
@@ -614,19 +711,69 @@ components:
                     description: Network bandwidth, USD per hour
                     type: string
                     pattern: ^([-+]?)(\d*)(?:\.(\d{0,9})\d*)?$
-        kubernetes_master_node:
-            description: Default configuration of Kubernetes master nodes in this data center.
+        instance_catalog_item_spec:
+            description: Specification of the instance catalog item
+            type: object
+            required:
+                - data_center
+                - architecture
+                - qualities
+                - quantities
+            properties:
+                data_center:
+                    description: The unique identifier of the data center.
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                architecture:
+                    $ref: '#/components/schemas/architecture'
+                    description: The hardware architecture of the instance.
+                qualities:
+                    description: The set of qualities supported by instance
+                    type: object
+                    propertyNames:
+                        type: string
+                        pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                    additionalProperties:
+                        type: integer
+                        format: int64
+                quantities:
+                    description: A set of instance catalog item ranges such as amount of CPU, RAM and storage
+                    type: object
+                    propertyNames:
+                        type: string
+                        pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                    additionalProperties:
+                        $ref: '#/components/schemas/quantity_range'
+                description:
+                    description: Additional information about the catalog item.
+                    type: string
+        instance_catalog_item_status:
+            description: Status of the instance catalog item
+            type: object
+            required:
+                - enabled
+                - prices
+            properties:
+                enabled:
+                    description: This catalog item is enabled
+                    type: boolean
+                prices:
+                    $ref: '#/components/schemas/instance_catalog_item_price_set'
+                    description: The prices in USD per hour per unit of each quantity
+        kubernetes_control_plane_nodes:
+            description: Default configuration of Kubernetes control plane nodes in this data center
             type: object
             required:
                 - catalog_item
                 - quantities
             properties:
                 catalog_item:
-                    description: The catalog item unique identifier for Kubernetes master nodes.
+                    description: The unique identifier of the instance catalog item
                     type: string
                     pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
                 quantities:
                     $ref: '#/components/schemas/quantity_set'
+                    description: The minimum hardware configuration
         location:
             description: Location
             type: object
@@ -731,10 +878,6 @@ components:
                     type: array
                     items:
                         $ref: '#/components/schemas/network'
-        network_phase:
-            description: The phase of the network life cycle
-            type: string
-            enum: [creating, running, terminating, terminated]
         network_spec:
             description: Specification of the network
             type: object
@@ -782,7 +925,7 @@ components:
                 - nat_ips
             properties:
                 phase:
-                    $ref: '#/components/schemas/network_phase'
+                    $ref: '#/components/schemas/phase'
                     description: The life cycle phase of the network.
                 nat_ips:
                     description: |
@@ -803,6 +946,134 @@ components:
             properties:
                 display_name:
                     description: The display name of the network
+                    type: string
+                    maxLength: 512
+        phase:
+            description: The life cycle phase
+            type: string
+            enum: [creating, ready, terminating, terminated]
+        public_ip:
+            description: Description of the public IP
+            type: object
+            required:
+                - id
+                - spec
+                - status
+            properties:
+                id:
+                    description: Unique ID of the public IP
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                spec:
+                    $ref: '#/components/schemas/public_ip_spec'
+                    description: Specification of the public IP
+                status:
+                    $ref: '#/components/schemas/public_ip_status'
+                    description: Status of the public IP
+        public_ip_create:
+            description: Properties of the public IP to create
+            type: object
+            required:
+                - network
+            properties:
+                network:
+                    description: The network for the instance
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                display_name:
+                    description: The display name of the public IP
+                    type: string
+                    maxLength: 512
+        public_ip_issues:
+            description: Public IP issues
+            type: object
+            properties:
+                degraded:
+                    description: The public IP is running in a degraded mode. There might be a delay between issuing a command for controlling this public IP and receiving a response.
+                    type: boolean
+                shortage:
+                    description: Indicates the public IP is not fully provisioned due to a shortage at the data center.
+                    type: boolean
+                out_of_quota:
+                    description: Indicates the public IP is not fully provisioned due to quota limitation.
+                    type: boolean
+        public_ip_list:
+            description: List of public IPs
+            type: object
+            required:
+                - items
+            properties:
+                items:
+                    description: The public IPs
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/public_ip'
+        public_ip_spec:
+            description: Specification of the public IP
+            type: object
+            required:
+                - network
+                - created_at
+            properties:
+                network:
+                    description: The network for the instance
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                keep:
+                    description: If true then the public IP will be kept even when unused
+                    type: boolean
+                display_name:
+                    description: The display name of the public IP
+                    type: string
+                    maxLength: 512
+                created_at:
+                    description: Time when the public IP was created
+                    type: string
+                    format: date-time
+                deleted:
+                    description: If true, the public IP has been deleted
+                    type: boolean
+        public_ip_status:
+            description: Status of the public IP
+            type: object
+            required:
+                - phase
+            properties:
+                phase:
+                    $ref: '#/components/schemas/phase'
+                    description: The life cycle phase of the public IP.
+                configuring:
+                    description: When true, the actual public IP configuration may lag behind as the requested settings are being applied
+                    type: boolean
+                issues:
+                    $ref: '#/components/schemas/public_ip_issues'
+                ip_address:
+                    description: The IP address allocated in data center.
+                    type: string
+                    format: ipv4
+                target:
+                    description: The ID of target of public IP
+                    type: string
+                target_type:
+                    $ref: '#/components/schemas/public_ip_target_type'
+                    description: Type of the public IP target
+        public_ip_target_type:
+            description: |
+                Type of target of public IP:
+                * `node`: a node in Ridge Kubernetes API (`/kubernetes/v1/nodes/...`)
+                * `instance`: an instance in Ridge IaaS API  (`/iaas/v1/instances/...`)
+                * `load_balancer`: a cluster load balancer in Ridge Kubernetes API (`/kubernetes/v1/clusters/{cluster}/load-balancers...`)
+            type: string
+            enum: [node, instance, load_balancer]
+        public_ip_update:
+            description: Properties of the public IP to update
+            type: object
+            properties:
+                keep:
+                    description: If true then the public IP will be kept even when unused
+                    type: boolean
+                display_name:
+                    description: The display name of the public IP
                     type: string
                     maxLength: 512
         quality:
@@ -827,6 +1098,9 @@ components:
                 values:
                     $ref: '#/components/schemas/quality_value_mode'
                     description: If specified, the quality has values, with either bigger or smaller numbers considered preferable
+                unit:
+                    description: The optional measurement unit of the quality values
+                    type: string
         quality_list:
             description: A list of qualities
             type: object
@@ -841,7 +1115,7 @@ components:
         quality_scope:
             description: Quality scope
             type: string
-            enum: [data_center, instance]
+            enum: [data_center, instance, volume]
         quality_section:
             description: A thematic section containing quality definitions
             type: object
@@ -928,7 +1202,7 @@ components:
             type: string
             enum: [order, instance, volume]
         quantity_set:
-            description: A set of quantities. The object maps quantity identifiers to values. See https://api.ridge.co/compute/unstable/quantities for possible properties.
+            description: A set of quantities. The object maps quantity identifiers to values. See https://api.ridge.co/compute/v1/quantities for possible properties.
             type: object
             properties:
                 cpu_cores:
@@ -978,35 +1252,19 @@ components:
             type: object
             required:
                 - id
-                - data_center
-                - size_range
-                - price
-                - enabled
+                - spec
+                - status
             properties:
                 id:
                     description: Unique ID of the volume catalog item
                     type: string
                     pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
-                data_center:
-                    description: The unique identifier of the data center.
-                    type: string
-                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
-                default:
-                    description: This volume catalog item is used by default for the data center
-                    type: boolean
-                description:
-                    description: Additional information about the catalog item.
-                    type: string
-                size_range:
-                    $ref: '#/components/schemas/quantity_range'
-                    description: The range of supported persistent volume sizes
-                price:
-                    description: The price in USD per hour per gigabyte
-                    type: string
-                    pattern: ^([-+]?)(\d*)(?:\.(\d{0,9})\d*)?$
-                enabled:
-                    description: This catalog item is enabled
-                    type: boolean
+                spec:
+                    $ref: '#/components/schemas/volume_catalog_item_spec'
+                    description: Specification of the volume catalog item
+                status:
+                    $ref: '#/components/schemas/volume_catalog_item_status'
+                    description: Status of the volume catalog item
         volume_catalog_item_list:
             description: List of volume catalog items
             type: object
@@ -1018,6 +1276,47 @@ components:
                     type: array
                     items:
                         $ref: '#/components/schemas/volume_catalog_item'
+        volume_catalog_item_spec:
+            description: Specification of the volume catalog item
+            type: object
+            required:
+                - data_center
+                - qualities
+                - size_range
+            properties:
+                data_center:
+                    description: The unique identifier of the data center.
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                default:
+                    description: This volume catalog item is used by default for the data center
+                    type: boolean
+                qualities:
+                    description: The set of qualities supported by volume
+                    type: object
+                    propertyNames:
+                        type: string
+                        pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                    additionalProperties:
+                        type: integer
+                        format: int64
+                size_range:
+                    $ref: '#/components/schemas/quantity_range'
+                    description: The range of supported persistent volume sizes
+        volume_catalog_item_status:
+            description: Status of the volume catalog item
+            type: object
+            required:
+                - enabled
+                - price
+            properties:
+                enabled:
+                    description: This catalog item is enabled
+                    type: boolean
+                price:
+                    description: The price in USD per hour per gigabyte
+                    type: string
+                    pattern: ^([-+]?)(\d*)(?:\.(\d{0,9})\d*)?$
         volume_create:
             description: Properties of the volume to create
             type: object
@@ -1071,10 +1370,6 @@ components:
                     type: array
                     items:
                         $ref: '#/components/schemas/volume'
-        volume_phase:
-            description: The phase of the volume life cycle
-            type: string
-            enum: [missing, starting, running, terminating, terminated]
         volume_reference:
             description: An object referencing a volume
             type: object
@@ -1107,9 +1402,9 @@ components:
         volume_reference_type:
             description: |
                 Type of referencing object:
-                * `persistent_volume`: a persistent volume in Ridge Kubernetes Service API (`/rks/unstable/persistent-volumes/...`)
-                * `persistent_volume_claim`: a persistent volume claim in Ridge Kubernetes Service API (`/rks/unstable/persistent-volume-claims/...`)
-                * `volume_attachment`: a volume attachment in Ridge IaaS API  (`/ria/unstable/volume-attachments/...`)
+                * `persistent_volume`: a persistent volume in Ridge Kubernetes API (`/kubernetes/v1/persistent-volumes/...`)
+                * `persistent_volume_claim`: a persistent volume claim in Ridge Kubernetes API (`/kubernetes/v1/persistent-volume-claims/...`)
+                * `volume_attachment`: a volume attachment in Ridge IaaS API  (`/iaas/v1/volume-attachments/...`)
             type: string
             enum: [persistent_volume, persistent_volume_claim, volume_attachment]
         volume_spec:
@@ -1159,8 +1454,11 @@ components:
                 - phase
             properties:
                 phase:
-                    $ref: '#/components/schemas/volume_phase'
+                    $ref: '#/components/schemas/phase'
                     description: The life cycle phase of the volume.
+                configuring:
+                    description: When true, the actual volume configuration may lag behind as the requested settings are being applied
+                    type: boolean
                 issues:
                     $ref: '#/components/schemas/volume_issues'
                 size:
@@ -1190,33 +1488,35 @@ components:
             content:
                 application/json:
                     schema:
-                        type: string
+                        $ref: '#/components/schemas/api_error'
         error_401:
             description: Unauthorized
             content:
                 application/json:
                     schema:
-                        type: string
+                        $ref: '#/components/schemas/api_error'
         error_403:
             description: Forbidden
             content:
                 application/json:
                     schema:
-                        type: string
+                        $ref: '#/components/schemas/api_error'
         error_404:
             description: Not Found
             content:
                 application/json:
                     schema:
-                        type: string
+                        $ref: '#/components/schemas/api_error'
 tags:
-    - name: Networks
-      description: Operations on networks
-    - name: Volumes
-      description: Operations on volumes
-    - name: Instance Catalog Items
-      description: Operations on instance catalog items
-    - name: Volume Catalog Items
-      description: Operations on volume catalog items
     - name: Data Centers
       description: Operations on data centers
+    - name: Data Centers
+      description: Operations on data centers
+    - name: Volumes
+      description: Operations on volumes
+    - name: Public IPs
+      description: Operations on public IPs
+    - name: Data Centers
+      description: Operations on data centers
+    - name: Networks
+      description: Operations on networks

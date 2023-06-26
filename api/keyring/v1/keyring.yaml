@@ -2,9 +2,9 @@ openapi: 3.1.0
 info:
     title: External Credentials API
     description: An API for managing credentials for external services.
-    version: unstable
+    version: v1
 servers:
-    - url: '{origin}/keyring/unstable'
+    - url: '{origin}/keyring/v1'
       variables:
         origin:
             default: https://api.ridge.co
@@ -144,7 +144,7 @@ paths:
         parameters:
             - name: docker_registry_creds
               in: path
-              description: Unique identifier of the docker registry creds
+              description: Unique identifier of the Docker registry credentials
               required: true
               schema:
                 type: string
@@ -266,6 +266,15 @@ paths:
             tags: [Docker Registry Credentials]
 components:
     schemas:
+        api_error:
+            description: Error response body
+            type: object
+            required:
+                - error
+            properties:
+                error:
+                    description: Human-readable error message
+                    type: string
         aws_key:
             description: Description of the AWS key
             type: object
@@ -369,7 +378,7 @@ components:
                     type: string
                     minLength: 1
         docker_registry_creds:
-            description: Description of the docker registry creds
+            description: Description of the Docker registry credentials
             type: object
             required:
                 - id
@@ -380,11 +389,11 @@ components:
                 - updated_at
             properties:
                 id:
-                    description: Unique ID of the docker registry creds
+                    description: Unique ID of the Docker registry credentials
                     type: string
                     pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
                 display_name:
-                    description: The display name of the docker registry creds
+                    description: The display name of the Docker registry credentials
                     type: string
                     maxLength: 512
                 project:
@@ -400,15 +409,15 @@ components:
                     type: string
                     minLength: 1
                 created_at:
-                    description: Time when the docker registry creds was created
+                    description: Time when the Docker registry credentials was created
                     type: string
                     format: date-time
                 updated_at:
-                    description: Time when the docker registry creds was last updated
+                    description: Time when the Docker registry credentials was last updated
                     type: string
                     format: date-time
         docker_registry_creds_create:
-            description: Properties of the docker registry creds to create
+            description: Properties of the Docker registry credentials to create
             type: object
             required:
                 - project
@@ -417,7 +426,7 @@ components:
                 - password
             properties:
                 display_name:
-                    description: The display name of the docker registry creds
+                    description: The display name of the Docker registry credentials
                     type: string
                     maxLength: 512
                 project:
@@ -448,11 +457,11 @@ components:
                     items:
                         $ref: '#/components/schemas/docker_registry_creds'
         docker_registry_creds_update:
-            description: Properties of the docker registry creds to update
+            description: Properties of the Docker registry credentials to update
             type: object
             properties:
                 display_name:
-                    description: The display name of the docker registry creds
+                    description: The display name of the Docker registry credentials
                     type: string
                     maxLength: 512
                 username:
@@ -469,25 +478,25 @@ components:
             content:
                 application/json:
                     schema:
-                        type: string
+                        $ref: '#/components/schemas/api_error'
         error_401:
             description: Unauthorized
             content:
                 application/json:
                     schema:
-                        type: string
+                        $ref: '#/components/schemas/api_error'
         error_403:
             description: Forbidden
             content:
                 application/json:
                     schema:
-                        type: string
+                        $ref: '#/components/schemas/api_error'
         error_404:
             description: Not Found
             content:
                 application/json:
                     schema:
-                        type: string
+                        $ref: '#/components/schemas/api_error'
 tags:
     - name: Docker Registry Credentials
       description: Operations on Docker registry credentials

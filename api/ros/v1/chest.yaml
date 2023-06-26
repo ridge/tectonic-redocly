@@ -1,0 +1,443 @@
+openapi: 3.1.0
+info:
+    title: Ridge Object Storage API
+    description: An API for the Ridge Object Storage
+    version: v1
+servers:
+    - url: '{origin}/object-storage/v1'
+      variables:
+        origin:
+            default: https://api.ridge.co
+            description: The scheme, domain name and optional port to access the API server
+paths:
+    /members/{member}/storage-keys:
+        parameters:
+            - name: member
+              in: path
+              description: Unique identifier of the member
+              required: true
+              schema:
+                type: string
+                pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+        get:
+            operationId: member_list_storage_keys
+            summary: List storage keys of a member
+            responses:
+                200:
+                    description: Success
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/storage_key_list'
+                400:
+                    $ref: '#/components/responses/error_400'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+                404:
+                    $ref: '#/components/responses/error_404'
+            tags: [Storage Keys]
+    /projects/{project}/storage-sites:
+        parameters:
+            - name: project
+              in: path
+              description: Unique identifier of the project
+              required: true
+              schema:
+                type: string
+                pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+        get:
+            operationId: project_list_storage_sites
+            summary: List storage sites of a project
+            responses:
+                200:
+                    description: Success
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/project_storage_site_list'
+                400:
+                    $ref: '#/components/responses/error_400'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+                404:
+                    $ref: '#/components/responses/error_404'
+            tags: [Storage Sites]
+    /projects/{project}/storage-sites/{storage_site}:
+        parameters:
+            - name: project
+              in: path
+              description: Unique identifier of the project
+              required: true
+              schema:
+                type: string
+                pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+            - name: storage_site
+              in: path
+              description: Unique identifier of the storage site
+              required: true
+              schema:
+                type: string
+                pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+        get:
+            operationId: project_storage_site_describe
+            summary: Describe a storage site
+            responses:
+                200:
+                    description: Success
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/project_storage_site'
+                400:
+                    $ref: '#/components/responses/error_400'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+                404:
+                    $ref: '#/components/responses/error_404'
+            tags: [Storage Sites]
+    /storage-keys:
+        post:
+            operationId: storage_key_create
+            summary: Create a storage key
+            parameters:
+                - name: X-Ridge-Request-ID
+                  in: header
+                  description: Client-generated request ID for idempotency
+                  schema:
+                    type: string
+                    maxLength: 64
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/storage_key_create'
+                required: true
+            responses:
+                200:
+                    description: Success
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/storage_key_created'
+                400:
+                    $ref: '#/components/responses/error_400'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+            tags: [Storage Keys]
+    /storage-keys/{storage_key}:
+        parameters:
+            - name: storage_key
+              in: path
+              description: Unique identifier of the storage key
+              required: true
+              schema:
+                type: string
+                pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+        get:
+            operationId: storage_key_describe
+            summary: Describe a storage key
+            responses:
+                200:
+                    description: Success
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/storage_key'
+                400:
+                    $ref: '#/components/responses/error_400'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+                404:
+                    $ref: '#/components/responses/error_404'
+            tags: [Storage Keys]
+        patch:
+            operationId: storage_key_update
+            summary: Update the properties of a storage key
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/storage_key_update'
+                required: true
+            responses:
+                200:
+                    description: Success
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/storage_key'
+                400:
+                    $ref: '#/components/responses/error_400'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+                404:
+                    $ref: '#/components/responses/error_404'
+            tags: [Storage Keys]
+        delete:
+            operationId: storage_key_delete
+            summary: Delete a storage key
+            responses:
+                204:
+                    description: Success
+                400:
+                    $ref: '#/components/responses/error_400'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+                404:
+                    $ref: '#/components/responses/error_404'
+            tags: [Storage Keys]
+components:
+    schemas:
+        api_error:
+            description: Error response body
+            type: object
+            required:
+                - error
+            properties:
+                error:
+                    description: Human-readable error message
+                    type: string
+        location:
+            description: Location
+            type: object
+            required:
+                - continent
+                - country
+                - city
+                - latitude
+                - longitude
+            properties:
+                continent:
+                    $ref: '#/components/schemas/location_continent'
+                    description: The continent in which the data center is located
+                country:
+                    description: The 2 letter country code according to ISO-3166-1
+                    type: string
+                    pattern: ^[A-Z][A-Z]$
+                state_or_province:
+                    description: The country subdivision code according to ISO-3166-2
+                    type: string
+                    pattern: ^[A-Z0-9]*$
+                city:
+                    description: The city in which the data center is located
+                    type: string
+                latitude:
+                    description: The latitude in range (-90.0, 90.0)
+                    type: string
+                    pattern: ^-?\d+\.\d+$
+                longitude:
+                    description: The latitude in range (-180.0, 180.0)
+                    type: string
+                    pattern: ^-?\d+\.\d+$
+        location_continent:
+            description: Continent
+            type: string
+            enum: [africa, asia, europe, north_america, south_america, antarctica, oceania]
+        project_storage_site:
+            description: Description of the storage site
+            type: object
+            required:
+                - id
+                - spec
+                - status
+            properties:
+                id:
+                    description: Unique ID of the storage site
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                spec:
+                    $ref: '#/components/schemas/project_storage_site_spec'
+                    description: Specification of the storage site
+                status:
+                    $ref: '#/components/schemas/project_storage_site_status'
+                    description: Status of the storage site
+        project_storage_site_list:
+            description: List of storage sites
+            type: object
+            required:
+                - items
+            properties:
+                items:
+                    description: The storage sites
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/project_storage_site'
+        project_storage_site_spec:
+            description: Specification of the storage site
+            type: object
+            required:
+                - project
+                - endpoint
+                - location
+                - data_center
+            properties:
+                project:
+                    description: The unique identifier of the project
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                endpoint:
+                    description: The S3-like API endpoint
+                    type: string
+                    format: uri
+                location:
+                    $ref: '#/components/schemas/location'
+                    description: The storage site actual geographical location
+                data_center:
+                    description: The unique identifier of the data center.
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                private:
+                    description: Indicates if the storage site is only available to this organization
+                    type: boolean
+        project_storage_site_status:
+            description: Status of the storage site
+            type: object
+            required:
+                - active
+                - enabled
+            properties:
+                active:
+                    description: Indicates if the project has, or recently had, buckets or storage keys in this storage site
+                    type: boolean
+                enabled:
+                    description: Indicates whether the storage site is enabled
+                    type: boolean
+        storage_key:
+            description: Description of the storage key
+            type: object
+            required:
+                - id
+                - member
+                - project
+                - storage_site
+                - created_at
+                - updated_at
+            properties:
+                id:
+                    description: Unique ID of the storage key
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                display_name:
+                    description: The display name of the storage key
+                    type: string
+                    maxLength: 512
+                member:
+                    description: The identifier of the Ridge member who owns this storage key.
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                project:
+                    description: The unique identifier of the project for which the key is valid
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                storage_site:
+                    description: The unique identifier of the storage site
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                created_at:
+                    description: Time when the storage key was created
+                    type: string
+                    format: date-time
+                updated_at:
+                    description: Time when the storage key was last updated
+                    type: string
+                    format: date-time
+        storage_key_create:
+            description: Properties of the storage key to create
+            type: object
+            required:
+                - member
+                - project
+                - storage_site
+            properties:
+                display_name:
+                    description: The display name of the storage key
+                    type: string
+                    maxLength: 512
+                member:
+                    description: The identifier of the Ridge member who owns this storage key.
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                project:
+                    description: The unique identifier of the project for which the key is valid
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                storage_site:
+                    description: The unique identifier of the storage site
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+        storage_key_created:
+            allOf:
+                - $ref: '#/components/schemas/storage_key'
+                - description: Description of the newly created storage key
+                  type: object
+                  required:
+                    - secret_key
+                  properties:
+                    secret_key:
+                        description: The S3 SecretKey to authenticate against the object storage location.
+                        type: string
+        storage_key_list:
+            description: List of storage keys
+            type: object
+            required:
+                - items
+            properties:
+                items:
+                    description: The storage keys
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/storage_key'
+        storage_key_update:
+            description: Properties of the storage key to update
+            type: object
+            properties:
+                display_name:
+                    description: The display name of the storage key
+                    type: string
+                    maxLength: 512
+    responses:
+        error_400:
+            description: Bad Request
+            content:
+                application/json:
+                    schema:
+                        $ref: '#/components/schemas/api_error'
+        error_401:
+            description: Unauthorized
+            content:
+                application/json:
+                    schema:
+                        $ref: '#/components/schemas/api_error'
+        error_403:
+            description: Forbidden
+            content:
+                application/json:
+                    schema:
+                        $ref: '#/components/schemas/api_error'
+        error_404:
+            description: Not Found
+            content:
+                application/json:
+                    schema:
+                        $ref: '#/components/schemas/api_error'
+tags:
+    - name: Storage Sites
+      description: Operations on storage sites
+    - name: Storage Keys
+      description: Operations on storage keys
+    - name: Storage Sites
+      description: Operations on storage sites

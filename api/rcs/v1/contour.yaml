@@ -1,10 +1,10 @@
 openapi: 3.1.0
 info:
-    title: Ridge Container Service API
+    title: Ridge Containers API
     description: An API for managing containers
-    version: unstable
+    version: v1
 servers:
-    - url: '{origin}/rcs/unstable'
+    - url: '{origin}/containers/v1'
       variables:
         origin:
             default: https://api.ridge.co
@@ -210,6 +210,15 @@ paths:
             tags: [Batches]
 components:
     schemas:
+        api_error:
+            description: Error response body
+            type: object
+            required:
+                - error
+            properties:
+                error:
+                    description: Human-readable error message
+                    type: string
         aws_role:
             description: The IAM role that will grant the cluster permissions (using temporary credentials) to access AWS services
             type: object
@@ -249,6 +258,7 @@ components:
             required:
                 - number
                 - container_image
+                - catalog_item
                 - network
             properties:
                 display_name:
@@ -321,9 +331,6 @@ components:
                     type: array
                     items:
                         $ref: '#/components/schemas/batch'
-        batch_phase:
-            type: string
-            enum: [creating, fulfilling, fulfilled, failed, terminating, terminated]
         batch_spec:
             description: Specification of the batch
             type: object
@@ -332,6 +339,7 @@ components:
                 - container_image
                 - env
                 - args
+                - catalog_item
                 - network
                 - quantities
                 - created_at
@@ -392,6 +400,9 @@ components:
                     description: Time when the batch was last updated
                     type: string
                     format: date-time
+                deleted:
+                    description: If true, the batch has been deleted
+                    type: boolean
         batch_status:
             description: Status of the batch
             type: object
@@ -405,7 +416,7 @@ components:
                     type: string
                     pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
                 phase:
-                    $ref: '#/components/schemas/batch_phase'
+                    $ref: '#/components/schemas/phase'
                     description: The life cycle phase of the batch.
                 number:
                     description: The actual number of running or completed containers.
@@ -432,44 +443,19 @@ components:
             type: object
             required:
                 - id
-                - batch
-                - quantities
-                - phase
+                - spec
+                - status
             properties:
                 id:
                     description: Unique ID of the container
                     type: string
                     pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
-                batch:
-                    description: The batch to which this container belongs.
-                    type: string
-                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
-                quantities:
-                    $ref: '#/components/schemas/quantity_set'
-                    description: Instances parameters to run on them
-                started_at:
-                    description: The time when the container was started.
-                    type: string
-                    format: date-time
-                terminated_at:
-                    description: The time when the container was terminated.
-                    type: string
-                    format: date-time
-                phase:
-                    $ref: '#/components/schemas/container_phase'
-                    description: The life cycle phase of the container.
-                phase_reason:
-                    $ref: '#/components/schemas/termination_reason'
-                    description: Information on why the container has reached current life cycle phase.
-                exit_code:
-                    description: Exit code of containerized application.
-                    type: integer
-                error:
-                    description: Error which occurred during container's life cycle.
-                    type: string
-                issues:
-                    $ref: '#/components/schemas/container_issues'
-                    description: Container issues
+                spec:
+                    $ref: '#/components/schemas/container_spec'
+                    description: Specification of the container
+                status:
+                    $ref: '#/components/schemas/container_status'
+                    description: Status of the container
         container_issues:
             type: object
             properties:
@@ -490,9 +476,55 @@ components:
                     type: array
                     items:
                         $ref: '#/components/schemas/container'
-        container_phase:
+        container_spec:
+            description: Specification of the container
+            type: object
+            required:
+                - batch
+                - quantities
+            properties:
+                batch:
+                    description: The batch to which this container belongs.
+                    type: string
+                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                quantities:
+                    $ref: '#/components/schemas/quantity_set'
+                    description: Instances parameters to run on them
+                deleted:
+                    description: If true, the container has been deleted
+                    type: boolean
+        container_status:
+            description: Status of the container
+            type: object
+            required:
+                - phase
+            properties:
+                started_at:
+                    description: The time when the container was started.
+                    type: string
+                    format: date-time
+                terminated_at:
+                    description: The time when the container was terminated.
+                    type: string
+                    format: date-time
+                phase:
+                    $ref: '#/components/schemas/phase'
+                    description: The life cycle phase of the container.
+                termination_reason:
+                    $ref: '#/components/schemas/termination_reason'
+                    description: Information on why the container is terminated.
+                exit_code:
+                    description: Exit code of containerized application.
+                    type: integer
+                error:
+                    description: Error which occurred during container's life cycle.
+                    type: string
+                issues:
+                    $ref: '#/components/schemas/container_issues'
+                    description: Container issues
+        phase:
             type: string
-            enum: [starting, running, terminating, terminated, broken]
+            enum: [creating, ready, terminating, terminated]
         quantity_set:
             description: Resource quantities
             type: object
@@ -527,25 +559,25 @@ components:
             content:
                 application/json:
                     schema:
-                        type: string
+                        $ref: '#/components/schemas/api_error'
         error_401:
             description: Unauthorized
             content:
                 application/json:
                     schema:
-                        type: string
+                        $ref: '#/components/schemas/api_error'
         error_403:
             description: Forbidden
             content:
                 application/json:
                     schema:
-                        type: string
+                        $ref: '#/components/schemas/api_error'
         error_404:
             description: Not Found
             content:
                 application/json:
                     schema:
-                        type: string
+                        $ref: '#/components/schemas/api_error'
 tags:
     - name: Batches
       description: Operations on batches

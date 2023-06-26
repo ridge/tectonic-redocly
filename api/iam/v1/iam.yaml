@@ -2,9 +2,9 @@ openapi: 3.1.0
 info:
     title: IAM API
     description: An API for identity and access management
-    version: unstable
+    version: v1
 servers:
-    - url: '{origin}/iam/unstable'
+    - url: '{origin}/iam/v1'
       variables:
         origin:
             default: https://api.ridge.co
@@ -109,80 +109,6 @@ paths:
                 404:
                     $ref: '#/components/responses/error_404'
             tags: [API Keys]
-    /group-memberships:
-        post:
-            operationId: group_membership_create
-            summary: Create a group membership
-            parameters:
-                - name: X-Ridge-Request-ID
-                  in: header
-                  description: Client-generated request ID for idempotency
-                  schema:
-                    type: string
-                    maxLength: 64
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/group_membership_create'
-                required: true
-            responses:
-                200:
-                    description: Success
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/group_membership'
-                400:
-                    $ref: '#/components/responses/error_400'
-                401:
-                    $ref: '#/components/responses/error_401'
-                403:
-                    $ref: '#/components/responses/error_403'
-            tags: [Group Memberships]
-    /group-memberships/{group_membership}:
-        parameters:
-            - name: group_membership
-              in: path
-              description: Unique identifier of the group membership
-              required: true
-              schema:
-                type: string
-                pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
-        get:
-            operationId: group_membership_describe
-            summary: Describe a group membership
-            responses:
-                200:
-                    description: Success
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/group_membership'
-                400:
-                    $ref: '#/components/responses/error_400'
-                401:
-                    $ref: '#/components/responses/error_401'
-                403:
-                    $ref: '#/components/responses/error_403'
-                404:
-                    $ref: '#/components/responses/error_404'
-            tags: [Group Memberships]
-        delete:
-            operationId: group_membership_delete
-            summary: Delete a group membership
-            responses:
-                204:
-                    description: Success
-                400:
-                    $ref: '#/components/responses/error_400'
-                401:
-                    $ref: '#/components/responses/error_401'
-                403:
-                    $ref: '#/components/responses/error_403'
-                404:
-                    $ref: '#/components/responses/error_404'
-            tags: [Group Memberships]
     /groups:
         post:
             operationId: group_create
@@ -282,7 +208,7 @@ paths:
                 404:
                     $ref: '#/components/responses/error_404'
             tags: [Groups]
-    /groups/{group}/memberships:
+    /groups/{group}/members:
         parameters:
             - name: group
               in: path
@@ -292,15 +218,15 @@ paths:
                 type: string
                 pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
         get:
-            operationId: group_list_group_memberships
-            summary: List memberships in a group
+            operationId: group_list_members
+            summary: List members of a group
             responses:
                 200:
                     description: Success
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/group_membership_list'
+                                $ref: '#/components/schemas/member_list'
                 400:
                     $ref: '#/components/responses/error_400'
                 401:
@@ -309,7 +235,53 @@ paths:
                     $ref: '#/components/responses/error_403'
                 404:
                     $ref: '#/components/responses/error_404'
-            tags: [Group Memberships]
+            tags: [Members]
+    /groups/{group}/members/{member}:
+        parameters:
+            - name: group
+              in: path
+              description: Unique identifier of the group
+              required: true
+              schema:
+                type: string
+                pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+            - name: member
+              in: path
+              description: Unique identifier of the member
+              required: true
+              schema:
+                type: string
+                pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+        post:
+            operationId: group_member_add
+            summary: Add a member to a group
+            responses:
+                204:
+                    description: Success
+                400:
+                    $ref: '#/components/responses/error_400'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+                404:
+                    $ref: '#/components/responses/error_404'
+            tags: [Groups]
+        delete:
+            operationId: group_member_remove
+            summary: Remove a member from a group
+            responses:
+                204:
+                    description: Success
+                400:
+                    $ref: '#/components/responses/error_400'
+                401:
+                    $ref: '#/components/responses/error_401'
+                403:
+                    $ref: '#/components/responses/error_403'
+                404:
+                    $ref: '#/components/responses/error_404'
+            tags: [Groups]
     /groups/{group}/privileges:
         parameters:
             - name: group
@@ -465,7 +437,7 @@ paths:
                 404:
                     $ref: '#/components/responses/error_404'
             tags: [API Keys]
-    /members/{member}/group-memberships:
+    /members/{member}/groups:
         parameters:
             - name: member
               in: path
@@ -475,15 +447,15 @@ paths:
                 type: string
                 pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
         get:
-            operationId: member_list_group_memberships
-            summary: List group memberships of a member
+            operationId: member_list_groups
+            summary: List groups to which a member belongs
             responses:
                 200:
                     description: Success
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/group_membership_list'
+                                $ref: '#/components/schemas/group_list'
                 400:
                     $ref: '#/components/responses/error_400'
                 401:
@@ -492,7 +464,7 @@ paths:
                     $ref: '#/components/responses/error_403'
                 404:
                     $ref: '#/components/responses/error_404'
-            tags: [Group Memberships]
+            tags: [Groups]
     /members/{member}/invitation/send:
         parameters:
             - name: member
@@ -575,39 +547,11 @@ paths:
                 404:
                     $ref: '#/components/responses/error_404'
             tags: [Policies]
-    /members/{member}/storage-keys:
-        parameters:
-            - name: member
-              in: path
-              description: Unique identifier of the member
-              required: true
-              schema:
-                type: string
-                pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
-        get:
-            operationId: member_list_storage_keys
-            summary: List storage keys of a member
-            responses:
-                200:
-                    description: Success
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/storage_key_list'
-                400:
-                    $ref: '#/components/responses/error_400'
-                401:
-                    $ref: '#/components/responses/error_401'
-                403:
-                    $ref: '#/components/responses/error_403'
-                404:
-                    $ref: '#/components/responses/error_404'
-            tags: [Storage Keys]
     /orgs/{org}:
         parameters:
             - name: org
               in: path
-              description: Unique identifier of the org
+              description: Unique identifier of the organization
               required: true
               schema:
                 type: string
@@ -635,7 +579,7 @@ paths:
         parameters:
             - name: org
               in: path
-              description: Unique identifier of the org
+              description: Unique identifier of the organization
               required: true
               schema:
                 type: string
@@ -663,7 +607,7 @@ paths:
         parameters:
             - name: org
               in: path
-              description: Unique identifier of the org
+              description: Unique identifier of the organization
               required: true
               schema:
                 type: string
@@ -691,7 +635,7 @@ paths:
         parameters:
             - name: org
               in: path
-              description: Unique identifier of the org
+              description: Unique identifier of the organization
               required: true
               schema:
                 type: string
@@ -719,7 +663,7 @@ paths:
         parameters:
             - name: org
               in: path
-              description: Unique identifier of the org
+              description: Unique identifier of the organization
               required: true
               schema:
                 type: string
@@ -747,7 +691,7 @@ paths:
         parameters:
             - name: org
               in: path
-              description: Unique identifier of the org
+              description: Unique identifier of the organization
               required: true
               schema:
                 type: string
@@ -988,107 +932,17 @@ paths:
                 403:
                     $ref: '#/components/responses/error_403'
             tags: [Roles]
-    /storage-keys:
-        post:
-            operationId: storage_key_create
-            summary: Create a storage key
-            parameters:
-                - name: X-Ridge-Request-ID
-                  in: header
-                  description: Client-generated request ID for idempotency
-                  schema:
-                    type: string
-                    maxLength: 64
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/storage_key_create'
-                required: true
-            responses:
-                200:
-                    description: Success
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/storage_key'
-                400:
-                    $ref: '#/components/responses/error_400'
-                401:
-                    $ref: '#/components/responses/error_401'
-                403:
-                    $ref: '#/components/responses/error_403'
-            tags: [Storage Keys]
-    /storage-keys/{storage_key}:
-        parameters:
-            - name: storage_key
-              in: path
-              description: Unique identifier of the storage key
-              required: true
-              schema:
-                type: string
-                pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
-        get:
-            operationId: storage_key_describe
-            summary: Describe a storage key
-            responses:
-                200:
-                    description: Success
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/storage_key'
-                400:
-                    $ref: '#/components/responses/error_400'
-                401:
-                    $ref: '#/components/responses/error_401'
-                403:
-                    $ref: '#/components/responses/error_403'
-                404:
-                    $ref: '#/components/responses/error_404'
-            tags: [Storage Keys]
-        patch:
-            operationId: storage_key_update
-            summary: Update the properties of a storage key
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/storage_key_update'
-                required: true
-            responses:
-                200:
-                    description: Success
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/storage_key'
-                400:
-                    $ref: '#/components/responses/error_400'
-                401:
-                    $ref: '#/components/responses/error_401'
-                403:
-                    $ref: '#/components/responses/error_403'
-                404:
-                    $ref: '#/components/responses/error_404'
-            tags: [Storage Keys]
-        delete:
-            operationId: storage_key_delete
-            summary: Delete a storage key
-            responses:
-                204:
-                    description: Success
-                400:
-                    $ref: '#/components/responses/error_400'
-                401:
-                    $ref: '#/components/responses/error_401'
-                403:
-                    $ref: '#/components/responses/error_403'
-                404:
-                    $ref: '#/components/responses/error_404'
-            tags: [Storage Keys]
 components:
     schemas:
+        api_error:
+            description: Error response body
+            type: object
+            required:
+                - error
+            properties:
+                error:
+                    description: Human-readable error message
+                    type: string
         api_key:
             description: Description of the API key
             type: object
@@ -1224,57 +1078,6 @@ components:
                     type: array
                     items:
                         $ref: '#/components/schemas/group'
-        group_membership:
-            description: Description of the group membership
-            type: object
-            required:
-                - id
-                - group
-                - member
-                - created_at
-            properties:
-                id:
-                    description: Unique ID of the group membership
-                    type: string
-                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
-                group:
-                    description: The group
-                    type: string
-                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
-                member:
-                    description: The group member
-                    type: string
-                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
-                created_at:
-                    description: Time when the group membership was created
-                    type: string
-                    format: date-time
-        group_membership_create:
-            description: Properties of the group membership to create
-            type: object
-            required:
-                - group
-                - member
-            properties:
-                group:
-                    description: The group
-                    type: string
-                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
-                member:
-                    description: The group member
-                    type: string
-                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
-        group_membership_list:
-            description: List of group memberships
-            type: object
-            required:
-                - items
-            properties:
-                items:
-                    description: The group memberships
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/group_membership'
         group_update:
             description: Properties of the group to update
             type: object
@@ -1379,39 +1182,41 @@ components:
             type: string
             enum: [project, org, partner, admin]
         org:
-            description: Description of the org
+            description: Description of the organization
             type: object
             required:
                 - id
-                - partner
                 - created_at
                 - updated_at
             properties:
                 id:
-                    description: Unique ID of the org
+                    description: Unique ID of the organization
                     type: string
                     pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
                 display_name:
-                    description: The display name of the org
+                    description: The display name of the organization
                     type: string
                     maxLength: 512
-                partner:
-                    description: The organization's partner ID
+                partner_logo:
+                    description: Partner's logo
                     type: string
-                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
+                    format: uri
                 trial:
                     description: True if the organization is in trial stage
                     type: boolean
+                billed:
+                    description: True if the organization is directly billed by Ridge
+                    type: boolean
                 created_at:
-                    description: Time when the org was created
+                    description: Time when the organization was created
                     type: string
                     format: date-time
                 updated_at:
-                    description: Time when the org was last updated
+                    description: Time when the organization was last updated
                     type: string
                     format: date-time
                 deleted:
-                    description: If true, the org has been deleted
+                    description: If true, the organization has been deleted
                     type: boolean
         personal_info:
             description: The personal information of a user
@@ -1609,11 +1414,6 @@ components:
                     type: integer
                     format: int64
                     minimum: 0
-                gateways:
-                    description: Gateways
-                    type: integer
-                    format: int64
-                    minimum: 0
                 load_balancers:
                     description: Load balancers
                     type: integer
@@ -1675,81 +1475,6 @@ components:
                     type: array
                     items:
                         $ref: '#/components/schemas/role'
-        storage_key:
-            description: Description of the storage key
-            type: object
-            required:
-                - id
-                - member
-                - storage_site
-                - created_at
-                - updated_at
-            properties:
-                id:
-                    description: Unique ID of the storage key
-                    type: string
-                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
-                display_name:
-                    description: The display name of the storage key
-                    type: string
-                    maxLength: 512
-                member:
-                    description: Member ID
-                    type: string
-                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
-                storage_site:
-                    description: Storage site ID
-                    type: string
-                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
-                created_at:
-                    description: Time when the storage key was created
-                    type: string
-                    format: date-time
-                updated_at:
-                    description: Time when the storage key was last updated
-                    type: string
-                    format: date-time
-                secret_key:
-                    description: The S3 SecretKey to authenticate against the object storage location.  It is included only on create and describe operations.
-                    type: string
-        storage_key_create:
-            description: Properties of the storage key to create
-            type: object
-            required:
-                - member
-                - storage_site
-            properties:
-                display_name:
-                    description: The display name of the storage key
-                    type: string
-                    maxLength: 512
-                member:
-                    description: Member ID
-                    type: string
-                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
-                storage_site:
-                    description: Storage site ID
-                    type: string
-                    pattern: ^[A-Za-z0-9][A-Za-z0-9]*([-_][A-Za-z0-9]+)*$
-        storage_key_list:
-            description: List of storage keys
-            type: object
-            required:
-                - items
-            properties:
-                items:
-                    description: The storage keys
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/storage_key'
-        storage_key_update:
-            description: Properties of the storage key to update
-            type: object
-            properties:
-                display_name:
-                    description: The display name of the storage key
-                    type: string
-                    maxLength: 512
         subject_type:
             description: The type of a policy subject
             type: string
@@ -1760,41 +1485,39 @@ components:
             content:
                 application/json:
                     schema:
-                        type: string
+                        $ref: '#/components/schemas/api_error'
         error_401:
             description: Unauthorized
             content:
                 application/json:
                     schema:
-                        type: string
+                        $ref: '#/components/schemas/api_error'
         error_403:
             description: Forbidden
             content:
                 application/json:
                     schema:
-                        type: string
+                        $ref: '#/components/schemas/api_error'
         error_404:
             description: Not Found
             content:
                 application/json:
                     schema:
-                        type: string
+                        $ref: '#/components/schemas/api_error'
 tags:
     - name: Roles
       description: Operations on roles
+    - name: Projects
+      description: Operations on projects
+    - name: Members
+      description: Operations on members
+    - name: Policies
+      description: Operations on policies
     - name: Organizations
       description: Operations on organizations
     - name: Members
       description: Operations on members
-    - name: API Keys
-      description: Operations on API keys
-    - name: Projects
-      description: Operations on projects
     - name: Groups
       description: Operations on groups
-    - name: Group Memberships
-      description: Operations on group memberships
-    - name: Policies
-      description: Operations on policies
-    - name: Storage Keys
-      description: Operations on storage keys
+    - name: API Keys
+      description: Operations on API keys

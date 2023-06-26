@@ -3,61 +3,61 @@ api:
   - group: Ridge Kubernetes Service (RKS)
     expanded: false
     pages:
-      - group: unstable
+      - group: v1
         expanded: false
         pages:
-            - label: rks-unstable
-              page: api/rks/unstable/rks.page.yaml/*
+            - label: rks-v1
+              page: api/rks/v1/rks.page.yaml/*
   - group: Ridge Container Service (RCS)
     expanded: false
     pages:
-      - group: unstable
+      - group: v1
         expanded: false
         pages:
-            - label: rcs-unstable
-              page: api/rcs/unstable/rcs.page.yaml/*
+            - label: rcs-v1
+              page: api/rcs/v1/rcs.page.yaml/*
   - group: Identity and Access Management (IAM)
     expanded: false
     pages:
       - label: Overview
         page: api/iam/iam-overview.md
-      - group: unstable
+      - group: v1
         expanded: false
         pages:
-            - label: iam-unstable
-              page: api/iam/unstable/iam.page.yaml/*
+            - label: iam-v1
+              page: api/iam/v1/iam.page.yaml/*
   - group: Compute
     expanded: false
     pages:
-      - group: unstable
+      - group: v1
         expanded: false
         pages:
-            - label: compute-unstable
-              page: api/compute/unstable/compute.page.yaml/*
+            - label: compute-v1
+              page: api/compute/v1/compute.page.yaml/*
   - group: Infrastructure
     expanded: false
     pages:
-      - group: unstable
+      - group: v1
         expanded: false
         pages:
-            - label: compute-unstable
-              page: api/freerange/unstable/freerange.page.yaml/*
+            - label: compute-v1
+              page: api/freerange/v1/freerange.page.yaml/*
   - group: External Credentials
     expanded: false
     pages:
-      - group: unstable
+      - group: v1
         expanded: false
         pages:
-            - label: keyring-unstable
-              page: api/keyring/unstable/keyring.page.yaml/*
+            - label: keyring-v1
+              page: api/keyring/v1/keyring.page.yaml/*
   - group: Object Storage
     expanded: false
     pages:
-      - group: unstable
+      - group: v1
         expanded: false
         pages:
-            - label: ros-unstable
-              page: api/ros/unstable/ros.page.yaml/*
+            - label: ros-v1
+              page: api/ros/v1/ros.page.yaml/*
 getting-started:
     - page: getting-started/index.md
     - page: getting-started/iam/iam-getting-started.md
